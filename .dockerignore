@@ -1,0 +1,23 @@
+.git
+.gitignore
+.env
+docker-compose.yml
+Dockerfile
+.dockerignore
+README.md
+
+# Never bake local secrets into the image
+wp-config.php
+
+# Runtime data belongs in volumes, not the image
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+wp-content/debug.log
+*.log
+
+Thumbs.db
+Desktop.ini
+.DS_Store
+.idea/
+.vscode/

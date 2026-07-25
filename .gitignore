@@ -1,0 +1,23 @@
+# WordPress secrets — DB credentials and auth salts. Never commit.
+wp-config.php
+
+# Local environment
+.env
+
+# Uploads are user content, not source
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+
+# Plugin/theme state
+wp-content/debug.log
+*.log
+
+# OS / editor cruft
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+.idea/
+.vscode/
+*.swp
