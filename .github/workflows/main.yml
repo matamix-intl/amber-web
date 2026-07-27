@@ -1,0 +1,62 @@
+name: CI/CD Pipeline for Amber web WordPress
+
+on:
+  push:
+    branches:
+      - main
+      - v-*
+
+env:
+  DOCKER_IMAGE: ramees95/amber_web:latest
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    environment: development
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build & push latest image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_IMAGE }}
+          cache-from: type=gha,scope=dmax-latest
+          cache-to: type=gha,mode=max,scope=dmax-latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: docker
+    environment: development
+
+    steps:
+      - name: Login to Docker Hub on the server
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Deploy application
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd amber-web
+            docker compose down
+            docker compose up -d --pull always --force-recreate          
+            docker image prune -af
+            docker compose logs --tail=20
