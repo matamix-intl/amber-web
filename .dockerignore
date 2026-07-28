@@ -1,23 +1,28 @@
 .git
 .gitignore
 .env
-docker-compose.yml
+.env.*
+!.env.example
+
+# Docker / docs (not needed inside the image)
 Dockerfile
 .dockerignore
-README.md
+docker-compose*.yml
+DOCKER.md
 
-# Never bake local secrets into the image
+# Local secrets — never bake into the image
 wp-config.php
 
-# Runtime data belongs in volumes, not the image
-wp-content/uploads/
-wp-content/upgrade/
-wp-content/cache/
-wp-content/debug.log
-*.log
+# Build dependencies (dev deps not needed in image)
+node_modules/
 
-Thumbs.db
-Desktop.ini
+# Backups and archives
+wp-content/ai1wm-backups
+*.sql
+*.sql.gz
+
+# OS / editor
 .DS_Store
-.idea/
-.vscode/
+Thumbs.db
+*.swp
+*~

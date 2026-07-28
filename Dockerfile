@@ -1,26 +1,32 @@
-# Amber Web — WordPress 7.0
-#
-# Built on the official WordPress image, which supplies Apache, PHP 8.3 and the
-# extensions WordPress needs (mysqli, gd, zip, imagick, opcache).
-#
-# The base image's entrypoint generates wp-config.php at container start from
-# WORDPRESS_* environment variables, so no credentials are baked into the image.
-FROM wordpress:php8.3-apache
+# WordPress 7.0 + PHP 8.2 (Apache). Matches this project's core version.
+FROM wordpress:php8.2-apache
 
-# Overlay this site's code on top of the base image's WordPress core.
-# .dockerignore keeps wp-config.php, uploads and local cruft out.
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		libzip-dev \
+		unzip \
+	; \
+	docker-php-ext-install zip; \
+	apt-get clean; \
+	rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/www/html
+
+# Application code (themes, plugins, core, uploads in repo)
 COPY --chown=www-data:www-data . /var/www/html/
 
-# Permalinks need mod_rewrite plus AllowOverride so .htaccess is honoured.
-RUN a2enmod rewrite \
-    && printf '<Directory /var/www/html/>\n\tAllowOverride All\n</Directory>\n' \
-       > /etc/apache2/conf-available/wordpress-htaccess.conf \
-    && a2enconf wordpress-htaccess
+# Docker-specific config and permalinks at web root
+COPY --chown=www-data:www-data docker/wp-config-docker.php /var/www/html/wp-config.php
+COPY --chown=www-data:www-data docker/htaccess-root /var/www/html/.htaccess
 
-# Let WordPress write .htaccess, uploads and updates.
-RUN chown -R www-data:www-data /var/www/html
+# Writable uploads; plugins may write cache under wp-content
+RUN set -eux; \
+	find /var/www/html/wp-content -type d -exec chmod 775 {} \; ; \
+	find /var/www/html/wp-content -type f -exec chmod 664 {} \; ; \
+	chown -R www-data:www-data /var/www/html/wp-content
 
 EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-    CMD curl -fsS http://localhost/wp-login.php > /dev/null || exit 1
+	CMD curl -f http://localhost/ || exit 1

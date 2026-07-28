@@ -36,8 +36,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ env.DOCKER_IMAGE }}
-          cache-from: type=gha,scope=dmax-latest
-          cache-to: type=gha,mode=max,scope=dmax-latest
+          cache-from: type=gha,scope=amber-web-latest
+          cache-to: type=gha,mode=max,scope=amber-web-latest
 
   deploy:
     runs-on: ubuntu-latest
