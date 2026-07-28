@@ -11,6 +11,17 @@ RUN set -eux; \
 	apt-get clean; \
 	rm -rf /var/lib/apt/lists/*
 
+# Raise upload limits — migration imports need well above the 2M/8M defaults.
+# post_max_size must be >= upload_max_filesize or uploads fail silently.
+# mod_php (apache2handler) reads conf.d/*.ini at startup.
+RUN printf '%s\n' \
+	'upload_max_filesize = 256M' \
+	'post_max_size = 256M' \
+	'memory_limit = 512M' \
+	'max_execution_time = 600' \
+	'max_input_time = 600' \
+	> /usr/local/etc/php/conf.d/uploads.ini
+
 WORKDIR /var/www/html
 
 # Application code (themes, plugins, core, uploads in repo)
