@@ -31,8 +31,13 @@ COPY --chown=www-data:www-data . /var/www/html/
 COPY --chown=www-data:www-data docker/wp-config-docker.php /var/www/html/wp-config.php
 COPY --chown=www-data:www-data docker/htaccess-root /var/www/html/.htaccess
 
-# Writable uploads; plugins may write cache under wp-content
+# Writable uploads; plugins may write cache under wp-content.
+# uploads/ is gitignored so it is absent from the build context — create it
+# here, or WordPress cannot write media and AI1WM cannot stage its backups.
 RUN set -eux; \
+	mkdir -p /var/www/html/wp-content/uploads; \
+	mkdir -p /var/www/html/wp-content/upgrade; \
+	mkdir -p /var/www/html/wp-content/ai1wm-backups; \
 	find /var/www/html/wp-content -type d -exec chmod 775 {} \; ; \
 	find /var/www/html/wp-content -type f -exec chmod 664 {} \; ; \
 	chown -R www-data:www-data /var/www/html/wp-content
