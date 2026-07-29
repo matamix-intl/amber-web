@@ -42,7 +42,15 @@ RUN set -eux; \
 	find /var/www/html/wp-content -type f -exec chmod 664 {} \; ; \
 	chown -R www-data:www-data /var/www/html/wp-content
 
+# Runtime permission repair. Build-time chown cannot reach a volume that the
+# server's compose file mounts over wp-content/uploads, so fix it on boot.
+COPY docker/fix-permissions.sh /usr/local/bin/fix-permissions.sh
+RUN chmod +x /usr/local/bin/fix-permissions.sh
+
 EXPOSE 80
+
+ENTRYPOINT ["/usr/local/bin/fix-permissions.sh"]
+CMD ["apache2-foreground"]
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
 	CMD curl -f http://localhost/ || exit 1
