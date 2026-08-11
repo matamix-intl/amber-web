@@ -15,8 +15,8 @@ RUN set -eux; \
 # post_max_size must be >= upload_max_filesize or uploads fail silently.
 # mod_php (apache2handler) reads conf.d/*.ini at startup.
 RUN printf '%s\n' \
-	'upload_max_filesize = 300M' \
-	'post_max_size = 300M' \
+	'upload_max_filesize = 400M' \
+	'post_max_size = 400M' \
 	'memory_limit = 512M' \
 	'max_execution_time = 600' \
 	'max_input_time = 600' \
