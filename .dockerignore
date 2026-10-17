@@ -1,28 +1,52 @@
 .git
 .gitignore
+.gitattributes
+.github
+.claude
+.vscode
+.idea
+
+# Secrets and host-specific config never belong in the image; the Dockerfile
+# supplies docker/wp-config-docker.php and docker/htaccess-root instead.
 .env
 .env.*
 !.env.example
+/wp-config.php
+/.htaccess
+/.user.ini
 
 # Docker / docs (not needed inside the image)
 Dockerfile
 .dockerignore
 docker-compose*.yml
 DOCKER.md
+README*.md
+readme.html
+license.txt
 
-# Local secrets — never bake into the image
-wp-config.php
-
-# Build dependencies (dev deps not needed in image)
-node_modules/
-
-# Backups and archives
+# Backups, archives and runtime output. Uploads come from the server volume.
+wp-content/uploads
 wp-content/ai1wm-backups
+wp-content/updraft
+wp-content/backups
+wp-content/cache
+wp-content/upgrade
+wp-content/debug.log
+*.log
 *.sql
 *.sql.gz
+*.zip
+*.tar
+*.tar.gz
+node_modules
+
+# Translation sources and templates; WordPress only loads the compiled .mo.
+**/*.po
+**/*.pot
 
 # OS / editor
 .DS_Store
 Thumbs.db
+desktop.ini
 *.swp
 *~

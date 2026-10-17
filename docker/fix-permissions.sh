@@ -1,5 +1,5 @@
-#!/bin/bash
-# Repair wp-content ownership at runtime, then hand off to the WordPress entrypoint.
+#!/bin/sh
+# Repair wp-content ownership at runtime, then start the main process.
 #
 # Build-time chown only affects the image. When the server's compose file mounts
 # a volume or bind mount over wp-content/uploads, that mount masks the image's
@@ -8,7 +8,7 @@
 #
 # This runs as root before Apache starts (Apache itself drops to www-data for
 # workers), so it can fix ownership on whatever is actually mounted.
-set -euo pipefail
+set -eu
 
 WP_CONTENT=/var/www/html/wp-content
 
@@ -28,4 +28,4 @@ if [ "$(id -u)" = "0" ]; then
 		"$WP_CONTENT/cache" || true
 fi
 
-exec docker-entrypoint.sh "$@"
+exec "$@"
