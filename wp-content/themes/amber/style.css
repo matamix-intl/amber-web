@@ -1,0 +1,22 @@
+/*!
+Theme Name:        Amber
+Theme URI:         https://example.com/amber
+Author:            Amber Studio
+Author URI:        https://example.com
+Description:       Amber is a premium, enterprise-grade multi-product SaaS WordPress theme (Amber Technologies brand: sky-blue on deep navy). Fully custom, Gutenberg-compatible, ACF Pro powered, mobile-first, SEO-friendly and accessibility-conscious. No page builder dependency.
+Version:           1.2.0
+Requires at least: 6.2
+Tested up to:      7.0
+Requires PHP:      7.4
+License:           GNU General Public License v2 or later
+License URI:       http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:       amber
+Tags:              business, saas, custom-colors, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready, block-styles, wide-blocks, accessibility-ready
+
+Amber WordPress Theme, (C) 2026 Amber Studio.
+Amber is distributed under the terms of the GNU GPL v2 or later.
+
+This theme's compiled production styles live in /assets/css/main.css (enqueued separately).
+The SCSS source of truth is in /assets/scss/. This file only carries the WordPress
+theme header so WordPress recognises the theme.
+*/

@@ -1,0 +1,185 @@
+// =============================================================================
+// Sections · Legal (Privacy Policy / Terms & Conditions)
+// Long-form document: oversized title, a pulled-out dates block, then the
+// body in a readable measure beside a sticky table of contents.
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// ---- Hero ---------------------------------------------------------------------
+.legal-hero {
+	padding-block: clamp(2.5rem, 1.75rem + 3.5vw, 4.5rem) clamp(1.5rem, 1.25rem + 1vw, 2.25rem);
+
+	.breadcrumbs { justify-content: flex-start; margin-bottom: var(--amber-space-4); }
+}
+
+// Heavy, tight display title — the dominant element, as in the reference.
+.legal-hero__title {
+	margin: 0;
+	font-size: clamp(1.9rem, 1.4rem + 2.2vw, 2.9rem);
+	font-weight: 800;
+	letter-spacing: -0.025em;
+	line-height: 1.1;
+	color: var(--amber-ink);
+}
+
+// "Effective Date / Last Updated" — bold, muted, sitting just under the title.
+.legal-hero__dates {
+	margin: clamp(0.75rem, 0.65rem + 0.4vw, 1.1rem) 0 0;
+	font-weight: 700;
+	font-size: var(--amber-fs-sm);
+	line-height: 1.6;
+	color: var(--amber-muted);
+}
+
+// ---- Body ---------------------------------------------------------------------
+.legal-body {
+	padding-block: 0 clamp(3rem, 2.25rem + 3vw, 5.5rem);
+}
+
+.legal-body__inner {
+	display: grid;
+	gap: clamp(2rem, 1.5rem + 2vw, 4rem);
+
+	// The TOC comes first in the source because it is navigation, but on
+	// narrow screens a long list would push the document off-screen — so it
+	// renders after the content there and moves back beside it on desktop.
+	.legal-toc { order: 2; }
+	.legal-content { order: 1; }
+
+	@include bp.up('lg') {
+		// Narrower TOC track and a tighter gap hand the extra width to the
+		// document, which is what carries the content.
+		grid-template-columns: minmax(0, 1fr) minmax(0, 13rem);
+		gap: clamp(2rem, 1.25rem + 2.5vw, 3.5rem);
+		align-items: start;
+
+		.legal-toc { order: 2; }
+		.legal-content { order: 1; }
+	}
+
+	// No headings in the document — let the content use the full measure.
+	&--solo {
+		grid-template-columns: minmax(0, 1fr);
+		max-width: var(--amber-container-narrow);
+	}
+}
+
+// ---- Table of contents ---------------------------------------------------------
+.legal-toc__inner {
+	border: 1px solid var(--amber-line);
+	border-radius: var(--amber-radius);
+	background: var(--amber-surface);
+	padding: var(--amber-space-5);
+
+	@include bp.up('lg') {
+		position: sticky;
+		// Clears the sticky site header.
+		top: 6.5rem;
+		max-height: calc(100vh - 8rem);
+		overflow-y: auto;
+		background: none;
+		border: 0;
+		border-inline-start: 1px solid var(--amber-line);
+		border-radius: 0;
+		padding: 0 0 0 var(--amber-space-5);
+	}
+}
+
+.legal-toc__title {
+	margin: 0 0 var(--amber-space-4);
+	font-family: var(--amber-font-sans);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--amber-ink);
+}
+
+.legal-toc__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.65rem;
+	counter-reset: none;
+}
+
+.legal-toc__item {
+	line-height: 1.4;
+
+	a {
+		font-size: 0.8125rem;
+		color: var(--amber-muted);
+		text-decoration: none;
+		transition: color var(--amber-dur-fast) ease;
+
+		&:hover { color: var(--amber-brand); }
+	}
+
+	// Sub-headings indent under their parent.
+	&--h3 {
+		padding-left: var(--amber-space-4);
+
+		a { font-size: 0.75rem; }
+	}
+}
+
+// ---- Document ------------------------------------------------------------------
+.legal-content {
+	// Wide measure — legal documents are scanned more than read line by line,
+	// and the grid track caps it well before this on desktop anyway.
+	max-width: 90ch;
+	font-size: 0.9375rem;
+
+	// Numbered section headings — small and bold, set apart by weight and
+	// spacing rather than size, so the document reads as one dense column.
+	h2 {
+		margin-top: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
+		font-size: 1.0625rem;
+		font-weight: 700;
+		letter-spacing: -0.005em;
+		line-height: 1.4;
+		color: var(--amber-ink);
+		// Anchors land clear of the sticky header.
+		scroll-margin-top: 7rem;
+	}
+
+	h3 {
+		margin-top: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);
+		font-size: 0.9375rem;
+		font-weight: 700;
+		line-height: 1.4;
+		color: var(--amber-ink);
+		scroll-margin-top: 7rem;
+	}
+
+	// First heading sits closer to the top — nothing above it to separate from.
+	> h2:first-child,
+	> h3:first-child { margin-top: 0; }
+
+	p, li { line-height: 1.7; }
+
+	ul, ol { padding-left: 1.25em; }
+
+	li + li { margin-top: 0.5rem; }
+
+	li::marker { color: var(--amber-brand); }
+
+	strong { color: var(--amber-ink); font-weight: 700; }
+
+	a {
+		color: var(--amber-brand);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+
+		&:hover { color: var(--amber-brand-700); }
+	}
+
+	// Contact block and similar trailing detail — keep it readable but quiet.
+	hr {
+		margin-block: clamp(2rem, 1.5rem + 1.5vw, 3rem);
+		border: 0;
+		border-top: 1px solid var(--amber-line);
+	}
+}

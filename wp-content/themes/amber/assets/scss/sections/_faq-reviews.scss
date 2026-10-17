@@ -1,0 +1,252 @@
+// =============================================================================
+// Sections · FAQ + Reviews (homepage)
+// FAQ: light-blue band, centered white badge + heading, white rounded
+// accordion cards (first open) driven by modules/accordion.js.
+// Reviews: centered badge + heading, full-bleed auto-playing card slider with
+// the centered card highlighted dark (modules/reviews-slider.js).
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// =============================================================================
+// FAQ — "Got Questions? We've Got Answers"
+// =============================================================================
+.faq-sec {
+	background: var(--amber-brand-50);
+	padding-block: clamp(4rem, 3rem + 5vw, 7.5rem);
+}
+
+.faq-sec__header {
+	text-align: center;
+	margin-bottom: clamp(2.25rem, 5vw, 3.75rem);
+}
+.faq-sec__badge {
+	display: inline-block;
+	padding: 0.45rem 1.05rem;
+	border-radius: var(--amber-radius-pill);
+	background: #fff;
+	color: #1a1a1c;
+	font-size: 0.85rem;
+	font-weight: 600;
+	margin-bottom: 1.25rem;
+	box-shadow: 0 4px 14px -6px rgba(26, 26, 28, 0.15);
+}
+.faq-sec__title {
+	margin: 0 auto;
+	max-width: 34ch;
+	font-family: var(--amber-font-sans);
+	font-weight: 500;
+	font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3.25rem);
+	line-height: 1.15;
+	letter-spacing: -0.02em;
+	color: #1a1a1c;
+	text-wrap: balance;
+}
+
+// The accordion — white rounded cards (overrides the shared component look
+// inside this section only).
+.faq-sec__accordion {
+	max-width: 900px;
+	margin-inline: auto;
+	display: grid;
+	gap: 1.25rem;
+	text-align: left;
+
+	.accordion__item {
+		background: #fff;
+		border: 0;
+		border-radius: 20px;
+		padding-inline: clamp(1.25rem, 2.5vw, 2rem);
+		box-shadow: none;
+	}
+
+	.accordion__heading { margin: 0; }
+
+	.accordion__trigger {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		width: 100%;
+		padding: clamp(1.25rem, 2.4vw, 2rem) 0;
+		background: none;
+		border: 0;
+		cursor: pointer;
+		text-align: left;
+	}
+	.accordion__question {
+		flex: 1;
+		font-family: var(--amber-font-sans);
+		font-weight: 400;
+		font-size: clamp(1.02rem, 0.95rem + 0.35vw, 1.25rem);
+		line-height: 1.45;
+		color: #1a1a1c;
+	}
+	.accordion__icon {
+		display: inline-flex;
+		flex: 0 0 auto;
+		color: #1a1a1c;
+		transition: transform var(--amber-dur-fast) var(--amber-ease);
+		svg { width: 17px; height: 17px; }
+	}
+	.accordion__item.is-open .accordion__icon,
+	.accordion__trigger[aria-expanded='true'] .accordion__icon { transform: rotate(180deg); }
+	// Keep the chevron ink-dark even when open (the shared component turns it brand-blue).
+	.accordion__item.is-open .accordion__trigger .accordion__icon { color: #1a1a1c; }
+
+	.accordion__answer {
+		border-top: 1px solid #e3e7ed;
+		padding: clamp(1.1rem, 2vw, 1.5rem) 0 clamp(1.4rem, 2.4vw, 2rem);
+		p { margin: 0; font-size: 0.98rem; line-height: 1.7; color: #5c6572; }
+		p + p { margin-top: 0.75rem; }
+	}
+}
+
+// =============================================================================
+// Reviews — centered auto-playing slider
+// =============================================================================
+.reviews-sec {
+	background: #fff;
+	padding-block: clamp(4rem, 3rem + 5vw, 7.5rem);
+	overflow: hidden;
+}
+
+.reviews-sec__header {
+	text-align: center;
+	margin-bottom: clamp(2.25rem, 5vw, 3.5rem);
+}
+.reviews-sec__badge {
+	display: inline-block;
+	padding: 0.45rem 1.05rem;
+	border-radius: var(--amber-radius-pill);
+	background: #fff;
+	border: 1px solid #e3e7ed;
+	color: #1a1a1c;
+	font-size: 0.85rem;
+	font-weight: 600;
+	margin-bottom: 1.25rem;
+	box-shadow: var(--amber-shadow-xs);
+}
+.reviews-sec__title {
+	margin: 0 auto;
+	max-width: 26ch;
+	font-family: var(--amber-font-sans);
+	font-weight: 500;
+	font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3.25rem);
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	color: #1a1a1c;
+	text-wrap: balance;
+}
+
+// Full-bleed rail: side cards run off the screen edges like the reference.
+.reviews-sec__viewport {
+	position: relative;
+	width: 100vw;
+	left: 50%;
+	transform: translateX(-50%);
+	overflow: hidden;
+}
+.reviews-sec__track {
+	display: flex;
+	gap: 32px;
+	align-items: stretch;
+	transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+	will-change: transform;
+	&.is-instant { transition: none; }
+}
+
+.review-card {
+	position: relative;
+	flex: 0 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	padding: 2rem;
+	border-radius: 20px;
+	background: #f9fafb;
+	overflow: hidden;
+	isolation: isolate;
+	transition: background-color 0.35s ease;
+
+	// Soft pink/violet corner glow — only visible on the active card.
+	&__glow {
+		position: absolute;
+		z-index: -1;
+		top: -160px; left: -160px;
+		width: 380px; height: 380px;
+		border-radius: 50%;
+		background:
+			radial-gradient(closest-side, rgba(223, 176, 255, 0.85) 0%, rgba(253, 190, 220, 0.4) 55%, transparent 100%);
+		filter: blur(26px);
+		opacity: 0;
+		transition: opacity 0.35s ease;
+	}
+
+	&__avatar {
+		margin: 0;
+		width: 56px; height: 56px;
+		border-radius: 50%;
+		overflow: hidden;
+		background: linear-gradient(156deg, #fff 32%, #83e7ee 91%);
+		display: grid;
+		place-items: center;
+		img { width: 100%; height: 100%; object-fit: cover; }
+	}
+	&__initial {
+		font-family: var(--amber-font-display);
+		font-weight: 700;
+		font-size: 1.3rem;
+		color: #1a1a1c;
+	}
+
+	&__quote {
+		// Neutralise the theme's global blockquote treatment (brand bar + inset).
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: none;
+		flex: 1;
+		font-size: 1rem;
+		font-style: normal;
+		line-height: 1.65;
+		color: rgba(26, 26, 28, 0.6);
+		transition: color 0.35s ease;
+	}
+
+	&__meta { display: flex; flex-direction: column; gap: 2px; }
+	&__name {
+		margin: 0;
+		font-size: 1.1rem;
+		font-weight: 500;
+		color: #1a1a1c;
+		transition: color 0.35s ease;
+	}
+	&__role {
+		margin: 0;
+		font-size: 0.85rem;
+		color: rgba(26, 26, 28, 0.55);
+		transition: color 0.35s ease;
+	}
+
+	// Centered card — dark highlight.
+	&.is-active {
+		background: #13171e;
+		.review-card__glow { opacity: 1; }
+		.review-card__quote { color: rgba(252, 252, 252, 0.6); }
+		.review-card__name { color: #fcfcfc; }
+		.review-card__role { color: rgba(252, 252, 252, 0.55); }
+	}
+}
+
+// Static fallback (reduced motion / no JS): three cards in the container.
+@media (prefers-reduced-motion: reduce) {
+	.reviews-sec__viewport {
+		width: auto;
+		left: auto;
+		transform: none;
+		padding-inline: var(--amber-gutter);
+	}
+	.reviews-sec__track { flex-wrap: wrap; justify-content: center; }
+	.review-card { width: min(100%, 420px); }
+}

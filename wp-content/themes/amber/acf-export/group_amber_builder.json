@@ -1,0 +1,2309 @@
+{
+    "key": "group_amber_builder",
+    "title": "Page Sections",
+    "fields": [
+        {
+            "key": "field_amber_sections",
+            "label": "Sections",
+            "name": "sections",
+            "aria-label": "",
+            "type": "flexible_content",
+            "instructions": "Build the page by stacking reusable sections. Drag to reorder.",
+            "required": false,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "button_label": "Add Section",
+            "layouts": [
+                {
+                    "key": "layout_amber_hero",
+                    "name": "hero",
+                    "label": "★ Hero Banner",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_66f70780ff747f1b_hero_eyebrow",
+                            "label": "Eyebrow",
+                            "name": "hero_eyebrow",
+                            "type": "text",
+                            "default_value": "New · v2.0 is here"
+                        },
+                        {
+                            "key": "field_amber_2c6d639f5f8f1302_hero_heading",
+                            "label": "Heading",
+                            "name": "hero_heading",
+                            "type": "text",
+                            "default_value": "The platform built for modern teams"
+                        },
+                        {
+                            "key": "field_amber_2ac3c575545c6106_hero_subheading",
+                            "label": "Subheading",
+                            "name": "hero_subheading",
+                            "type": "textarea",
+                            "rows": 3,
+                            "default_value": "Ship faster with a beautifully simple, enterprise-grade workspace your whole company will love."
+                        },
+                        {
+                            "key": "field_amber_d1e1c344477b3523_hero_primary_btn",
+                            "label": "Primary Button",
+                            "name": "hero_primary_btn",
+                            "type": "link",
+                            "return_format": "array",
+                            "wrapper": {
+                                "width": "50"
+                            }
+                        },
+                        {
+                            "key": "field_amber_d9f3a3bd249e68e5_hero_secondary_btn",
+                            "label": "Secondary Button",
+                            "name": "hero_secondary_btn",
+                            "type": "link",
+                            "return_format": "array",
+                            "wrapper": {
+                                "width": "50"
+                            }
+                        },
+                        {
+                            "key": "field_amber_e490253d05d66bed_hero_image",
+                            "label": "Hero Image / Screenshot",
+                            "name": "hero_image",
+                            "type": "image",
+                            "return_format": "array",
+                            "preview_size": "medium",
+                            "library": "all"
+                        },
+                        {
+                            "key": "field_amber_80b95db0a9218c53_hero_note",
+                            "label": "Trust note (under buttons)",
+                            "name": "hero_note",
+                            "type": "text",
+                            "default_value": "No credit card required · 14-day free trial"
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_products",
+                    "name": "products",
+                    "label": "★ Products Showcase",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_bfeb715e195f777f_products_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "products_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_a07ab1ecc9a6cbd9_products_heading",
+                            "label": "Heading",
+                            "name": "products_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_7918da01659678ee_products_subheading",
+                            "label": "Subheading",
+                            "name": "products_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_62939ef07c4ffd73_products_align",
+                            "label": "Alignment",
+                            "name": "products_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_c078977d08fd3a5a_products_items",
+                            "label": "Products",
+                            "name": "products_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Product",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_b068931cc450442b_name",
+                                    "label": "Product Name",
+                                    "name": "name",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "50"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_baec6461b0d69dde_icon",
+                                    "label": "Icon",
+                                    "name": "icon",
+                                    "type": "select",
+                                    "choices": {
+                                        "bolt": "Bolt / Speed",
+                                        "shield": "Shield / Security",
+                                        "rocket": "Rocket / Launch",
+                                        "layers": "Layers / Stack",
+                                        "chart": "Chart / Analytics",
+                                        "globe": "Globe / Global",
+                                        "star": "Star",
+                                        "check": "Check"
+                                    },
+                                    "ui": 1,
+                                    "wrapper": {
+                                        "width": "25"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_727b79a9a430ccdd_accent",
+                                    "label": "Accent Colour",
+                                    "name": "accent",
+                                    "type": "color_picker",
+                                    "wrapper": {
+                                        "width": "25"
+                                    },
+                                    "default_value": "#0ea5e9"
+                                },
+                                {
+                                    "key": "field_amber_1dee80c7d5ab2c1c_desc",
+                                    "label": "Short Description",
+                                    "name": "desc",
+                                    "type": "textarea",
+                                    "rows": 2
+                                },
+                                {
+                                    "key": "field_amber_9f034b63948763d4_features",
+                                    "label": "Features (one per line)",
+                                    "name": "features",
+                                    "type": "textarea",
+                                    "rows": 5
+                                },
+                                {
+                                    "key": "field_amber_2a304a1348456ccd_link",
+                                    "label": "Link",
+                                    "name": "link",
+                                    "type": "link",
+                                    "return_format": "array"
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_2f191e471dddc01d_products_bg",
+                            "label": "Background",
+                            "name": "products_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_fd30b78b1a00db7d_products_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "products_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_94e4a3df882ca906_products_anchor",
+                            "label": "Anchor ID",
+                            "name": "products_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_industries",
+                    "name": "industries",
+                    "label": "Industries Grid",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_29779d403e0d0e09_industries_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "industries_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_f274eefb442c54e5_industries_heading",
+                            "label": "Heading",
+                            "name": "industries_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_3fb1801ebd2a95a9_industries_subheading",
+                            "label": "Subheading",
+                            "name": "industries_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_237c411fe3f3f849_industries_align",
+                            "label": "Alignment",
+                            "name": "industries_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_5c8bb2e0dbeee455_industries_items",
+                            "label": "Industries",
+                            "name": "industries_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Industry",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_b068931cc450442b_name",
+                                    "label": "Name",
+                                    "name": "name",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "60"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_baec6461b0d69dde_icon",
+                                    "label": "Icon",
+                                    "name": "icon",
+                                    "type": "select",
+                                    "choices": {
+                                        "cart": "Retail",
+                                        "utensils": "Restaurant",
+                                        "washer": "Laundry",
+                                        "factory": "Manufacturing",
+                                        "truck": "Distribution",
+                                        "cap": "Education",
+                                        "health": "Healthcare",
+                                        "briefcase": "Services",
+                                        "globe": "Global"
+                                    },
+                                    "ui": 1,
+                                    "wrapper": {
+                                        "width": "40"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_aa410498b01bfe89_industries_bg",
+                            "label": "Background",
+                            "name": "industries_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_8ffe3a7d8d464145_industries_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "industries_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_6dcb1494a0cb4875_industries_anchor",
+                            "label": "Anchor ID",
+                            "name": "industries_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_bento",
+                    "name": "bento",
+                    "label": "Why Choose (Bento)",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_d0823d1376f69ce7_bento_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "bento_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_95ef6fe24e42e7bd_bento_heading",
+                            "label": "Heading",
+                            "name": "bento_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_d74b3e6beede82ab_bento_subheading",
+                            "label": "Subheading",
+                            "name": "bento_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_07e9fee9bf7b6dbd_bento_align",
+                            "label": "Alignment",
+                            "name": "bento_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_639074b2384ba67b_bento_items",
+                            "label": "Cards",
+                            "name": "bento_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Card",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_baec6461b0d69dde_icon",
+                                    "label": "Icon",
+                                    "name": "icon",
+                                    "type": "select",
+                                    "choices": {
+                                        "bolt": "Bolt / Speed",
+                                        "shield": "Shield / Security",
+                                        "rocket": "Rocket / Launch",
+                                        "layers": "Layers / Stack",
+                                        "chart": "Chart / Analytics",
+                                        "globe": "Globe / Global",
+                                        "star": "Star",
+                                        "check": "Check"
+                                    },
+                                    "ui": 1,
+                                    "wrapper": {
+                                        "width": "30"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_d5d3db1765287eef_title",
+                                    "label": "Title",
+                                    "name": "title",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "50"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_518a4861e5be7486_feature",
+                                    "label": "Feature tile (large)",
+                                    "name": "feature",
+                                    "type": "true_false",
+                                    "ui": 1,
+                                    "wrapper": {
+                                        "width": "20"
+                                    },
+                                    "default_value": 0
+                                },
+                                {
+                                    "key": "field_amber_1cb251ec0d568de6_text",
+                                    "label": "Text",
+                                    "name": "text",
+                                    "type": "textarea",
+                                    "rows": 2
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_da7428c4c09f4ef7_bento_bg",
+                            "label": "Background",
+                            "name": "bento_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_0f8f2e8e480321f4_bento_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "bento_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_2716d64c4d4b5263_bento_anchor",
+                            "label": "Anchor ID",
+                            "name": "bento_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_live_demo",
+                    "name": "live_demo",
+                    "label": "Live Product Experience",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_fa61bf564aa66b79_live_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "live_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_013efb952bad7f7f_live_heading",
+                            "label": "Heading",
+                            "name": "live_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_9167be8db3c8b4f6_live_subheading",
+                            "label": "Subheading",
+                            "name": "live_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_bfc6f55b0a17d904_live_align",
+                            "label": "Alignment",
+                            "name": "live_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_188beb6385a9dc9c_live_items",
+                            "label": "Products",
+                            "name": "live_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Product",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_b068931cc450442b_name",
+                                    "label": "Product Name",
+                                    "name": "name",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "60"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_727b79a9a430ccdd_accent",
+                                    "label": "Accent Colour",
+                                    "name": "accent",
+                                    "type": "color_picker",
+                                    "wrapper": {
+                                        "width": "40"
+                                    },
+                                    "default_value": "#0ea5e9"
+                                },
+                                {
+                                    "key": "field_amber_ffb6dc6db8e4e545_kpis",
+                                    "label": "KPIs",
+                                    "name": "kpis",
+                                    "type": "textarea",
+                                    "rows": 3,
+                                    "instructions": "One per line as “Label | Value”."
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_8c960a7965c248ca_live_bg",
+                            "label": "Background",
+                            "name": "live_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_6435fc28b61bfe2f_live_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "live_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_86e84c4d792fd238_live_anchor",
+                            "label": "Anchor ID",
+                            "name": "live_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_logos",
+                    "name": "logos",
+                    "label": "Trusted-By Logo Slider",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_643b4b584964ffe2_logos_heading",
+                            "label": "Heading",
+                            "name": "logos_heading",
+                            "type": "text",
+                            "default_value": "Trusted by fast-growing teams worldwide"
+                        },
+                        {
+                            "key": "field_amber_9c4c877a14af5617_logos_items",
+                            "label": "Logos",
+                            "name": "logos_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Logo",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_96d6f2e7e1f705ab_logo",
+                                    "label": "Logo",
+                                    "name": "logo",
+                                    "type": "image",
+                                    "return_format": "array",
+                                    "preview_size": "medium",
+                                    "library": "all",
+                                    "wrapper": {
+                                        "width": "60"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_b068931cc450442b_name",
+                                    "label": "Company Name (alt)",
+                                    "name": "name",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "40"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_features",
+                    "name": "features",
+                    "label": "Features Grid",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_9ff4545c99d4caaa_features_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "features_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_fed76e701c84b4db_features_heading",
+                            "label": "Heading",
+                            "name": "features_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_93342cdeaf1f75c8_features_subheading",
+                            "label": "Subheading",
+                            "name": "features_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_e95ce5e681f3725f_features_align",
+                            "label": "Alignment",
+                            "name": "features_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_09139b166a19c288_features_items",
+                            "label": "Features",
+                            "name": "features_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Feature",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_baec6461b0d69dde_icon",
+                                    "label": "Icon",
+                                    "name": "icon",
+                                    "type": "select",
+                                    "choices": {
+                                        "bolt": "Bolt / Speed",
+                                        "shield": "Shield / Security",
+                                        "rocket": "Rocket / Launch",
+                                        "layers": "Layers / Stack",
+                                        "chart": "Chart / Analytics",
+                                        "globe": "Globe / Global",
+                                        "star": "Star",
+                                        "check": "Check"
+                                    },
+                                    "ui": 1,
+                                    "wrapper": {
+                                        "width": "30"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_d5d3db1765287eef_title",
+                                    "label": "Title",
+                                    "name": "title",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "70"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_1cb251ec0d568de6_text",
+                                    "label": "Description",
+                                    "name": "text",
+                                    "type": "textarea",
+                                    "rows": 3
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_c33269f85a5ae4e4_features_bg",
+                            "label": "Background",
+                            "name": "features_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_ef2823a5f66deb33_features_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "features_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_c9d8306d7018b0de_features_anchor",
+                            "label": "Anchor ID",
+                            "name": "features_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_services",
+                    "name": "services",
+                    "label": "Services",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_64391d3735f13128_services_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "services_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_8187ee4ae18bbf70_services_heading",
+                            "label": "Heading",
+                            "name": "services_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_ca959797f4a2571c_services_subheading",
+                            "label": "Subheading",
+                            "name": "services_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_bc30807c706ba7c9_services_align",
+                            "label": "Alignment",
+                            "name": "services_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_a55b4c7625f1aa39_services_source",
+                            "label": "Content Source",
+                            "name": "services_source",
+                            "type": "select",
+                            "choices": {
+                                "manual": "Manual list (below)",
+                                "cpt": "Pull from Services post type"
+                            },
+                            "ui": 1,
+                            "default_value": "manual"
+                        },
+                        {
+                            "key": "field_amber_d90d9522e6817d69_services_items",
+                            "label": "Services",
+                            "name": "services_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Service",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_baec6461b0d69dde_icon",
+                                    "label": "Icon",
+                                    "name": "icon",
+                                    "type": "select",
+                                    "choices": {
+                                        "bolt": "Bolt / Speed",
+                                        "shield": "Shield / Security",
+                                        "rocket": "Rocket / Launch",
+                                        "layers": "Layers / Stack",
+                                        "chart": "Chart / Analytics",
+                                        "globe": "Globe / Global",
+                                        "star": "Star",
+                                        "check": "Check"
+                                    },
+                                    "ui": 1,
+                                    "wrapper": {
+                                        "width": "25"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_d5d3db1765287eef_title",
+                                    "label": "Title",
+                                    "name": "title",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "75"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_1cb251ec0d568de6_text",
+                                    "label": "Description",
+                                    "name": "text",
+                                    "type": "textarea",
+                                    "rows": 3
+                                },
+                                {
+                                    "key": "field_amber_2a304a1348456ccd_link",
+                                    "label": "Link",
+                                    "name": "link",
+                                    "type": "link",
+                                    "return_format": "array"
+                                }
+                            ],
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_amber_a55b4c7625f1aa39_services_source",
+                                        "operator": "==",
+                                        "value": "manual"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "key": "field_amber_14d60fcc018d5638_services_bg",
+                            "label": "Background",
+                            "name": "services_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_5b2900a58a5a1931_services_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "services_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_12b23bf299bf0929_services_anchor",
+                            "label": "Anchor ID",
+                            "name": "services_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_why_choose",
+                    "name": "why_choose",
+                    "label": "Why Choose Us (split)",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_999be3997d1d4fde_why_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "why_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_a47fdfde5d85e130_why_heading",
+                            "label": "Heading",
+                            "name": "why_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_4f84ec5ec66d2990_why_subheading",
+                            "label": "Subheading",
+                            "name": "why_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_d794d4cfbb10f2f5_why_align",
+                            "label": "Alignment",
+                            "name": "why_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_b8486d8f911ffac4_why_image",
+                            "label": "Image",
+                            "name": "why_image",
+                            "type": "image",
+                            "return_format": "array",
+                            "preview_size": "medium",
+                            "library": "all"
+                        },
+                        {
+                            "key": "field_amber_c128358eeab967ed_why_image_side",
+                            "label": "Image Side",
+                            "name": "why_image_side",
+                            "type": "select",
+                            "choices": {
+                                "right": "Right",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "right"
+                        },
+                        {
+                            "key": "field_amber_750e55c674ef54a2_why_points",
+                            "label": "Points",
+                            "name": "why_points",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Point",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_d5d3db1765287eef_title",
+                                    "label": "Title",
+                                    "name": "title",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "field_amber_1cb251ec0d568de6_text",
+                                    "label": "Text",
+                                    "name": "text",
+                                    "type": "textarea",
+                                    "rows": 3
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_147db6e7554dfc2a_why_btn",
+                            "label": "Button",
+                            "name": "why_btn",
+                            "type": "link",
+                            "return_format": "array"
+                        },
+                        {
+                            "key": "field_amber_feff58a1e0b4c27b_why_bg",
+                            "label": "Background",
+                            "name": "why_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_d298c21f621c2908_why_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "why_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_95c88189b01c8550_why_anchor",
+                            "label": "Anchor ID",
+                            "name": "why_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_stats",
+                    "name": "stats",
+                    "label": "Statistics Counter",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_b3d7b639e9830eba_stats_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "stats_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_ee1b4b4d7ac42bdf_stats_heading",
+                            "label": "Heading",
+                            "name": "stats_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_3a0b51b708cc49cd_stats_subheading",
+                            "label": "Subheading",
+                            "name": "stats_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_aeda22131bc7a4fb_stats_align",
+                            "label": "Alignment",
+                            "name": "stats_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_e00f4fbad8f6b489_stats_items",
+                            "label": "Stats",
+                            "name": "stats_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Stat",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_2063c1608d6e0baf_value",
+                                    "label": "Number",
+                                    "name": "value",
+                                    "type": "number",
+                                    "wrapper": {
+                                        "width": "30"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_851f5ac9941d7208_prefix",
+                                    "label": "Prefix",
+                                    "name": "prefix",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "15"
+                                    },
+                                    "placeholder": "$"
+                                },
+                                {
+                                    "key": "field_amber_4ec1b477cd0232b8_suffix",
+                                    "label": "Suffix",
+                                    "name": "suffix",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "15"
+                                    },
+                                    "placeholder": "%, K, M, +"
+                                },
+                                {
+                                    "key": "field_amber_d304ba20e96d8741_label",
+                                    "label": "Label",
+                                    "name": "label",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "40"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_d5a208cd744c3f9b_stats_bg",
+                            "label": "Background",
+                            "name": "stats_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_4756d4139d9e2d0d_stats_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "stats_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_0545e73421fb6b3f_stats_anchor",
+                            "label": "Anchor ID",
+                            "name": "stats_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_process",
+                    "name": "process",
+                    "label": "Process Timeline",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_9d3068f4bb0a658b_process_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "process_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_78ddb49bc97dbed1_process_heading",
+                            "label": "Heading",
+                            "name": "process_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_b6522eb0f370e992_process_subheading",
+                            "label": "Subheading",
+                            "name": "process_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_fae1ba5f62ac528b_process_align",
+                            "label": "Alignment",
+                            "name": "process_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_a66257987aa18f33_process_steps",
+                            "label": "Steps",
+                            "name": "process_steps",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Step",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_d5d3db1765287eef_title",
+                                    "label": "Title",
+                                    "name": "title",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "40"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_1cb251ec0d568de6_text",
+                                    "label": "Description",
+                                    "name": "text",
+                                    "type": "textarea",
+                                    "rows": 3,
+                                    "wrapper": {
+                                        "width": "60"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_5ad55118ace2a2d5_process_bg",
+                            "label": "Background",
+                            "name": "process_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_62c4ae5f24976929_process_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "process_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_9b746fbd740f1015_process_anchor",
+                            "label": "Anchor ID",
+                            "name": "process_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_showcase",
+                    "name": "showcase",
+                    "label": "Product Showcase",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_4c6037f053982027_showcase_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "showcase_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_e7ce8355a975c5f6_showcase_heading",
+                            "label": "Heading",
+                            "name": "showcase_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_8eb3c771060cf16b_showcase_subheading",
+                            "label": "Subheading",
+                            "name": "showcase_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_22249140a1a5f60f_showcase_align",
+                            "label": "Alignment",
+                            "name": "showcase_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_06e0a643ffdcf361_showcase_items",
+                            "label": "Showcase Rows",
+                            "name": "showcase_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Showcase Row",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_72e04b9ab3e41ff6_eyebrow",
+                                    "label": "Eyebrow",
+                                    "name": "eyebrow",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "50"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_d5d3db1765287eef_title",
+                                    "label": "Title",
+                                    "name": "title",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "50"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_1cb251ec0d568de6_text",
+                                    "label": "Text",
+                                    "name": "text",
+                                    "type": "textarea",
+                                    "rows": 3
+                                },
+                                {
+                                    "key": "field_amber_78805a221a988e79_image",
+                                    "label": "Image",
+                                    "name": "image",
+                                    "type": "image",
+                                    "return_format": "array",
+                                    "preview_size": "medium",
+                                    "library": "all"
+                                },
+                                {
+                                    "key": "field_amber_2a304a1348456ccd_link",
+                                    "label": "Link",
+                                    "name": "link",
+                                    "type": "link",
+                                    "return_format": "array"
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_42be7389157893a3_showcase_bg",
+                            "label": "Background",
+                            "name": "showcase_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_b06487b9f3b7f2d5_showcase_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "showcase_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_4ab867e7d3e29c9f_showcase_anchor",
+                            "label": "Anchor ID",
+                            "name": "showcase_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_testimonials",
+                    "name": "testimonials",
+                    "label": "Testimonials",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_2de69fd39ad776ed_testi_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "testi_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_eb7deb07d6fd2e04_testi_heading",
+                            "label": "Heading",
+                            "name": "testi_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_178a7915ecedfe8a_testi_subheading",
+                            "label": "Subheading",
+                            "name": "testi_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_72df638ef1c82178_testi_align",
+                            "label": "Alignment",
+                            "name": "testi_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_96dd1134817972e5_testi_items",
+                            "label": "Testimonials",
+                            "name": "testi_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Testimonial",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_7a674c327bfa07f7_quote",
+                                    "label": "Quote",
+                                    "name": "quote",
+                                    "type": "textarea",
+                                    "rows": 3
+                                },
+                                {
+                                    "key": "field_amber_aaca0f5eb4d2d98a_avatar",
+                                    "label": "Avatar",
+                                    "name": "avatar",
+                                    "type": "image",
+                                    "return_format": "array",
+                                    "preview_size": "medium",
+                                    "library": "all",
+                                    "wrapper": {
+                                        "width": "34"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_b068931cc450442b_name",
+                                    "label": "Name",
+                                    "name": "name",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "33"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_29a7e96467b69a9f_role",
+                                    "label": "Role / Company",
+                                    "name": "role",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "33"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_2c5504ab9a86164d_rating",
+                                    "label": "Rating (1-5)",
+                                    "name": "rating",
+                                    "type": "number",
+                                    "default_value": 5,
+                                    "min": 1,
+                                    "max": 5
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_84fbe4d3eb8cd942_testi_bg",
+                            "label": "Background",
+                            "name": "testi_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_8252787f440bcf6c_testi_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "testi_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_d1b7ddd6b25dffa8_testi_anchor",
+                            "label": "Anchor ID",
+                            "name": "testi_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_pricing",
+                    "name": "pricing",
+                    "label": "Pricing Plans",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_00205694cd814d81_pricing_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "pricing_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_64d9f9db81536b86_pricing_heading",
+                            "label": "Heading",
+                            "name": "pricing_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_1efcf8ac09cff2ee_pricing_subheading",
+                            "label": "Subheading",
+                            "name": "pricing_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_62aebf787b805088_pricing_align",
+                            "label": "Alignment",
+                            "name": "pricing_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_238aea7bc78d1b2e_pricing_plans",
+                            "label": "Plans",
+                            "name": "pricing_plans",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Plan",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_b068931cc450442b_name",
+                                    "label": "Plan Name",
+                                    "name": "name",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "40"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_78a5eb43deef9a7b_price",
+                                    "label": "Price",
+                                    "name": "price",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "30"
+                                    },
+                                    "placeholder": "$29"
+                                },
+                                {
+                                    "key": "field_amber_a0acfa46d86f7610_period",
+                                    "label": "Period",
+                                    "name": "period",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "30"
+                                    },
+                                    "placeholder": "/mo"
+                                },
+                                {
+                                    "key": "field_amber_b3c54e0f209c7125_tagline",
+                                    "label": "Tagline",
+                                    "name": "tagline",
+                                    "type": "textarea",
+                                    "rows": 2
+                                },
+                                {
+                                    "key": "field_amber_9f034b63948763d4_features",
+                                    "label": "Features (one per line)",
+                                    "name": "features",
+                                    "type": "textarea",
+                                    "rows": 5,
+                                    "instructions": "Each line becomes a checklist item."
+                                },
+                                {
+                                    "key": "field_amber_ce50a09343724eb8_button",
+                                    "label": "Button",
+                                    "name": "button",
+                                    "type": "link",
+                                    "return_format": "array"
+                                },
+                                {
+                                    "key": "field_amber_dd0d24a48197b278_featured",
+                                    "label": "Highlight as “Most popular”",
+                                    "name": "featured",
+                                    "type": "true_false",
+                                    "ui": 1,
+                                    "default_value": 0
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_05309e8a4fa67994_pricing_bg",
+                            "label": "Background",
+                            "name": "pricing_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_720de3f609215fee_pricing_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "pricing_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_02d39c2e51e2e5a8_pricing_anchor",
+                            "label": "Anchor ID",
+                            "name": "pricing_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_faq",
+                    "name": "faq",
+                    "label": "FAQ Accordion",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_728eeaf15f9b0341_faq_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "faq_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_259ab9a832923582_faq_heading",
+                            "label": "Heading",
+                            "name": "faq_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_a23dcdac87af3fe9_faq_subheading",
+                            "label": "Subheading",
+                            "name": "faq_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_1ca51cc6181ca5f0_faq_align",
+                            "label": "Alignment",
+                            "name": "faq_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_3c47dc3791efe9f2_faq_items",
+                            "label": "Questions",
+                            "name": "faq_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Question",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_5494af1f14a8c199_question",
+                                    "label": "Question",
+                                    "name": "question",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "field_amber_a363b8d13575101a_answer",
+                                    "label": "Answer",
+                                    "name": "answer",
+                                    "type": "wysiwyg",
+                                    "tabs": "visual",
+                                    "media_upload": 1,
+                                    "toolbar": "basic"
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_962e45642c25f709_faq_bg",
+                            "label": "Background",
+                            "name": "faq_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_52f28fc392be222a_faq_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "faq_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_ff83b8a018f338d3_faq_anchor",
+                            "label": "Anchor ID",
+                            "name": "faq_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_team",
+                    "name": "team",
+                    "label": "Team Members",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_9433c34e46897f32_team_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "team_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_731f2e8b2fe69728_team_heading",
+                            "label": "Heading",
+                            "name": "team_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_5e72e13eaa4887e5_team_subheading",
+                            "label": "Subheading",
+                            "name": "team_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_8e08d7237ce1956e_team_align",
+                            "label": "Alignment",
+                            "name": "team_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_c37864761303f514_team_items",
+                            "label": "Members",
+                            "name": "team_items",
+                            "type": "repeater",
+                            "layout": "block",
+                            "button_label": "Add Member",
+                            "sub_fields": [
+                                {
+                                    "key": "field_amber_5ae0c1c8a5260bc7_photo",
+                                    "label": "Photo",
+                                    "name": "photo",
+                                    "type": "image",
+                                    "return_format": "array",
+                                    "preview_size": "medium",
+                                    "library": "all",
+                                    "wrapper": {
+                                        "width": "34"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_b068931cc450442b_name",
+                                    "label": "Name",
+                                    "name": "name",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "33"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_29a7e96467b69a9f_role",
+                                    "label": "Role",
+                                    "name": "role",
+                                    "type": "text",
+                                    "wrapper": {
+                                        "width": "33"
+                                    }
+                                },
+                                {
+                                    "key": "field_amber_f1576406b382b7d1_linkedin",
+                                    "label": "LinkedIn URL",
+                                    "name": "linkedin",
+                                    "type": "url"
+                                }
+                            ]
+                        },
+                        {
+                            "key": "field_amber_dffe83dc8e55f595_team_bg",
+                            "label": "Background",
+                            "name": "team_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_042af23a1fbf3eea_team_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "team_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_caddc5c7015e99bf_team_anchor",
+                            "label": "Anchor ID",
+                            "name": "team_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_blog",
+                    "name": "blog",
+                    "label": "Blog Preview",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_b9ee22a24050d582_blog_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "blog_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_fa27a2ea6c28a41b_blog_heading",
+                            "label": "Heading",
+                            "name": "blog_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_254f02a0e8ceb80b_blog_subheading",
+                            "label": "Subheading",
+                            "name": "blog_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_e0fb65295db46d4b_blog_align",
+                            "label": "Alignment",
+                            "name": "blog_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_4aee7efe8816a007_blog_count",
+                            "label": "Number of posts",
+                            "name": "blog_count",
+                            "type": "number",
+                            "default_value": 3,
+                            "min": 1,
+                            "max": 6,
+                            "wrapper": {
+                                "width": "50"
+                            }
+                        },
+                        {
+                            "key": "field_amber_f1e2066085d93abc_blog_btn",
+                            "label": "View-all Button",
+                            "name": "blog_btn",
+                            "type": "link",
+                            "return_format": "array",
+                            "wrapper": {
+                                "width": "50"
+                            }
+                        },
+                        {
+                            "key": "field_amber_74b504b101b0fb02_blog_bg",
+                            "label": "Background",
+                            "name": "blog_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_169ebd848f22bec5_blog_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "blog_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_e0fef0c65e9427ce_blog_anchor",
+                            "label": "Anchor ID",
+                            "name": "blog_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_cta",
+                    "name": "cta",
+                    "label": "CTA Banner",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_ed718923e84bda14_cta_heading",
+                            "label": "Heading",
+                            "name": "cta_heading",
+                            "type": "text",
+                            "default_value": "Ready to get started?"
+                        },
+                        {
+                            "key": "field_amber_86f94c7f75930c41_cta_text",
+                            "label": "Text",
+                            "name": "cta_text",
+                            "type": "textarea",
+                            "rows": 3,
+                            "default_value": "Join thousands of teams building better products with Amber."
+                        },
+                        {
+                            "key": "field_amber_f881337a0b6b253c_cta_primary",
+                            "label": "Primary Button",
+                            "name": "cta_primary",
+                            "type": "link",
+                            "return_format": "array",
+                            "wrapper": {
+                                "width": "50"
+                            }
+                        },
+                        {
+                            "key": "field_amber_737d98e43a164f60_cta_secondary",
+                            "label": "Secondary Button",
+                            "name": "cta_secondary",
+                            "type": "link",
+                            "return_format": "array",
+                            "wrapper": {
+                                "width": "50"
+                            }
+                        },
+                        {
+                            "key": "field_amber_37236dfc368b6ceb_cta_style",
+                            "label": "Style",
+                            "name": "cta_style",
+                            "type": "select",
+                            "choices": {
+                                "gradient": "Brand Gradient",
+                                "ink": "Dark",
+                                "surface": "Light"
+                            },
+                            "ui": 1,
+                            "default_value": "gradient"
+                        }
+                    ]
+                },
+                {
+                    "key": "layout_amber_contact",
+                    "name": "contact",
+                    "label": "Contact Section",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_amber_15d66a26b203e072_contact_eyebrow",
+                            "label": "Eyebrow / Label",
+                            "name": "contact_eyebrow",
+                            "type": "text",
+                            "placeholder": "Why Amber"
+                        },
+                        {
+                            "key": "field_amber_f3fb705308cf5e35_contact_heading",
+                            "label": "Heading",
+                            "name": "contact_heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_amber_b826fc881eec866b_contact_subheading",
+                            "label": "Subheading",
+                            "name": "contact_subheading",
+                            "type": "textarea",
+                            "rows": 3
+                        },
+                        {
+                            "key": "field_amber_c49014a37bbd8533_contact_align",
+                            "label": "Alignment",
+                            "name": "contact_align",
+                            "type": "select",
+                            "choices": {
+                                "center": "Centered",
+                                "left": "Left"
+                            },
+                            "ui": 1,
+                            "default_value": "center"
+                        },
+                        {
+                            "key": "field_amber_0e0825c700619de7_contact_shortcode",
+                            "label": "Form Shortcode",
+                            "name": "contact_shortcode",
+                            "type": "textarea",
+                            "rows": 2,
+                            "instructions": "Paste a CF7/WPForms shortcode, or leave blank for the built-in form."
+                        },
+                        {
+                            "key": "field_amber_ec4138d37eca65a9_contact_show_details",
+                            "label": "Show contact details (from Theme Settings)",
+                            "name": "contact_show_details",
+                            "type": "true_false",
+                            "ui": 1,
+                            "default_value": 1
+                        },
+                        {
+                            "key": "field_amber_b19624f20cf07f98_contact_map_embed",
+                            "label": "Google Map Embed URL",
+                            "name": "contact_map_embed",
+                            "type": "text",
+                            "instructions": "The src URL from a Google Maps “Embed a map” iframe."
+                        },
+                        {
+                            "key": "field_amber_1962e99762cd530b_contact_bg",
+                            "label": "Background",
+                            "name": "contact_bg",
+                            "type": "select",
+                            "choices": {
+                                "white": "White",
+                                "surface": "Light Surface",
+                                "ink": "Dark (Ink)",
+                                "gradient": "Brand Gradient"
+                            },
+                            "ui": 1,
+                            "default_value": "white",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_74dc2ac825adde45_contact_spacing",
+                            "label": "Vertical Spacing",
+                            "name": "contact_spacing",
+                            "type": "select",
+                            "choices": {
+                                "normal": "Normal",
+                                "large": "Large",
+                                "small": "Compact",
+                                "none": "None"
+                            },
+                            "ui": 1,
+                            "default_value": "normal",
+                            "wrapper": {
+                                "width": "33"
+                            }
+                        },
+                        {
+                            "key": "field_amber_40aa980d0ca8a013_contact_anchor",
+                            "label": "Anchor ID",
+                            "name": "contact_anchor",
+                            "type": "text",
+                            "instructions": "Optional #id for in-page links.",
+                            "wrapper": {
+                                "width": "34"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_type",
+                "operator": "==",
+                "value": "front_page"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "page"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [],
+    "active": true,
+    "description": "Reusable section builder available on the front page and all pages.",
+    "show_in_rest": false,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1781670860
+}

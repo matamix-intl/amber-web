@@ -1,0 +1,260 @@
+// =============================================================================
+// Sections · Gozzbe interactive feature list ("Point of Sale" reference layout)
+//
+// Only the Gozzbe product page uses this. Two-column layout: a clickable list
+// on the left (icon + title; the active row expands its description), and on
+// desktop a single image on the right that crossfades to match whichever row
+// is active. On mobile the image column is hidden and each row instead shows
+// its own image inline beneath the description when expanded.
+//
+// Structure:
+//   .gzf-section > .gzf-container
+//     .gzf-head              heading + intro paragraph
+//     .gzf-grid              2-col grid (1-col on mobile)
+//       .gzf-list            the clickable rows
+//         .gzf-item          one row (icon, title, collapsible description)
+//       .gzf-visual          desktop-only image stack (hidden < lg)
+//
+// Motion lives in modules/gozzbe-features.js; degrades to the first item
+// permanently expanded (all content visible, nothing to click) when JS is off.
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+.gzf-section {
+	padding-block: var(--amber-section-y);
+	background: #fff;
+}
+
+// Deliberately NOT the shared `.container` (max-width: 1200px, centred, fluid
+// gutter): this section holds a strict 120px off the true screen edge, not
+// inset within a centred column.
+.gzf-container {
+	width: 100%;
+	padding-inline: 120px;
+	margin-inline: auto;
+	box-sizing: border-box;
+
+	// A flat 120px per side is fine at desktop widths, but on tablet/mobile it
+	// would eat the whole viewport (at 768px, 240px of padding leaves only
+	// 528px for a two-column grid, and it only gets worse below that). Ease it
+	// down below `lg` — the same breakpoint .gzf-grid drops to a single column
+	// at — so content always has room; desktop keeps the exact 120px this was
+	// asked for.
+	@include bp.down('lg') {
+		padding-inline: var(--amber-gutter);
+	}
+}
+
+.gzf-head {
+	max-width: 60rem;
+	margin-bottom: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+
+	&__title {
+		margin: 0 0 0.75rem;
+		font-family: var(--amber-font-sans);
+		font-weight: 700;
+		font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
+		line-height: 1.15;
+		letter-spacing: -0.01em;
+		color: var(--amber-ink);
+	}
+
+	&__sub {
+		margin: 0;
+		max-width: 52rem;
+		font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+		line-height: 1.65;
+		color: var(--amber-body);
+	}
+}
+
+.gzf-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--amber-space-7);
+	align-items: start;
+
+	@include bp.up('lg') {
+		grid-template-columns: 1fr 1fr;
+		gap: clamp(3rem, 2rem + 4vw, 4rem);
+		// `stretch` (grid's own default, set explicitly here) so .gzf-visual
+		// matches whatever height .gzf-list naturally reaches, instead of the
+		// two columns being independently sized — the reference's image panel
+		// is exactly as tall as the row list beside it, not a fixed box.
+		align-items: stretch;
+	}
+}
+
+// =============================================================================
+// Left column — the clickable list
+// =============================================================================
+.gzf-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	// Gives the active card's rotateX/Y a real vanishing point instead of the
+	// flat, undistorted look a transform gets with no ancestor perspective.
+	perspective: 1200px;
+}
+
+.gzf-item {
+	position: relative;
+	padding: 1.1rem 1.25rem;
+	border-radius: var(--amber-radius);
+	border: 1px solid transparent;
+	cursor: pointer;
+	transform-style: preserve-3d;
+	transition: background var(--amber-dur-fast) ease, box-shadow var(--amber-dur) var(--amber-ease),
+		border-color var(--amber-dur-fast) ease, transform var(--amber-dur) var(--amber-ease);
+
+	&:hover { background: var(--amber-surface); }
+	&:focus-visible { outline: 2px solid var(--amber-brand); outline-offset: 2px; }
+
+	// 3D card effect: the active row lifts and tilts slightly off the page
+	// plane (a gentle rotateX/Y, not a full flip), with a matching layered
+	// shadow to sell the depth and a soft highlight along the top edge like
+	// light catching a raised surface.
+	&.is-active {
+		background: var(--amber-surface);
+		transform: translateY(-4px) translateZ(12px) rotateX(2deg) rotateY(-1.5deg);
+		box-shadow:
+			0 2px 4px rgba(15, 23, 42, 0.04),
+			0 10px 20px -6px rgba(15, 23, 42, 0.12),
+			0 24px 40px -16px rgba(15, 23, 42, 0.18);
+
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			z-index: 0;
+			border-radius: inherit;
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 40%);
+			pointer-events: none;
+		}
+	}
+
+	&__head,
+	&__body {
+		position: relative;
+		z-index: 1; // stay above the .is-active highlight overlay
+	}
+
+	&__head {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	&__icon {
+		display: grid;
+		place-items: center;
+		flex: 0 0 auto;
+		width: 40px;
+		height: 40px;
+		color: var(--amber-brand-600);
+		img { width: 30px; height: 30px; }
+		svg { width: 24px; height: 24px; }
+	}
+
+	&__title {
+		margin: 0;
+		font-family: var(--amber-font-sans);
+		font-weight: 600;
+		font-size: clamp(1rem, 0.95rem + 0.2vw, 1.1875rem);
+		color: var(--amber-ink);
+	}
+
+	// Collapsible description — height-animated via grid-template-rows so no
+	// JS height measurement is needed (auto-height accordion technique).
+	&__body {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows var(--amber-dur) var(--amber-ease);
+	}
+	&__body-inner { overflow: hidden; }
+
+	&.is-active &__body { grid-template-rows: 1fr; }
+
+	&__desc {
+		margin: 0.6rem 0 0;
+		padding-left: calc(40px + 1rem); // align under the title, past the icon
+		font-size: 0.9375rem;
+		line-height: 1.6;
+		color: var(--amber-body);
+	}
+
+	// Inline image — mobile/tablet only (desktop uses .gzf-visual instead).
+	&__img-mobile {
+		display: block;
+		width: 100%;
+		height: auto;
+		margin-top: 0.85rem;
+		border-radius: var(--amber-radius);
+		object-fit: cover;
+
+		@include bp.up('lg') { display: none; }
+	}
+}
+
+// =============================================================================
+// Right column — desktop image stack (crossfades between active items)
+// =============================================================================
+.gzf-visual {
+	display: none;
+
+	@include bp.up('lg') {
+		display: block;
+		position: sticky;
+		top: calc(var(--amber-header-h, 88px) + 2rem);
+		// Cap how tall the sticky panel can get so it can't overflow the
+		// viewport (and therefore the sticky positioning) when the list is
+		// very long — it still matches the list up to that ceiling.
+		max-height: calc(100vh - var(--amber-header-h, 88px) - 4rem);
+	}
+}
+
+.gzf-visual__stage {
+	position: relative;
+	// Fill the height .gzf-grid's `align-items: stretch` gives this column —
+	// i.e. match .gzf-list's natural height — rather than a fixed min-height
+	// that left the panel visibly shorter than the row list beside it.
+	height: 100%;
+	min-height: 420px; // floor for on short lists (e.g. a 1-2 item section)
+	border-radius: clamp(16px, 1.6vw, 24px);
+	overflow: hidden;
+	background: var(--amber-surface);
+}
+
+.gzf-visual__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	opacity: 0;
+	transition: opacity var(--amber-dur) var(--amber-ease);
+	z-index: 0;
+
+	&.is-active {
+		opacity: 1;
+		z-index: 1;
+	}
+}
+
+// ---- No-JS fallback: every row's description stays open, nothing to click --
+.no-js {
+	.gzf-item { cursor: default; }
+	.gzf-item__body { grid-template-rows: 1fr; }
+	.gzf-visual { display: none; } // no image-swap possible without JS
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.gzf-item__body,
+	.gzf-item,
+	.gzf-visual__img { transition: none; }
+
+	// The tilt is a motion effect at heart — keep the active state legible
+	// (background + shadow still mark it) but drop the rotate/translate.
+	.gzf-item.is-active { transform: none; }
+}

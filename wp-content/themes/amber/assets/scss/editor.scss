@@ -1,0 +1,27 @@
+// =============================================================================
+// Block editor styles — gives Gutenberg the same tokens & typography as the
+// front-end so authored content previews accurately.
+// Compile: npx sass assets/scss/editor.scss assets/css/editor.css --style=compressed
+// =============================================================================
+
+@use 'settings/tokens';
+@use 'base/typography';
+
+.editor-styles-wrapper {
+	font-family: var(--amber-font-sans);
+	font-size: var(--amber-fs-base);
+	color: var(--amber-body);
+	background: #fff;
+
+	.wp-block { max-width: 760px; }
+	.wp-block[data-align='wide'] { max-width: 1080px; }
+	.wp-block[data-align='full'] { max-width: none; }
+
+	h1, h2, h3, h4 { font-family: var(--amber-font-display); color: var(--amber-ink); letter-spacing: -0.02em; }
+
+	a { color: var(--amber-brand); }
+
+	.has-brand-color { color: var(--amber-brand); }
+	.has-ink-color { color: var(--amber-ink); }
+	.has-brand-background-color { background-color: var(--amber-brand); }
+}

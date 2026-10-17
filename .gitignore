@@ -21,3 +21,7 @@ Desktop.ini
 .idea/
 .vscode/
 *.swp
+
+# Build dependencies and local debug scripts
+node_modules/
+wp-content/themes/*/_check-*.php

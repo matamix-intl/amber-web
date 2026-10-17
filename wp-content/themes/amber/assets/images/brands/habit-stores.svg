@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 44" width="150" height="44" role="img" aria-label="Habit Stores">
+	<g fill="#0f172a">
+		<path d="M20 8 l1.6 4.6 4.8.4-3.7 3.2 1.2 4.7-4-2.6-4 2.6 1.2-4.7-3.7-3.2 4.8-.4z"/>
+	</g>
+	<text x="10" y="34" font-family="'Segoe Script', 'Brush Script MT', cursive" font-size="19" fill="#0f172a">habit</text>
+	<text x="10" y="42" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.8" fill="#475569">SALON &amp; BEAUTY</text>
+</svg>

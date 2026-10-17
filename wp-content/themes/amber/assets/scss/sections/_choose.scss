@@ -1,0 +1,83 @@
+// =============================================================================
+// Sections · How To Choose — checklist left, product image right
+// Light band right after the hero: heading/intro/checklist/CTA on the left,
+// a single editable image on the right.
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+.section--choose { overflow: hidden; }
+
+.choose-sec__row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(2.5rem, 5vw, 4.5rem);
+	align-items: center;
+
+	@include bp.up('lg') {
+		grid-template-columns: minmax(0, 54%) minmax(0, 46%);
+	}
+}
+
+// ---- Copy column ---------------------------------------------------------------
+.choose-sec__title {
+	margin: 0 0 10px;
+	font-family: var(--amber-font-display);
+	font-size: 26px;
+	line-height: 1.4;
+	font-weight: 700;
+	color: var(--amber-ink);
+
+	@include bp.up('lg') { font-size: 36px; line-height: 46px; }
+}
+
+.choose-sec__intro {
+	margin: 0 0 30px;
+	font-size: 18px;
+	line-height: 1.6;
+	font-weight: 400;
+	color: var(--amber-ink);
+}
+
+.choose-sec__list {
+	display: grid;
+	gap: 0.65rem;
+	margin: 0 0 2rem;
+	padding-left: 1.5rem;
+	list-style: none;
+
+	li {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.65rem;
+		font-size: 18px;
+		line-height: 1.6;
+		color: var(--amber-ink);
+	}
+}
+
+.choose-sec__check {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	margin-top: 0.15rem;
+	border-radius: 50%;
+	background: var(--amber-success);
+	color: #fff;
+
+	svg { width: 13px; height: 13px; stroke-width: 3; }
+}
+
+// ---- Visual: single editable image ---------------------------------------------
+.choose-sec__visual {
+	display: flex;
+}
+
+.choose-sec__img {
+	width: 100%;
+	height: auto;
+	border-radius: var(--amber-radius-lg);
+}

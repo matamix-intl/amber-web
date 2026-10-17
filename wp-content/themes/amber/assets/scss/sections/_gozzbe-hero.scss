@@ -1,0 +1,520 @@
+// =============================================================================
+// Sections · Gozzbe hero — centred SaaS banner + tabbed product showcase
+//
+// Only the Gozzbe product page uses this layout (the other three products keep
+// the shared full-bleed background-image banner in _erp.scss). Structure:
+//   .gz-hero            light full-width band
+//     .gz-hero__intro   first-load laundry-basket animation overlay
+//     .gz-hero__inner   centred column: title, lead, tabs
+//       .gz-tabs        pill tab bar + screenshot panels
+//
+// Motion lives in modules/gozzbe-hero.js; everything degrades to a static,
+// fully readable hero when JS is off or prefers-reduced-motion is set.
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+.gz-hero {
+	position: relative;
+	// The banner sits under the floating header (body carries the header height
+	// as padding-top); repay that as extra top padding so the copy clears it.
+	padding-top: clamp(3rem, 2rem + 4vw, 5.5rem);
+	padding-bottom: 2px;
+	// Safety gutter for narrow viewports only, so content never touches the
+	// screen edge below ~1280px + 2*gutter wide. On wide screens this is inert
+	// — .gz-hero__inner's `margin-inline: auto` centres its 1280px box with
+	// room to spare, so the gutter never actually eats into the title's width
+	// (see the note on .gz-hero__inner for why it must NOT also live there).
+	padding-inline: var(--amber-gutter);
+	background: #fff;
+	overflow: hidden;
+
+	// Soft brand wash behind the headline, echoing the reference's clean white
+	// stage without introducing a new colour.
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0 0 auto;
+		height: 60%;
+		pointer-events: none;
+		background: radial-gradient(60rem 26rem at 50% -12%, rgba(14, 165, 233, 0.08), transparent 70%);
+	}
+
+	&__inner {
+		position: relative;
+		z-index: 1;
+		width: 100%;
+		// 1280px CONTENT width (reference: --container-7xl). This must be the
+		// ONLY horizontal inset on the title's ancestor chain: the previous
+		// version put `padding-inline: var(--amber-gutter)` on .gz-hero AND
+		// `max-width: 1280px` here, and with the sitewide `box-sizing:
+		// border-box` reset those stack — the title's real available width was
+		// 1280px minus ~80px of gutter (≈1200px), which is ~7px short of
+		// "Launch, Manage and Scale Your Laundry" at 60px Inter bold (1193px
+		// measured), just enough to force a second line. Padding now lives only
+		// on .gz-hero (the full-bleed band), so this box gets the full 1280px.
+		max-width: 1280px;
+		margin-inline: auto;
+		text-align: center;
+	}
+}
+
+// ---- Headline + lead -------------------------------------------------------
+.gz-hero__title {
+	// Reference metrics (CleanCloud): 60px / line-height 1.2 / weight 700, on
+	// Inter, with NO negative tracking and the full 1280px container to wrap
+	// against. Three things had pulled it away from that:
+	//   - `max-width: 22ch` capped the line at ~931px, forcing "Your" onto the
+	//     second line instead of letting "…Scale Your Laundry" run on;
+	//   - `--amber-font-display` (Satoshi) is the theme's display face, but the
+	//     reference sets this headline in its body sans;
+	//   - `letter-spacing: -0.02em` (-1.2px) squeezed it noticeably tighter.
+	margin: 0 auto clamp(1rem, 0.6rem + 1.2vw, 1.5rem);
+	max-width: 100%;
+	font-family: var(--amber-font-sans);
+	font-weight: 700;
+	font-size: clamp(2.25rem, 1.4rem + 3.4vw, 3.75rem);
+	line-height: 1.2;
+	letter-spacing: normal;
+	color: var(--amber-ink);
+}
+
+.gz-hero__lead {
+	margin: 0 auto clamp(2rem, 1.4rem + 2vw, 2.75rem);
+	max-width: 68rem;
+	font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+	line-height: 1.65;
+	color: var(--amber-body);
+}
+
+// =============================================================================
+// POS hero — same centred banner, no tabs/intro. A bold statement line above
+// the lead paragraph, then a large open frame reserved for a product shot.
+// =============================================================================
+.gz-hero--pos .gz-hero__lead {
+	margin-bottom: clamp(2.5rem, 1.6rem + 3vw, 3.5rem);
+}
+
+// =============================================================================
+// Zoomie hero — same centred banner/long two-line headline as the base
+// .gz-hero, single large hero image underneath (no tabs, no trust strip).
+// The bundled hero art is a full illustrated scene rather than a product
+// screenshot, so its stage uses `object-fit: contain` on a soft brand wash
+// instead of `cover`, so nothing gets cropped.
+// =============================================================================
+
+// Light-blue-to-white gradient across the WHOLE hero band (heading, lead
+// paragraph and hero image all sit on it), replacing the base .gz-hero's
+// plain white background + radial-gradient pseudo-element for this product
+// only. Reference: Restora POS's mint wash spanning its entire hero.
+//
+// Pulled up behind the floating header the same way the plain ERP hero does
+// (see .hero-section-outer / .erpv2-hero in _erp.scss): body reserves
+// `64px + clamp(1.5rem, 3.2vw, 3rem)` as top padding for the fixed pill nav,
+// so a negative margin-top of that same amount lets the gradient bleed to
+// the very top of the viewport instead of stopping in a hard line under the
+// header; padding-top repays the offset so the heading still clears the nav.
+// Gradient resolves to solid white well before the section ends (35%, not
+// 100%) — the hero image sits roughly there, and its own source PNG has a
+// solid white (non-transparent) background, so the wash needs to already
+// have reached the exact same white by the time the image begins, or its
+// edges show as a hard rectangle against still-visible blue.
+.gz-hero--zoomie {
+	margin-top: calc(-1 * (64px + clamp(1.5rem, 3.2vw, 3rem)));
+	padding-top: calc(64px + clamp(1.5rem, 3.2vw, 3rem) + clamp(3rem, 2rem + 4vw, 5.5rem));
+	background: linear-gradient(180deg, #eaf6ff 0%, #dcf1fb 20%, #fff 38%);
+
+	&::before { content: none; }
+}
+
+// Wider stage than the base .gz-hero__inner (1280px) so the long first line
+// has room to stay on one line at the same font-size, and the hero image
+// below reads noticeably wider than the Gozzbe/POS product-shot stage.
+.gz-hero--zoomie .gz-hero__inner {
+	max-width: 1440px;
+}
+
+// Two strict lines: the PHP side already emits exactly one hard <br> between
+// them (no reliance on natural wrapping), so each line just needs to refuse
+// to wrap a second time. First line is deliberately long/wide; the second is
+// a short two-word line that keeps its own centred rhythm underneath.
+.gz-hero--zoomie .gz-hero__title {
+	max-width: 100%;
+	font-size: clamp(2rem, 1.1rem + 3.6vw, 3.5rem);
+}
+
+// Each of the two hard-<br>-separated lines refuses to re-wrap on its own —
+// the long first line stays wide/one-line, the short second line stays put —
+// only once there's enough viewport width for that to be reasonable.
+@include bp.up('lg') {
+	.gz-hero--zoomie .gz-hero__title {
+		white-space: nowrap;
+	}
+}
+
+// Layout-only wrapper now (the gradient lives on .gz-hero--zoomie itself, so
+// the whole band — heading included — shares one continuous wash instead of
+// a second gradient starting partway down).
+.gz-hero--zoomie .gz-hero__wash {
+	margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+.gz-hero--zoomie .gz-hero__lead {
+	max-width: 68rem;
+	margin-inline: auto;
+	margin-bottom: clamp(2rem, 1.4rem + 2.5vw, 3rem);
+}
+
+// Near-full-viewport image stage: breaks out past the 1440px text column
+// (its parent, .gz-hero__inner) all the way out to the viewport edge, minus
+// a fixed 100px gutter on each side — so a moderate strip of the section's
+// gradient wash shows down the sides instead of a full column of it.
+// `width: 100vw` centred via the half-viewport negative-margin trick escapes
+// the ancestor's max-width the same way full-bleed sections do elsewhere in
+// the theme; the 100px gutter comes off via padding on the 100vw box rather
+// than a margin, so it stays exactly 100px regardless of viewport width (a
+// percentage-based margin would not).
+.gz-hero--zoomie .gz-hero__media {
+	width: 100vw;
+	margin-left: 50%;
+	transform: translateX(-50%);
+	padding-inline: 100px;
+	min-height: clamp(18rem, 12rem + 22vw, 32rem);
+	box-sizing: border-box;
+	// The base .gz-hero__media (a Gozzbe/POS product-screenshot frame) paints
+	// a flat surface-grey card with rounded corners and clips overflow — with
+	// `object-fit: contain` that card shows as visible letterboxing around
+	// the art, so the image reads as a separate boxed element sitting on top
+	// of the gradient instead of part of it. Dropping all three lets the
+	// image sit directly on the section's own gradient with no container.
+	background: none;
+	border-radius: 0;
+	overflow: visible;
+}
+
+.gz-hero--zoomie .gz-hero__media-img {
+	height: auto;
+	max-height: clamp(18rem, 12rem + 22vw, 32rem);
+	object-fit: contain;
+	// Soft contact shadow instead of a hard card edge, so the image still
+	// reads as sitting on the gradient rather than floating with nothing
+	// grounding it.
+	filter: drop-shadow(0 24px 40px rgba(15, 23, 42, 0.14));
+}
+
+// Headline reads as one solid colour, matching the Gozzbe reference — the
+// shared .text-primary class elsewhere paints white text for the dark
+// full-bleed hero, so it needs an explicit override back to the heading's own
+// ink colour here rather than a brand accent split.
+.gz-hero--pos .gz-hero__title .text-primary {
+	color: inherit;
+	font-weight: inherit;
+}
+
+.gz-hero__lead-bold {
+	margin: 0 auto 0.75rem;
+	max-width: 44rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 600;
+	font-size: clamp(1.05rem, 1rem + 0.4vw, 1.25rem);
+	line-height: 1.5;
+	color: var(--amber-ink);
+}
+
+.gz-hero__media {
+	width: 100%;
+	// Deliberately tall so the space below the headline reads as a real
+	// stage for a screenshot, not an afterthought strip — matching the
+	// reference's large centred product-image slot.
+	min-height: clamp(20rem, 14rem + 22vw, 34rem);
+	border-radius: clamp(18px, 2vw, 32px);
+	background: var(--amber-surface);
+	overflow: hidden;
+	line-height: 0;
+}
+
+.gz-hero__media-img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+// ---- Trusted-by strip (left-aligned, under the hero media) ----------------
+.gz-hero__trust {
+	display: flex;
+	align-items: center;
+	gap: clamp(1.25rem, 0.9rem + 1.2vw, 2rem);
+	margin-top: clamp(2rem, 1.5rem + 1.5vw, 2.75rem);
+	// .gz-hero__inner centres everything else in this hero; the trust strip
+	// reads left-to-right instead, so it opts back out of that and out of the
+	// text-align: center it would otherwise inherit.
+	text-align: left;
+}
+
+.gz-hero__trust-label {
+	flex: 0 0 auto;
+	font-family: var(--amber-font-sans);
+	font-weight: 600;
+	font-size: var(--amber-fs-sm, 0.875rem);
+	letter-spacing: 0.02em;
+	color: var(--amber-muted);
+	white-space: nowrap;
+}
+
+.gz-hero__trust-viewport {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	-webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+	mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.gz-hero__trust-track {
+	display: flex;
+	align-items: center;
+	gap: clamp(2rem, 5vw, 3.5rem);
+	width: max-content;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	&.is-animated { animation: amber-marquee 38s linear infinite; }
+	&:hover { animation-play-state: paused; }
+}
+
+.gz-hero__trust-item {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 44px;
+}
+
+.gz-hero__trust-img {
+	max-height: 40px;
+	width: auto;
+}
+
+// =============================================================================
+// Tabbed showcase
+// =============================================================================
+.gz-tabs {
+	width: 100%;
+	max-width: 1280px;
+	margin-inline: auto;
+}
+
+// The nav scrolls horizontally on small screens rather than wrapping into a
+// ragged block — matching the reference's single-row pill bar.
+.gz-tabs__nav-wrap {
+	margin-bottom: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	&::-webkit-scrollbar { display: none; }
+
+	// Bleed to the gutter edges on mobile so the row can scroll edge-to-edge.
+	@include bp.down('md') {
+		margin-inline: calc(-1 * var(--amber-gutter));
+		padding-inline: var(--amber-gutter);
+	}
+}
+
+.gz-tabs__nav {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 0.5rem;
+	width: max-content;
+	min-width: 100%;
+
+	@include bp.up('lg') {
+		justify-content: space-between;
+		gap: 0.25rem;
+	}
+}
+
+.gz-tabs__btn {
+	flex: 0 0 auto;
+	padding: 0.6rem 1.5rem;
+	border: 0;
+	border-radius: var(--amber-radius);
+	background: transparent;
+	font-family: var(--amber-font-sans);
+	font-weight: 600;
+	font-size: clamp(0.875rem, 0.84rem + 0.15vw, 1rem);
+	line-height: 1.4;
+	white-space: nowrap;
+	color: var(--amber-muted);
+	cursor: pointer;
+	transition: color var(--amber-dur-fast) ease, background var(--amber-dur-fast) ease,
+		box-shadow var(--amber-dur-fast) ease;
+
+	&:hover,
+	&:focus-visible {
+		color: var(--amber-ink-700);
+		background: var(--amber-surface);
+	}
+
+	&.is-active {
+		color: #fff;
+		background: var(--amber-brand);
+		box-shadow: 0 10px 24px -10px rgba(14, 165, 233, 0.55);
+	}
+
+	&:focus-visible { outline: 2px solid var(--amber-brand); outline-offset: 2px; }
+}
+
+// ---- Panels ----------------------------------------------------------------
+.gz-tabs__panels {
+	position: relative;
+	border-radius: clamp(18px, 2vw, 32px);
+}
+
+.gz-tabs__panel {
+	// The thick light-blue frame from the reference.
+	border: clamp(8px, 1.1vw, 16px) solid var(--amber-brand-400);
+	border-radius: clamp(18px, 2vw, 32px);
+	overflow: hidden;
+	background: var(--amber-brand-400);
+	line-height: 0;   // kill the inline-image descender gap
+
+	// Fade + rise as a panel becomes active (JS toggles .is-active).
+	opacity: 0;
+	transform: translateY(10px);
+	transition: opacity var(--amber-dur) var(--amber-ease),
+		transform var(--amber-dur) var(--amber-ease);
+
+	&[hidden] { display: none; }
+	&.is-active { opacity: 1; transform: none; }
+}
+
+.gz-tabs__img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: clamp(10px, 1.2vw, 18px);
+	object-fit: cover;
+}
+
+// =============================================================================
+// First-load intro — laundry-basket animation, then the headline expands
+// =============================================================================
+.gz-hero__intro {
+	// Fixed, not absolute: the hero is taller than the fold, so an absolutely
+	// positioned overlay centred the basket against the whole section (pushing
+	// it far down the page) and left the area below the fold uncovered.
+	// Pinning to the viewport centres the art in what the visitor actually sees.
+	position: fixed;
+	inset: 0;
+	z-index: 130; // above the floating header pill (z-index 100)
+	display: grid;
+	place-items: center;
+	background: #fff;
+	overflow: hidden;
+	// Fades itself out; JS removes it from the flow when finished.
+	transition: opacity 0.6s var(--amber-ease), visibility 0.6s;
+
+	&.is-done {
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+	}
+}
+
+// Intro video.
+//
+// The source clip is only 120x150px natively. `object-fit: cover` at
+// full-viewport size was stretching that ~15x to fill the screen — the
+// "zoomed"/blurry look wasn't a crop, it was that scale-up. Letting it render
+// at its true native size fixed the blur but left it looking like a stray
+// postage stamp on an empty white page. This clamps it to a deliberately
+// modest icon-scale box (matching the footprint the original SVG intro used)
+// so the upscale factor stays small (~1.6-2x, not ~15x) and detail stays
+// reasonably sharp while it's still a visible, centred intro moment.
+.gz-hero__intro-video {
+	width: clamp(140px, 18vw, 240px);
+	height: auto;
+	object-fit: contain;
+}
+
+// Fallback SVG art — small centred icon, only rendered when no video is set.
+.gz-hero__intro-art {
+	width: clamp(140px, 18vw, 240px);
+	aspect-ratio: 528 / 660;
+
+	svg { display: block; width: 100%; height: 100%; }
+}
+
+// Hold the page still while the fixed intro overlay is up, so a stray scroll
+// doesn't move content behind it and land the visitor mid-page on reveal.
+body.gz-intro-lock { overflow: hidden; }
+
+// The headline/lead/tabs start collapsed and "expand" once the intro clears.
+//
+// Keyed off `html.js` rather than a JS-applied class on the hero: a class added
+// after DOMContentLoaded lands too late, so the title painted in its FINAL
+// state for a frame and then visibly snapped to collapsed. `.js` is set by an
+// inline script in <head> before first paint, so the collapsed state is the
+// first thing rendered. Without JS the rule never matches and the hero is
+// static and fully readable.
+.js .gz-hero:not(.is-revealed):not(.gz-hero--pos) {
+	.gz-hero__title,
+	.gz-hero__lead,
+	.gz-tabs { opacity: 0; }
+
+	.gz-hero__title { transform: scaleX(0.86) translateY(8px); }
+	.gz-hero__lead  { transform: translateY(12px); }
+	.gz-tabs        { transform: translateY(18px); }
+
+	// Fail-safe: if the JS module never runs (bundle 404, a throw upstream),
+	// nothing would ever add .is-revealed and the hero would stay invisible.
+	// This animation reveals it on its own after the intro's normal duration,
+	// and is harmless in the happy path because .is-revealed removes this rule
+	// long before the delay elapses.
+	.gz-hero__title,
+	.gz-hero__lead,
+	.gz-tabs { animation: gz-failsafe-reveal 0.01s linear 4s forwards; }
+}
+
+@keyframes gz-failsafe-reveal {
+	to { opacity: 1; transform: none; }
+}
+
+.gz-hero.is-revealed {
+	.gz-hero__title {
+		opacity: 1;
+		transform: none;
+		// Expand: the headline widens into place.
+		transition: opacity 0.7s var(--amber-ease), transform 0.9s var(--amber-ease);
+	}
+	.gz-hero__lead {
+		opacity: 1;
+		transform: none;
+		transition: opacity 0.6s ease 0.18s, transform 0.7s var(--amber-ease) 0.18s;
+	}
+	.gz-tabs {
+		opacity: 1;
+		transform: none;
+		transition: opacity 0.6s ease 0.32s, transform 0.7s var(--amber-ease) 0.32s;
+	}
+}
+
+.gz-hero__title { transform-origin: 50% 50%; }
+
+// ---- Reduced motion --------------------------------------------------------
+// Skip the intro entirely and show the finished hero.
+@media (prefers-reduced-motion: reduce) {
+	.gz-hero__intro { display: none; }
+
+	.gz-hero.is-intro {
+		.gz-hero__title,
+		.gz-hero__lead,
+		.gz-tabs { opacity: 1; transform: none; }
+	}
+
+	.gz-tabs__panel { transition: none; }
+}

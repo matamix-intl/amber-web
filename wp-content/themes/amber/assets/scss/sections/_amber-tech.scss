@@ -1,0 +1,344 @@
+// =============================================================================
+// Sections · Amber Technologies — Products, Industries, Bento, Live Demo
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// Products now live in their own partial (_products-stack.scss) — the 2x2
+// grid of .product-hero cards it used to define was replaced by the pinned
+// card stack, and nothing else referenced those class names.
+
+// -------------------------------------------------------------- Industries ----
+// "Industries We Serve" — a staggered dark mosaic on a near-black field.
+//
+// Layout is pure CSS Grid, no absolute positioning. Rows are a fine 26px unit
+// (--ind-unit) so a tile's height is chosen by how many units it spans, and
+// each tile is given an explicit column + start row. Because neighbouring
+// columns start on different rows, they step out of phase and the grid reads
+// as an irregular mosaic rather than a uniform table.
+//
+//   span 6 → 196px   span 7 → 230px   span 8 → 264px   (unit 26 + gap 8)
+//
+// Tiles beyond the eighth (only possible via the ACF Pro repeater) fall back
+// to auto-placement with a default span, so the grid never overlaps.
+
+.section--industries {
+	// Near-black field. The compound selectors beat `.section.is-bg-*` on
+	// specificity — same trick as .section--concept — so the mosaic stays dark
+	// whichever background token is saved on the section.
+	background: #08090b;
+	&.is-bg-white,
+	&.is-bg-surface,
+	&.is-bg-gradient,
+	&.is-bg-ink,
+	&.is-bg-navy { background: #08090b; }
+
+	// The eyebrow is a soft outlined pill rather than the light-blue badge the
+	// section used on its former white background.
+	.section-header__eyebrow {
+		display: inline-block;
+		padding: 0.5em 1.2em;
+		border-radius: var(--amber-radius-pill);
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		color: rgba(255, 255, 255, 0.72);
+	}
+
+	.section-header__title { color: #fff; }
+
+	.section-header__subtitle {
+		color: rgba(255, 255, 255, 0.55);
+		text-wrap: balance;
+	}
+}
+
+.industries-mosaic {
+	--ind-gap: 8px;
+	--ind-unit: 26px;
+
+	display: grid;
+	gap: var(--ind-gap);
+	margin: var(--amber-space-7) 0 0;
+	padding: 0;
+	list-style: none;
+
+	// Mobile: a clean, even grid, no stagger — at this width the offsets read
+	// as misalignment rather than rhythm. Single column on the smallest
+	// screens: at 320px a 2-up row left ~125px per tile and the uppercase
+	// labels broke onto three lines. Two columns from 360px up.
+	grid-template-columns: 1fr;
+	@media (min-width: 360px) { grid-template-columns: repeat(2, 1fr); }
+
+	// Tablet and up: switch to unit rows and let the tiles place themselves.
+	@include bp.up('md') {
+		grid-template-columns: repeat(3, 1fr);
+		grid-auto-rows: var(--ind-unit);
+	}
+
+	@include bp.up('xl') {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+.ind-tile {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: var(--amber-space-4);
+	min-height: 148px;
+	padding: clamp(1rem, 2vw, 1.6rem);
+	text-align: center; // the enlarged icon is centred, so the label follows it
+	background: #131519;
+	border: 1px solid rgba(255, 255, 255, 0.07);
+	border-radius: 4px;
+	transition:
+		transform 0.3s ease,
+		border-color 0.3s ease,
+		background-color 0.3s ease;
+
+	// From tablet up the height comes from the row span, not min-height.
+	@include bp.up('md') {
+		min-height: 0;
+		grid-row: span 7;
+	}
+
+	&__icon {
+		// The icon claims all the space the name doesn't, so it scales with the
+		// tile instead of sitting at a fixed size. `mask-size: contain` keeps
+		// the artwork's aspect ratio and centres it in that box, so a tall tile
+		// simply gets a bigger icon. The cap stops the tallest tiles (span 11)
+		// from blowing the icon up out of proportion with its neighbours.
+		flex: 1 1 auto;
+		width: 100%;
+		min-height: 72px;
+		max-height: 190px;
+
+		// The uploaded PNG is used as a mask, not painted directly, so the
+		// theme owns the colour: white at rest, accent on hover. The file
+		// therefore needs a transparent background — only its shape is used.
+		background-color: #fff;
+		-webkit-mask-image: var(--ind-icon);
+		mask-image: var(--ind-icon);
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+		-webkit-mask-position: center;
+		mask-position: center;
+		-webkit-mask-size: contain;
+		mask-size: contain;
+		transition: background-color 0.3s ease, border-color 0.3s ease;
+
+		// No PNG uploaded yet — a neutral outline keeps the tile composed
+		// instead of showing a solid white block. Held to a centred square so
+		// the empty state doesn't read as a full-width panel.
+		&--empty {
+			width: clamp(64px, 45%, 120px);
+			aspect-ratio: 1;
+			min-height: 0;
+			max-height: none;
+			margin: auto;
+			background-color: transparent;
+			-webkit-mask-image: none;
+			mask-image: none;
+			border: 1px dashed rgba(255, 255, 255, 0.22);
+			border-radius: 6px;
+		}
+	}
+
+	&__name {
+		margin: 0;
+		font-family: var(--amber-font-display);
+		font-size: clamp(0.72rem, 1vw, 0.88rem);
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		line-height: 1.4;
+		text-transform: uppercase;
+		color: #fff;
+	}
+
+	// Premium hover: a small lift, the border steps forward, the icon warms to
+	// the brand accent. focus-within keeps it reachable by keyboard.
+	&:hover,
+	&:focus-within {
+		transform: translateY(-4px);
+		background: #17191f;
+		border-color: rgba(255, 255, 255, 0.22);
+
+		.ind-tile__icon { background-color: var(--amber-brand-400); }
+		.ind-tile__icon--empty {
+			background-color: transparent;
+			border-color: var(--amber-brand-400);
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ind-tile,
+	.ind-tile__icon { transition: none; }
+	.ind-tile:hover,
+	.ind-tile:focus-within { transform: none; }
+}
+
+// --------------------------------------------------- Mosaic placement (md) ----
+// Three columns. Columns 1 and 2 carry three tiles each, column 3 carries two
+// taller ones — the uneven split is what keeps the composition from settling
+// into rows, and it satisfies "some cards span more vertical space".
+@include bp.up('md') {
+	.ind-tile:nth-child(1) { grid-column: 1; grid-row: 1 / span 7; }
+	.ind-tile:nth-child(2) { grid-column: 2; grid-row: 3 / span 6; }
+	.ind-tile:nth-child(3) { grid-column: 3; grid-row: 1 / span 9; }
+	.ind-tile:nth-child(4) { grid-column: 1; grid-row: 9 / span 6; }
+	.ind-tile:nth-child(5) { grid-column: 2; grid-row: 10 / span 7; }
+	.ind-tile:nth-child(6) { grid-column: 3; grid-row: 11 / span 11; }
+	.ind-tile:nth-child(7) { grid-column: 1; grid-row: 16 / span 7; }
+	.ind-tile:nth-child(8) { grid-column: 2; grid-row: 18 / span 6; }
+}
+
+// --------------------------------------------------- Mosaic placement (xl) ----
+// Four columns, two tiles each. Columns 2 and 4 start three units lower than
+// 1 and 3, so the whole grid reads as two interlocking staggered pairs.
+@include bp.up('xl') {
+	.ind-tile:nth-child(1) { grid-column: 1; grid-row: 1 / span 8; }
+	.ind-tile:nth-child(2) { grid-column: 2; grid-row: 3 / span 6; }
+	.ind-tile:nth-child(3) { grid-column: 3; grid-row: 1 / span 6; }
+	.ind-tile:nth-child(4) { grid-column: 4; grid-row: 3 / span 8; }
+	.ind-tile:nth-child(5) { grid-column: 1; grid-row: 10 / span 6; }
+	.ind-tile:nth-child(6) { grid-column: 2; grid-row: 10 / span 8; }
+	.ind-tile:nth-child(7) { grid-column: 3; grid-row: 8 / span 8; }
+	.ind-tile:nth-child(8) { grid-column: 4; grid-row: 12 / span 6; }
+}
+
+// ------------------------------------------------------------------- Bento ----
+.bento-grid {
+	display: grid;
+	gap: var(--amber-space-5);
+	grid-template-columns: 1fr;
+	@include bp.up('sm') { grid-template-columns: repeat(2, 1fr); }
+	@include bp.up('lg') { grid-template-columns: repeat(3, 1fr); }
+}
+.bento-card {
+	position: relative;
+	overflow: hidden;
+	padding: var(--amber-space-6);
+	background: #fff;
+	border: 1px solid var(--amber-line);
+	border-radius: var(--amber-radius-lg);
+	transition: transform var(--amber-dur) var(--amber-ease), box-shadow var(--amber-dur) ease, border-color var(--amber-dur) ease;
+	&:hover { transform: translateY(-6px); box-shadow: var(--amber-shadow); border-color: var(--amber-brand-100); }
+
+	&__icon {
+		display: inline-flex; align-items: center; justify-content: center;
+		width: 56px; height: 56px;
+		border-radius: var(--amber-radius);
+		background: var(--amber-brand-50);
+		color: var(--amber-brand);
+		margin-bottom: var(--amber-space-4);
+		svg { width: 28px; height: 28px; }
+	}
+	&__title { font-size: var(--amber-fs-md); }
+	&__text { margin-top: var(--amber-space-3); font-size: var(--amber-fs-sm); color: var(--amber-muted); }
+
+	// Feature tile — spans two columns, navy gradient, glow.
+	&--feature {
+		color: var(--amber-on-navy);
+		background: radial-gradient(120% 120% at 0% 0%, #0e2a4d, #071226);
+		border-color: rgba(56, 189, 248, 0.25);
+		@include bp.up('sm') { grid-column: span 2; }
+		@include bp.up('lg') { grid-row: span 2; grid-column: span 1; }
+
+		.bento-card__title { color: #fff; font-size: var(--amber-fs-lg); }
+		.bento-card__text { color: var(--amber-on-navy); font-size: var(--amber-fs-md); max-width: 42ch; }
+		.bento-card__icon { background: var(--amber-gradient); color: #fff; box-shadow: var(--amber-shadow-brand); }
+		&:hover { transform: translateY(-6px); border-color: rgba(56, 189, 248, 0.5); }
+	}
+	&__glow { position: absolute; inset: auto -20% -40% auto; width: 70%; height: 70%; background: var(--amber-glow); pointer-events: none; }
+}
+
+// --------------------------------------------------------------- Live Demo ----
+.live-demo {
+	display: grid;
+	gap: var(--amber-space-5);
+	grid-template-columns: 1fr;
+	@include bp.up('lg') { grid-template-columns: 300px 1fr; gap: var(--amber-space-6); }
+
+	&__tabs {
+		display: flex;
+		gap: var(--amber-space-3);
+		overflow-x: auto;
+		padding-bottom: 0.25rem;
+		@include bp.up('lg') { flex-direction: column; overflow: visible; padding: 0; }
+	}
+
+	&__tab {
+		--accent: #0ea5e9;
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		flex-shrink: 0;
+		padding: 1rem 1.1rem;
+		border-radius: var(--amber-radius);
+		border: 1px solid rgba(56, 189, 248, 0.16);
+		background: var(--amber-glass);
+		color: var(--amber-on-navy);
+		font-family: var(--amber-font-display);
+		font-weight: 700;
+		font-size: var(--amber-fs-sm);
+		transition: all var(--amber-dur-fast) var(--amber-ease);
+		@include bp.up('lg') { width: 100%; }
+
+		&-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex-shrink: 0; box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent); }
+		&-arrow { margin-left: auto; display: none; color: var(--accent); svg { width: 18px; height: 18px; } @include bp.up('lg') { display: inline-flex; } }
+
+		&:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); color: #fff; }
+		&.is-active {
+			background: color-mix(in srgb, var(--accent) 16%, transparent);
+			border-color: var(--accent);
+			color: #fff;
+		}
+	}
+
+	&__stage { position: relative; }
+	&__panel {
+		animation: amber-fade-in var(--amber-dur) var(--amber-ease);
+		&[hidden] { display: none; }
+	}
+}
+
+// Faux dashboard (shared by live demo)
+.dash {
+	--accent: #0ea5e9;
+	background: #0a1a31;
+	border: 1px solid rgba(56, 189, 248, 0.2);
+	border-radius: var(--amber-radius-lg);
+	box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.8);
+	overflow: hidden;
+
+	&__bar {
+		display: flex; align-items: center; justify-content: space-between;
+		padding: 0.85rem 1.1rem;
+		background: rgba(255, 255, 255, 0.03);
+		border-bottom: 1px solid rgba(56, 189, 248, 0.14);
+	}
+	&__logo { font-family: var(--amber-font-display); font-weight: 700; color: #fff; }
+	&__dots { display: flex; gap: 6px; i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.18); &:first-child { background: var(--accent); } } }
+
+	&__kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; padding: 1.1rem; }
+	&__kpi {
+		padding: 0.9rem;
+		border-radius: var(--amber-radius);
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(56, 189, 248, 0.12);
+	}
+	&__kpi-label { display: block; font-size: 0.72rem; color: var(--amber-on-navy-muted); }
+	&__kpi-value { display: block; margin-top: 0.25rem; font-family: var(--amber-font-display); font-weight: 800; font-size: 1.35rem; color: #fff; }
+
+	&__chart {
+		display: flex; align-items: flex-end; gap: 8px;
+		height: 150px; padding: 0 1.1rem 1.3rem;
+		i {
+			flex: 1; border-radius: 5px 5px 0 0;
+			background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 30%, transparent));
+			opacity: 0.85;
+		}
+	}
+}

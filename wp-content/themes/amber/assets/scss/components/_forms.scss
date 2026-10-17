@@ -1,0 +1,97 @@
+// =============================================================================
+// Components · Forms (contact, newsletter, search, comments)
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+input[type='text'],
+input[type='email'],
+input[type='url'],
+input[type='tel'],
+input[type='search'],
+input[type='password'],
+input[type='number'],
+textarea,
+select {
+	width: 100%;
+	padding: 0.7rem 0.9rem;
+	font-size: var(--amber-fs-xs);
+	color: var(--amber-ink);
+	background: #fff;
+	border: 1px solid var(--amber-line);
+	border-radius: var(--amber-radius-sm);
+	transition: border-color var(--amber-dur-fast) ease, box-shadow var(--amber-dur-fast) ease;
+
+	&::placeholder { color: #9aa1b2; }
+	&:focus { outline: none; border-color: var(--amber-brand); box-shadow: var(--amber-ring); }
+}
+
+textarea { resize: vertical; min-height: 140px; }
+
+label { display: block; font-weight: 600; font-size: var(--amber-fs-xs); color: var(--amber-ink-700); margin-bottom: 0.35rem; }
+
+.form-field { margin: 0; }
+.form-row { display: grid; gap: var(--amber-space-4); margin-bottom: var(--amber-space-4); }
+.form-row--split { grid-template-columns: 1fr; @include bp.up('sm') { grid-template-columns: 1fr 1fr; } }
+.form-field--honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.form-actions { margin-top: var(--amber-space-5); }
+
+.form-feedback,
+.newsletter__feedback {
+	margin-top: var(--amber-space-3);
+	font-size: var(--amber-fs-sm);
+	min-height: 1.2em;
+
+	&.is-success { color: var(--amber-success); font-weight: 600; }
+	&.is-error { color: #dc2626; font-weight: 600; }
+}
+
+// Loading state for any submitting form button
+.btn.is-loading {
+	position: relative;
+	color: transparent !important;
+	pointer-events: none;
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		margin: auto;
+		width: 1.1em; height: 1.1em;
+		border: 2px solid currentColor;
+		border-top-color: transparent;
+		border-radius: 50%;
+		color: #fff;
+		animation: amber-spin 0.6s linear infinite;
+	}
+}
+
+// Built-in contact form card
+.contact-form {
+	display: flex;
+	flex-direction: column;
+	flex: 1; // fills the remaining height of .contact__form-wrap so both
+	         // side-by-side panels visually match, not just their wrapper
+	padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+	background: #fff;
+	border: 1px solid var(--amber-line);
+	border-radius: var(--amber-radius-lg);
+	box-shadow: var(--amber-shadow-sm);
+}
+
+// Search form
+.search-form {
+	display: flex;
+	gap: var(--amber-space-3);
+	max-width: 480px;
+	margin-inline: auto;
+	&__input { flex: 1; }
+}
+
+// WordPress comment form
+.comment-form {
+	display: grid;
+	gap: var(--amber-space-4);
+	margin-top: var(--amber-space-5);
+	.comment-form-comment { grid-column: 1 / -1; }
+}

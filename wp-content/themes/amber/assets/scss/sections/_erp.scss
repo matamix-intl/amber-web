@@ -1,0 +1,2458 @@
+// =============================================================================
+// Sections · Amber ERP hero — full-bleed background-image banner (reference:
+// Digitz "Transform Your Business" hero). The section itself carries the
+// background-image (admin-editable, "Hero Background" ACF tab) with a dark
+// scrim for legibility; a single left-aligned text column sits on top —
+// no separate image column.
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// Reference page body is #f8faf9 (not the theme's white/surface tokens).
+body.page-template-page-amber-erp,
+body.page-template-page-zoomie,
+body.page-template-page-gozzbe,
+body.page-template-page-pos {
+	background: #f8faf9;
+}
+
+// =============================================================================
+// Amber ERP hero v2 — mirrors the VasyERP reference markup: a Bootstrap-style
+// 3/6/3 row (decorative vector column, centred headline/lead/CTAs, decorative
+// vector column) over an uploaded background image, each vector column
+// carrying two floating icon+label badges; below that, a dashboard product
+// shot with four floating stat cards overlapping its edges. Every image is
+// plain markup (no CSS-drawn blobs/icons) — the theme's placeholder.svg shows
+// until real assets are uploaded via the "Amber — ERP Page" ACF group.
+// =============================================================================
+
+.erpv2-hero {
+	position: relative;
+	overflow: hidden;
+	// Pull the banner up behind the floating header (the body carries the
+	// header's own height as padding-top), then repay that offset as extra
+	// top padding below, so the background bleeds to the very top of the
+	// viewport instead of starting under the opaque nav bar — same technique
+	// as .hero-section-outer above.
+	margin-top: calc(-1 * (64px + clamp(1.5rem, 3.2vw, 3rem)));
+	// Reduced breathing room past the header (was up to 5rem, then 1.5rem) so
+	// the headline sits right under the nav, making the whole banner compact.
+	padding: calc(64px + clamp(1.5rem, 3.2vw, 3rem) + 0.25rem) 0 0;
+	background-color: #eaf7ff; // paints before the image loads
+	background-position: top center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+// Reference container width (1320px design) — wider than the theme's default
+// 1200px .container so the vector columns clear the centred copy properly.
+.erpv2-hero__container {
+	max-width: 1320px;
+}
+
+// ---- Minimal grid + display utilities scoped to this hero (the reference
+// markup is Bootstrap-authored; this theme carries no Bootstrap grid, so the
+// handful of classes the markup actually uses are reproduced here rather
+// than pulling in the whole framework). ----
+.erpv2-hero__row {
+	position: relative;
+	// Explicit full width: with both .col-lg-3 columns taken out of flex flow
+	// (position: absolute, below), the flex row's own content-driven width
+	// would otherwise shrink to just the centred .col-lg-6 column — and the
+	// side columns' `right: 0.75rem` etc. is measured against THIS box, so a
+	// shrunk row pulls them inward instead of out to the true container edge.
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	margin-inline: -0.75rem;
+	// The side badges sit vertically centred against this row's own box —
+	// without headroom here, a badge can poke above/below the row's edge and
+	// get clipped by .erpv2-hero's overflow: hidden. Reserves enough space
+	// for half a badge (≈41px) plus its float-animation travel either side.
+	padding-block: 3rem;
+
+	> [class^='col-'] { padding-inline: 0.75rem; width: 100%; }
+}
+
+.erpv2-hero .d-none { display: none; }
+
+@include bp.up('lg') {
+	.erpv2-hero .d-lg-block { display: block; }
+	// Taken out of the row's own flex flow (absolutely positioned against the
+	// row, stretched top:0/bottom:0 to match whatever height the row ends up
+	// — driven purely by the centred headline column) so their decorative
+	// content never stretches the row taller than that column. A flex column
+	// centers the badge stack vertically within that stretched height.
+	.erpv2-hero .col-lg-3 {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 25%;
+		display: flex;
+		align-items: center;
+
+		&:first-child { left: 0.75rem; }
+		&:last-child { right: 0.75rem; }
+	}
+	// Wider than a literal 50% (Bootstrap's own col-lg-6), matching how the
+	// Gozzbe/POS hero titles use their full 1280px inner column rather than a
+	// narrow centred measure — the absolutely-positioned side badges (above)
+	// no longer compete for this space since they're out of flex flow.
+	.erpv2-hero .col-lg-6 { width: 86%; }
+}
+
+.erpv2-hero .text-center { text-align: center; }
+
+// ---- Centre column: headline / lead / CTAs ----------------------------------
+.erpv2-hero__title {
+	margin: 0 auto 1.1rem;
+	// Unconstrained, like the Gozzbe/POS hero titles (.gz-hero__title) — uses
+	// the full centre column width rather than capping to a narrow measure,
+	// so the headline reads as wide/bold as its siblings on those pages.
+	max-width: 100%;
+	font-family: var(--amber-font-display);
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	line-height: 1.18;
+	// Matches .gz-hero__title's scale exactly (Gozzbe/POS reference).
+	font-size: clamp(2.25rem, 1.4rem + 3.4vw, 3.75rem);
+	color: var(--amber-ink, #0f172a);
+}
+
+.erpv2-hero__title-accent {
+	display: block;
+	color: var(--amber-brand, #0ea5e9);
+}
+
+.erpv2-hero__lead {
+	margin: 0 auto 1.75rem;
+	max-width: 42ch;
+	font-size: clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+	font-weight: 600;
+	line-height: 1.7;
+	color: var(--amber-body, #475569);
+}
+
+.erpv2-hero__cta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+}
+
+.btn--erpv2-primary,
+.btn--erpv2-outline {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.95rem 2rem;
+	line-height: 1;
+	font-family: var(--amber-font-sans);
+	font-weight: 600;
+	font-size: 0.98rem;
+	border-radius: var(--amber-radius-pill, 999px);
+	text-decoration: none;
+	transition: background var(--amber-dur, 0.3s) ease, color var(--amber-dur, 0.3s) ease, transform var(--amber-dur-fast, 0.2s) ease, box-shadow var(--amber-dur, 0.3s) ease;
+}
+
+.btn--erpv2-primary {
+	color: #fff;
+	background: var(--amber-gradient, var(--amber-brand, #0ea5e9));
+	box-shadow: 0 14px 30px -14px rgba(14, 165, 233, 0.55);
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 18px 36px -14px rgba(14, 165, 233, 0.65);
+	}
+}
+
+.btn--erpv2-outline {
+	color: var(--amber-brand, #0ea5e9);
+	background: #fff;
+	border: 1.5px solid var(--amber-brand, #0ea5e9);
+
+	&:hover {
+		background: var(--amber-brand-50, #f0f9ff);
+		transform: translateY(-2px);
+	}
+}
+
+// ---- Side columns: dotted vector + two floating icon/label badges -----------
+// The uploaded vector-1.svg/vector-2.svg are a thin dotted connector line;
+// pinning its badges to the line's own endpoints proved too fragile (small
+// coordinate misreads show up as a visible gap/droop), so the badges are
+// placed at fixed, evenly-spaced positions instead — the line image sits
+// behind them as a loose decorative accent, not aligned to exact points.
+.erpv2-hero__vector {
+	position: relative;
+	width: 100%;
+	max-width: 220px;
+	height: clamp(9rem, 7rem + 4vw, 11rem);
+	margin: 0 auto;
+}
+
+.erpv2-hero__vector-img {
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 100%;
+	height: auto;
+	transform: translateY(-50%);
+	opacity: 0.7;
+	z-index: 0;
+}
+
+.erpv2-hero__badge {
+	position: absolute;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 0.15rem;
+	width: clamp(68px, 5vw, 82px);
+	height: clamp(68px, 5vw, 82px);
+	padding: 0.4rem;
+	text-align: center;
+	background: #fff;
+	border-radius: 50%;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+	animation: erpv2-badge-float 4s ease-in-out infinite;
+}
+
+.erpv2-hero__vector--left .erpv2-hero__badge--1  { top: 0;    left: 10%; }
+.erpv2-hero__vector--left .erpv2-hero__badge--2  { bottom: 0; right: 10%; animation-delay: -2s; }
+.erpv2-hero__vector--right .erpv2-hero__badge--1 { top: 0;    right: 10%; }
+.erpv2-hero__vector--right .erpv2-hero__badge--2 { bottom: 0; left: 10%;  animation-delay: -2s; }
+
+@keyframes erpv2-badge-float {
+	0%, 100% { transform: scale(1); }
+	50%      { transform: scale(1.06); }
+}
+
+.erpv2-hero__badge-icon {
+	display: block;
+	width: 1.6rem;
+	height: 1.6rem;
+	object-fit: contain;
+}
+
+.erpv2-hero__badge-text {
+	font-size: 0.62rem;
+	font-weight: 700;
+	line-height: 1.2;
+	color: var(--amber-ink, #0f172a);
+}
+
+// Desktop-only side columns (Bootstrap's own d-none/d-lg-block utilities
+// already hide/show the .col-lg-3 wrappers; this just governs the duplicate
+// mobile block below).
+.erpv2-hero__mobile-groups {
+	display: none;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 2.5rem;
+	margin: 2.5rem 0 0;
+
+	.erpv2-hero__vector { max-width: 200px; }
+}
+
+@media (max-width: 1023.98px) {
+	.erpv2-hero__mobile-groups { display: flex; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.erpv2-hero__badge { animation: none; }
+}
+
+// =============================================================================
+// Dashboard showcase — product shot + four floating stat cards overlapping
+// its edges, per the reference. Cards are plain <img> markup (already
+// pre-rendered as cards with their own shadow/rounding baked in — no extra
+// wrapper chrome added here), fixed at the reference's 220px width and
+// positioned by its exact percentages.
+// =============================================================================
+.erpv2-hero__showcase {
+	position: relative;
+	// Wide, matching the vasyerp.com reference where the tablet frame spans
+	// nearly the full container width — but the uploaded dashboard shot's own
+	// aspect ratio (≈1.54:1, taller than the reference's ultrawide crop)
+	// means the same width reads much taller here, stretching the whole
+	// banner's scroll height. Backed off from a literal 90%/68rem so the
+	// image's rendered height stays reasonable without shrinking it back down
+	// to a small/disproportionate size.
+	width: 88%;
+	max-width: 64rem;
+	// The side vector columns already reserve their own tall padding for the
+	// two badges (see .erpv2-hero__vector--left/--right), so this only needs
+	// a small breathing gap under the CTA row, not a second large offset —
+	// otherwise the two stack and leave a big empty band above the dashboard.
+	margin: clamp(0.75rem, 0.5rem + 1vw, 1.5rem) auto 0;
+	padding-bottom: clamp(1rem, 0.5rem + 1.5vw, 1.75rem);
+}
+
+.erpv2-hero__dash {
+	position: relative;
+	z-index: 1;
+	overflow: hidden;
+	border-radius: 20px;
+	background: #fff;
+	box-shadow: 0 40px 90px -30px rgba(15, 23, 42, 0.28);
+}
+
+.erpv2-hero__dash-img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.erpv2-hero__float {
+	position: absolute;
+	z-index: 2;
+	width: clamp(140px, 18vw, 220px);
+	animation: erpv2-float-card 7s ease-in-out infinite;
+
+	@media (max-width: 767.98px) { display: none; }
+}
+
+.erpv2-hero__float-img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+// Positions match the vasyerp.com reference: each card spills outward past
+// the dashboard frame's own left/right edge rather than sitting inset over
+// the screenshot content.
+.erpv2-hero__float--1 { top: 22%;    left: -9%;  }
+.erpv2-hero__float--2 { top: 8%;     right: -6%; animation-delay: -2.3s; }
+.erpv2-hero__float--3 { bottom: 8%;  left: -6%;  animation-delay: -4.6s; }
+.erpv2-hero__float--4 { bottom: 4%;  right: -4%; animation-delay: -1.4s; }
+
+@keyframes erpv2-float-card {
+	0%, 100% { translate: 0 0; }
+	50%      { translate: 0 -10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.erpv2-hero__float { animation: none; }
+}
+
+// =============================================================================
+// ERP challenges — "ERP is the key to solving retail challenges" (reference:
+// vasyerp.com). Centred one-line heading/lead, then the uploaded "arrows"
+// square (all four L-shaped connector arrows pre-drawn at its corners,
+// transparent middle) with the circular photo centred inside it, and the
+// four problem callouts pinned just outside each corner where the arrow
+// tips point — top-left/top-right/bottom-left/bottom-right — then a closing
+// down-arrow. Own grid layout — this theme carries no Bootstrap grid, so
+// nothing here relies on row/col-lg-*/d-flex utility classes.
+// =============================================================================
+.erp-chal {
+	padding-block: clamp(2rem, 1.2rem + 2.5vw, 3.75rem);
+
+	// Wider than the theme's default 1200px .container (reference sits at a
+	// generous ~1400px) so the four corner callouts have real room around the
+	// circle instead of crowding into a narrow strip.
+	.container {
+		max-width: 1520px;
+	}
+}
+
+.erp-chal__head {
+	margin: 0 auto clamp(1.75rem, 1.2rem + 2vw, 3rem);
+	max-width: 50rem;
+	text-align: center;
+}
+
+.erp-chal__heading {
+	margin: 0 0 0.75rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	// Shrinks to fit one line (reference heading never wraps) rather than a
+	// fixed clamp() ceiling that would force a second line on narrower
+	// desktop widths once the corner callouts also need room either side.
+	font-size: clamp(1.4rem, 1vw + 1.3rem, 2.5rem);
+	white-space: nowrap;
+	color: #1e293b;
+}
+
+.erp-chal__lead {
+	margin: 0;
+	font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem);
+	line-height: 1.7;
+	color: #64748b;
+}
+
+@media (max-width: 767.98px) {
+	// One-line heading only holds on wide viewports; small screens wrap
+	// normally rather than shrinking the text illegibly small.
+	.erp-chal__heading { white-space: normal; }
+}
+
+// ---- Ring: arrows frame + circular photo, four callouts either side --------
+// Three EQUAL columns (matches the reference's Bootstrap col-lg-4 × 3, not a
+// narrow-wide-narrow split). Because the frame column is the same width as
+// the text columns, and the circle only fills ~78% of its own column, the
+// text columns end up close to the circle with just the grid gap between —
+// same effect as the reference's small 1.5rem row gutter.
+.erp-chal__ring {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	column-gap: clamp(1rem, 2vw, 1.75rem);
+	row-gap: 0;
+	align-items: center;
+	max-width: 94rem;
+	margin-inline: auto;
+}
+
+// Square wrapper the arrows image defines the size of; the circular photo is
+// centred inside it at a larger fraction of the frame so the connector lines
+// run almost flush to the circle's edge instead of floating away from it.
+.erp-chal__frame {
+	grid-column: 2;
+	grid-row: 1 / -1;
+	position: relative;
+	width: 100%;
+	max-width: 34rem;
+	margin-inline: auto;
+	aspect-ratio: 1 / 1;
+}
+
+.erp-chal__arrows {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.erp-chal__photo {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 1;
+	overflow: hidden;
+	width: 78%;
+	aspect-ratio: 1 / 1;
+	transform: translate(-50%, -50%);
+	border: 10px solid #fff;
+	border-radius: 50%;
+	background: var(--amber-surface, #f6fafe);
+	box-shadow: 0 25px 50px -15px rgba(15, 23, 42, 0.28), 0 10px 20px -8px rgba(15, 23, 42, 0.15);
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.erp-chal__item--tl { grid-column: 1; grid-row: 1; align-self: end; transform: translateY(-16.5rem); }
+.erp-chal__item--bl { grid-column: 1; grid-row: 2; align-self: start; transform: translateY(-7rem); }
+.erp-chal__item--tr { grid-column: 3; grid-row: 1; align-self: end; transform: translateY(-16.5rem); }
+.erp-chal__item--br { grid-column: 3; grid-row: 2; align-self: start; transform: translateY(-7rem); }
+
+// Flex column container — icon stacked above text block, all vertical spacing
+// tight (12–20px) so arrow endpoints terminate visually at the icon/heading.
+.erp-chal__item {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.erp-chal__item--tl,
+.erp-chal__item--bl {
+	text-align: right;
+	align-items: flex-end;
+}
+
+.erp-chal__item--tr,
+.erp-chal__item--br {
+	text-align: left;
+	align-items: flex-start;
+}
+
+.erp-chal__icon {
+	display: block;
+	margin-bottom: 0.85rem;
+	width: clamp(3.4rem, 2.7rem + 1.8vw, 4.5rem);
+	height: clamp(3.4rem, 2.7rem + 1.8vw, 4.5rem);
+	object-fit: contain;
+	flex-shrink: 0;
+}
+
+.erp-chal__text {
+	max-width: 24rem;
+
+	h4 {
+		margin: 0 0 0.6rem;
+		font-family: var(--amber-font-display);
+		font-weight: 700;
+		line-height: 1.25;
+		font-size: clamp(1.2rem, 1rem + 0.6vw, 1.5rem);
+		color: #1e293b;
+	}
+
+	p {
+		margin: 0;
+		font-size: clamp(1rem, 0.92rem + 0.3vw, 1.1rem);
+		line-height: 1.7;
+		color: #64748b;
+	}
+}
+
+// Below the breakpoint where two columns either side of the frame no longer
+// fit, drop to a single stacked column — frame first, then the four
+// callouts in reading order, left-aligned throughout. The pre-drawn arrows
+// only make visual sense radiating from the circle at the wide layout, so
+// they're hidden here.
+@media (max-width: 767.98px) {
+	.erp-chal__ring {
+		grid-template-columns: 1fr;
+	}
+
+	.erp-chal__frame {
+		grid-column: 1;
+		grid-row: 1;
+		max-width: 16rem;
+		margin: 0 auto 1.5rem;
+	}
+
+	.erp-chal__arrows {
+		display: none;
+	}
+
+	.erp-chal__photo {
+		width: 100%;
+		border-width: 6px;
+	}
+
+	.erp-chal__item--tl { grid-column: 1; grid-row: 2; }
+	.erp-chal__item--tr { grid-column: 1; grid-row: 3; }
+	.erp-chal__item--bl { grid-column: 1; grid-row: 4; }
+	.erp-chal__item--br { grid-column: 1; grid-row: 5; }
+
+	.erp-chal__item--tl,
+	.erp-chal__item--tr,
+	.erp-chal__item--bl,
+	.erp-chal__item--br {
+		text-align: left;
+		// The desktop rules also set align-items: flex-end for --tl/--bl (a
+		// flex-column cross-axis property, independent of text-align) so
+		// those two columns sit flush against the right edge of the frame.
+		// Left uncleared here, the icon+text block itself stayed pushed to
+		// the right edge of the full-width mobile column while the text
+		// inside it read left-aligned — a block flush right with left-
+		// aligned text inside it, reading as ragged/misaligned.
+		align-items: flex-start;
+		// The desktop 3-column layout pulls each callout up with a large
+		// negative translateY (see .erp-chal__item--tl/bl/tr/br above) so it
+		// lines up beside the circular photo mid-column. In this stacked
+		// single-column layout the items sit in normal document rows below
+		// the frame instead, so that offset has to be cleared here — left
+		// as-is, it dragged the heading/text up underneath the photo.
+		transform: none;
+
+		.erp-chal__icon { margin-right: auto; margin-left: 0; }
+	}
+}
+
+// Tablet: the frame/circle shrink a step earlier than the fluid clamp() would
+// on its own, keeping the left/right columns from getting too cramped before
+// the mobile stacked layout takes over at 768px.
+@media (min-width: 768px) and (max-width: 991.98px) {
+	.erp-chal__frame {
+		max-width: 15rem;
+	}
+}
+
+.erp-chal__down {
+	margin-top: clamp(0.75rem, 0.5rem + 0.8vw, 1.25rem);
+	text-align: center;
+}
+
+.erp-chal__down-img {
+	display: inline-block;
+	max-width: 2.5rem;
+	height: auto;
+}
+
+// =============================================================================
+// ERP Key Features — "Key features of India's #1 ERP" (reference:
+// vasyerp.com's single-slide feature carousel). Centred heading/lead, then
+// one slide at a time: a large illustration on the left, a light card
+// (title + body text) on the right. Auto-advances on a timer — no manual
+// arrows. assets/js/modules/erp-keyfeatures-slider.js just toggles which
+// [data-erp-kf-slide] is visible — no scrolling/transform math, since only
+// one slide is ever shown.
+// =============================================================================
+.erp-kf {
+	padding-block: clamp(1.75rem, 1.1rem + 2vw, 3rem);
+
+	.container {
+		max-width: 1500px;
+	}
+}
+
+.erp-kf__head {
+	margin: 0 auto clamp(1.25rem, 0.9rem + 1.2vw, 2rem);
+	max-width: 56.25rem;
+	text-align: center;
+}
+
+.erp-kf__heading {
+	margin: 0 0 0.75rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	font-size: clamp(1.75rem, 1.1vw + 1.5rem, 2.5rem);
+	color: #1e293b;
+}
+
+.erp-kf__lead {
+	margin: 0;
+	font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem);
+	line-height: 1.75;
+	color: #64748b;
+}
+
+.erp-kf__viewport {
+	min-width: 0;
+}
+
+.erp-kf__track {
+	position: relative;
+}
+
+.erp-kf__slide {
+	display: grid;
+	grid-template-columns: 1fr;
+	align-items: center;
+	gap: clamp(2rem, 3vw, 3.5rem);
+
+	&[hidden] { display: none; }
+
+	@include bp.up('lg') {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	}
+}
+
+.erp-kf__media {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.erp-kf__media-img {
+	display: block;
+	width: 100%;
+	max-width: 30rem;
+	height: auto;
+	object-fit: contain;
+}
+
+.erp-kf__card {
+	padding: clamp(1.75rem, 1.4rem + 1.5vw, 2.75rem);
+	border-radius: 1.375rem;
+	background: var(--primary-bg-light, #f6fafe);
+}
+
+.erp-kf__card-title {
+	margin: 0 0 1rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	line-height: 1.3;
+	font-size: clamp(1.4rem, 1.15rem + 0.9vw, 1.85rem);
+	color: #1e293b;
+}
+
+.erp-kf__card-text {
+	margin: 0;
+	font-size: clamp(1rem, 0.95rem + 0.2vw, 1.1rem);
+	line-height: 1.75;
+	color: #64748b;
+}
+
+// =============================================================================
+// ERP "Why Amber" — "Why Amber is the best ERP software in India?" (reference:
+// vasyerp.com's Slick.js card carousel — 3 cards visible, prev/next arrows,
+// infinite loop). Centred heading/lead, then the slider: a viewport clipping
+// a flex track (assets/js/modules/erp-why-slider.js drives the loop/position
+// via transform, same clone-and-loop technique as the reviews slider) flanked
+// by two circular arrow buttons. Each card is icon-on-light-circle + heading
+// + text, matching the reference's illustration-in-a-badge style.
+// =============================================================================
+.erp-why {
+	padding-block: clamp(1.75rem, 1.1rem + 2vw, 3rem);
+
+	// Reference sits at a generous ~1450px, matching the ERP challenges
+	// section's own widened container so the three cards can span almost
+	// the full content width instead of a narrow centred strip.
+	.container {
+		max-width: 1500px;
+	}
+}
+
+.erp-why__head {
+	margin: 0 auto clamp(1.25rem, 0.9rem + 1.2vw, 2rem);
+	max-width: 56.25rem; // ~900px
+	text-align: center;
+}
+
+.erp-why__heading {
+	margin: 0 0 0.75rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	font-size: clamp(1.75rem, 1.1vw + 1.5rem, 2.5rem);
+	color: #1e293b;
+}
+
+.erp-why__lead {
+	margin: 0;
+	font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem);
+	line-height: 1.75;
+	color: #64748b;
+}
+
+.erp-why__slider {
+	display: flex;
+	align-items: center;
+	gap: clamp(0.5rem, 1.2vw, 1.25rem);
+}
+
+.erp-why__viewport {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+}
+
+// JS sets each card's width and slides via transform; .is-instant (added by
+// the slider right before/after a loop snap) suspends the transition so the
+// jump back to the middle set is invisible.
+.erp-why__track {
+	display: flex;
+	align-items: stretch;
+	gap: clamp(1.5rem, 1.8vw, 2rem);
+	transition: transform 0.45s ease;
+
+	&.is-instant {
+		transition: none;
+	}
+}
+
+// No card "box" — the reference has no visible border/background/shadow
+// around each item, the illustration + text simply sit on the section's own
+// background so the three items blend together as one continuous row.
+.erp-why__card {
+	flex: 0 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-block: clamp(0.5rem, 0.4rem + 0.4vw, 0.75rem);
+	text-align: center;
+}
+
+.erp-why__icon-wrap {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+	width: clamp(11rem, 8.5rem + 9vw, 15rem);
+	height: clamp(11rem, 8.5rem + 9vw, 15rem);
+	border-radius: 50%;
+	background: var(--primary-bg-light, #f6fafe);
+}
+
+.erp-why__icon {
+	display: block;
+	width: 82%;
+	height: 82%;
+	object-fit: contain;
+}
+
+.erp-why__card-title {
+	margin: 0 0 1.125rem; // 18px
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	line-height: 1.3;
+	font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.375rem); // ~20-22px
+	color: #1e293b;
+}
+
+.erp-why__card-text {
+	margin: 0;
+	max-width: 22rem;
+	font-size: clamp(1rem, 0.95rem + 0.15vw, 1.0625rem); // ~16-17px
+	line-height: 1.6;
+	color: #64748b;
+}
+
+// Large bold chevrons sitting outside the cards — no circle, no button
+// styling, just an icon vertically centred beside the viewport (matches the
+// reference's plain "«"/"»" arrows, not a floating icon button).
+.erp-why__arrow {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: clamp(1.5rem, 1.25rem + 0.6vw, 1.75rem);
+	height: clamp(1.5rem, 1.25rem + 0.6vw, 1.75rem);
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: #1e293b;
+	cursor: pointer;
+	transition: color 0.2s ease, transform 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		color: var(--primary-color, #26a2dc);
+	}
+
+	svg {
+		display: block;
+		width: clamp(1.15rem, 0.95rem + 0.6vw, 1.5rem);
+		height: auto;
+	}
+}
+
+// Below the breakpoint where the flanking arrows no longer have room, drop
+// them under the slider as a centred pair instead of squeezing the viewport.
+@media (max-width: 575.98px) {
+	.erp-why__slider {
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	.erp-why__viewport {
+		order: 1;
+		flex-basis: 100%;
+	}
+
+	// One card fills the viewport at this breakpoint (JS sets its width to
+	// the viewport's own clientWidth), but centring the track explicitly
+	// here keeps the icon/heading/text centred even before JS measures and
+	// sets that width, or if it ever runs a beat behind first paint.
+	.erp-why__track {
+		justify-content: center;
+	}
+
+	.erp-why__arrow {
+		order: 2;
+	}
+}
+
+.hero-section-outer {
+	position: relative;
+	overflow: hidden;
+	// Pull the banner up behind the floating header (the body carries the
+	// header's own height as padding-top), then repay that offset as extra
+	// top padding on the banner content below, so the background bleeds to
+	// the very top of the viewport while the copy still clears the header.
+	margin-top: calc(-1 * (64px + clamp(1.5rem, 3.2vw, 3rem)));
+	background-color: #061533; // paints before the image loads
+	background-position: center bottom;
+	background-repeat: no-repeat;
+	background-size: cover;
+	// The background image's own ratio (1820×864 ≈ 2.11:1). Guaranteeing the
+	// section is at least this tall relative to its width means "cover" never
+	// has to crop the image to fill the box — full image, full width, no
+	// pillarboxing. On very narrow/tall screens the text content naturally
+	// pushes the section taller than this floor, which is fine.
+	min-height: calc(100vw / 2.106);
+
+	// Dark scrim over the background-image for text legibility, matching the
+	// reference's overlay. Heavier on narrow screens, where the same
+	// background-image has no separate mobile crop and sits directly behind
+	// the (now full-width, stacked) text.
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		background: rgba(6, 21, 51, 0.78);
+
+		@media (min-width: 768px) {
+			background: rgba(6, 21, 51, 0.55);
+		}
+	}
+}
+
+// Full-bleed: override the theme's centered/max-width .container so the copy
+// starts flush from the screen edge (a fixed gutter only), like the reference.
+.hero-section {
+	position: relative;
+	z-index: 1;
+	max-width: none;
+	padding-left: clamp(1.5rem, 1rem + 3vw, 4rem);
+	padding-right: clamp(1.5rem, 1rem + 3vw, 4rem);
+}
+
+// ---- Banner layout (from the reference CSS) ---------------------------------
+.automated-time-tracking-banner {
+	// Sits close under the header (not vertically centred in the banner), so
+	// the two-line heading starts near the top instead of mid-image. The
+	// section above is pulled up behind the floating header (see
+	// .hero-section-outer's negative margin-top), so this padding has to add
+	// that header offset back on top of a small breathing gap.
+	padding: calc(48px + 64px + clamp(1.5rem, 3.2vw, 3rem)) 0 80px;
+}
+
+.banner-content {
+	gap: 10px;
+
+	h1 {
+		max-width: 900px;
+		font-family: var(--font-secondary, 'Satoshi', 'Inter', sans-serif);
+		color: #fff;
+		font-size: clamp(1.75rem, 1rem + 2.5vw, 3rem);
+		line-height: 1.15;
+		font-weight: 700;
+		margin-bottom: 0.5rem;
+	}
+
+	// Reference paints the whole heading plain white across two lines — no
+	// colour-split accent phrase.
+	.text-primary {
+		color: inherit;
+		font-weight: inherit;
+	}
+
+	// Forced two-line split: accent phrase on line one, rest phrase on line
+	// two — always, regardless of viewport width.
+	.banner-title-rest { display: block; }
+
+	// Everything below the heading stays narrower, so it clears the
+	// background image's dashboard graphic on the right.
+	p,
+	.hero-section-btn {
+		max-width: 560px;
+	}
+
+	p {
+		color: rgba(255, 255, 255, 0.82);
+		font-size: 18px;
+		font-family: var(--font-primary, 'Inter', sans-serif);
+		line-height: 1.7;
+		margin-top: 0;
+		margin-bottom: 1rem;
+	}
+
+	// Bold statement line between the heading and the longer description,
+	// matching the reference's two-tier copy structure.
+	.banner-lead-bold {
+		color: #fff;
+		font-weight: 700;
+		font-size: 1.15rem;
+		line-height: 1.6;
+	}
+}
+
+// ---- CTA button (exact values from the reference CSS) -----------------------
+.hero-section-btn {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px 20px;
+}
+
+// Solid black pill (reference's "Get Started" CTA sits on the blue panel as
+// a plain black button, not a brand-coloured gradient).
+.banner-primary-btn {
+	will-change: transform, box-shadow;
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 14px 28px;
+	line-height: 1;
+	font-weight: 600;
+	border-radius: var(--amber-radius-pill, 999px);
+	text-decoration: none;
+	color: #fff;
+	background: #0f172a;
+	transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
+
+	&:hover {
+		background: #000;
+		box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
+		transform: translateY(-2px);
+	}
+}
+
+// Small screens.
+@media (max-width: 767.98px) {
+	.automated-time-tracking-banner {
+		padding: calc(40px + 64px + clamp(1.5rem, 3.2vw, 3rem)) 0 60px;
+	}
+}
+
+// =============================================================================
+// Key Features — static icon-box grid (reference design: Digitz ERP features
+// section). White band: heading + subtitle, then a simple centered 3-column
+// grid of static cards — icon badge, title, description, no hover/flip.
+// Each card keeps its own pastel accent background/border.
+// =============================================================================
+
+.section--erp-features {
+	overflow: hidden;
+	padding: clamp(4rem, 3rem + 4vw, 6.5rem) 0 clamp(3.5rem, 2.5rem + 4vw, 6rem);
+	background: #fff;
+
+	> .container { position: relative; z-index: 1; }
+}
+
+// -----------------------------------------------------------------------------
+// Section head — eyebrow pill, strong heading, readable subtitle (dark text
+// on the white band).
+// -----------------------------------------------------------------------------
+.erp-features__head {
+	max-width: 780px;
+	margin: 0 auto clamp(2.25rem, 1.75rem + 1.5vw, 3.25rem);
+	text-align: center;
+}
+
+.erp-features__eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-bottom: 1.1rem;
+	padding: 0.4rem 1rem;
+	font-family: var(--amber-font-sans);
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--amber-brand-600, #2563eb);
+	background: var(--amber-brand-50, #eff6ff);
+	border: 1px solid rgba(37, 99, 235, 0.2);
+	border-radius: 999px;
+}
+
+.erp-features__heading {
+	margin: 0 0 0.9rem;
+	font-family: var(--amber-font-display);
+	font-weight: 800;
+	letter-spacing: -0.025em;
+	line-height: 1.12;
+	font-size: clamp(1.9rem, 1.4rem + 2vw, 2.75rem);
+	color: #0f172a;
+}
+
+.erp-features__sub {
+	margin: 0;
+	font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+	line-height: 1.75;
+	color: #64748b;
+}
+
+// -----------------------------------------------------------------------------
+// Grid — simple centered 3 (desktop) / 2 (tablet) / 1 (mobile) column layout.
+// -----------------------------------------------------------------------------
+.erp-feature-grid {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	gap: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+	grid-template-columns: 1fr;
+
+	@media (min-width: 768px)  { grid-template-columns: repeat(2, 1fr); }
+	@media (min-width: 1024px) { grid-template-columns: repeat(3, 1fr); }
+}
+
+// -----------------------------------------------------------------------------
+// Static card — pastel-tinted background, centered title/description. No
+// icon badge, no hover, no flip. Title uses the dark shade of its own
+// pastel accent.
+// -----------------------------------------------------------------------------
+.erp-feature-card {
+	// Accent custom props (blue by default; overridden by modifiers below).
+	--fc-bg: #eff6ff;
+	--fc-border: #bfdbfe;
+	--fc-title: #1e40af;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	padding: clamp(2rem, 1.75rem + 1vw, 2.5rem) clamp(1.5rem, 1.25rem + 0.6vw, 1.85rem);
+	background: var(--fc-bg);
+	border: 1px solid var(--fc-border);
+	border-radius: 20px;
+}
+
+.erp-feature-card__title {
+	margin: 0 0 0.6rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	font-size: 1.2rem;
+	letter-spacing: -0.01em;
+	color: var(--fc-title);
+}
+
+.erp-feature-card__desc {
+	margin: 0;
+	font-size: 0.95rem;
+	line-height: 1.7;
+	color: #475569;
+}
+
+// ---- Pastel accents (background/border/title colour per card) ----
+.erp-feature-card {
+	&--blue   { --fc-bg: #eff6ff; --fc-border: #bfdbfe; --fc-title: #1e40af; }
+	&--green  { --fc-bg: #f0fdf4; --fc-border: #bbf7d0; --fc-title: #166534; }
+	&--purple { --fc-bg: #f5f3ff; --fc-border: #ddd6fe; --fc-title: #5b21b6; }
+	&--orange { --fc-bg: #fff7ed; --fc-border: #fed7aa; --fc-title: #9a3412; }
+	&--cyan   { --fc-bg: #ecfeff; --fc-border: #a5f3fc; --fc-title: #155e75; }
+	&--indigo { --fc-bg: #eef2ff; --fc-border: #c7d2fe; --fc-title: #3730a3; }
+	&--pink   { --fc-bg: #fdf2f8; --fc-border: #fbcfe8; --fc-title: #9d174d; }
+}
+
+// =============================================================================
+// ERP Services — numbered two-column services grid (dark), per the reference:
+// split heading left / right-aligned intro / hairline rule / ten numbered
+// services in two columns with vertical hairlines, over a faint top-left grid
+// pattern with a radial glow and two softly pulsing cells.
+// =============================================================================
+
+// The previous section stays pinned while this one scrolls over it — combined
+// with the JS in modules/section-cover.js (scale + fade), the upper section
+// appears to recede "inward" as the black panel covers it.
+.section--erp-features {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	will-change: transform, opacity;
+	transform-origin: 50% 20%;
+}
+
+.section--erp-services {
+	position: relative;
+	z-index: 2;
+	overflow: hidden;
+	padding: clamp(4rem, 3rem + 4vw, 10rem) 0 clamp(4rem, 3rem + 4vw, 8rem);
+	// Deep navy, not pure black — reads as a premium "product" surface rather
+	// than a plain dark panel, and gives the cyan glows something to sit in.
+	background: radial-gradient(120% 90% at 15% 0%, #0a1830 0%, #050c1a 46%, #030812 100%);
+	border-radius: clamp(28px, 4vw, 56px) clamp(28px, 4vw, 56px) 0 0;
+	color: var(--amber-on-navy);
+
+	// Faint blueprint grid — thinner lines, tighter mask, no glow blob (the
+	// glow now lives on the timeline itself so it reads as one focal point
+	// instead of competing with a second light source in the corner).
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background:
+			linear-gradient(to right, rgba(35, 182, 255, 0.06) 1px, transparent 1px),
+			linear-gradient(to bottom, rgba(35, 182, 255, 0.06) 1px, transparent 1px);
+		background-size: 96px 96px, 96px 96px;
+		-webkit-mask-image: radial-gradient(85% 70% at 50% 30%, #000 0%, transparent 75%);
+		mask-image: radial-gradient(85% 70% at 50% 30%, #000 0%, transparent 75%);
+	}
+
+	> .container { position: relative; z-index: 1; }
+}
+
+// Two grid cells that glow gently — kept, toned down to match the quieter grid.
+.erp-svc__bgcell {
+	position: absolute;
+	width: 96px;
+	height: 96px;
+	background: rgba(35, 182, 255, 0.05);
+	pointer-events: none;
+	animation: erp-svc-cell 9s ease-in-out infinite;
+
+	&--1 { top: 96px; left: 96px; }
+	&--2 { top: 288px; left: 288px; animation-delay: 4.5s; }
+
+	@media (max-width: 1023.98px) { display: none; }
+}
+
+@keyframes erp-svc-cell {
+	0%, 100% { opacity: 0.25; }
+	50%      { opacity: 0.7; }
+}
+
+// Floating particles drifting slowly upward — the "alive but not distracting"
+// ambience the redesign calls for. Transform/opacity only (GPU-friendly,
+// paired with prefers-reduced-motion below). Six particles, staggered
+// duration/delay/horizontal position so the motion never reads as a loop.
+.erp-svc__particle {
+	position: absolute;
+	bottom: -8%;
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	background: var(--amber-brand-400);
+	box-shadow: 0 0 6px 1px rgba(56, 189, 248, 0.7);
+	pointer-events: none;
+	opacity: 0;
+	animation: erp-svc-particle 14s linear infinite;
+
+	&--1 { left: 8%;  animation-duration: 16s; animation-delay: 0s; }
+	&--2 { left: 22%; animation-duration: 13s; animation-delay: 2.5s; }
+	&--3 { left: 41%; animation-duration: 18s; animation-delay: 1s; }
+	&--4 { left: 63%; animation-duration: 15s; animation-delay: 4s; }
+	&--5 { left: 79%; animation-duration: 17s; animation-delay: 6.5s; }
+	&--6 { left: 92%; animation-duration: 14s; animation-delay: 3s; }
+
+	@media (max-width: 767.98px) { display: none; }
+}
+
+@keyframes erp-svc-particle {
+	0%   { transform: translateY(0) scale(0.6); opacity: 0; }
+	10%  { opacity: 0.8; }
+	90%  { opacity: 0.4; }
+	100% { transform: translateY(-92vh) scale(1); opacity: 0; }
+}
+
+// Glowing dots travelling along the grid lines — thinned to 4 runners (was 6)
+// so the background stays a backdrop, not a second thing to look at.
+.erp-svc__dot {
+	position: absolute;
+	width: 4px;
+	height: 4px;
+	margin: -2px 0 0 -2px;
+	border-radius: 50%;
+	background: #23b6ff;
+	box-shadow: 0 0 8px 1.5px rgba(35, 182, 255, 0.55);
+	pointer-events: none;
+	z-index: 0;
+
+	&--1 { top: 96px;  left: 0; animation: erp-dot-x 13s linear infinite; }
+	&--3 { top: 480px; left: 0; animation: erp-dot-x 16s linear 8s infinite; }
+	&--4 { left: 96px;  top: 0; animation: erp-dot-y 15s linear 2s infinite; }
+	&--6 { left: 864px; top: 0; animation: erp-dot-y 17s linear infinite; }
+	&--2, &--5 { display: none; } // fewer runners; keep markup/JS untouched
+
+	@media (max-width: 767.98px) { display: none; }
+}
+
+@keyframes erp-dot-x {
+	from { transform: translateX(-6vw); }
+	to   { transform: translateX(106vw); }
+}
+
+@keyframes erp-dot-y {
+	from { transform: translateY(-60px); }
+	to   { transform: translateY(140vh); }
+}
+
+// ---- Header: big split heading left, right-aligned intro ---------------------
+.erp-svc__head {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.5rem;
+	padding-bottom: 2rem;
+
+	@media (min-width: 1024px) {
+		// Heading column slightly wider so long one-line accent phrases
+		// ("Restaurant Solutions & Services") never collide with the intro.
+		grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+		padding-bottom: 3rem;
+	}
+}
+
+.erp-svc__title {
+	margin: 0;
+	font-family: var(--amber-font-display);
+	font-weight: 600;
+	// Tighter modern tracking on the big display line.
+	letter-spacing: -0.03em;
+	line-height: 1.1;
+	// Sized so the accent phrase below always fits its column on ONE line
+	// ("ERP Solutions & Services" ≈ 24ch in a ~660px column at 3rem).
+	font-size: clamp(1.6rem, 0.75rem + 2.8vw, 3.25rem);
+	color: #fff;
+}
+
+.erp-svc__accent {
+	// Own line, never wrapping mid-phrase.
+	display: block;
+	white-space: nowrap;
+	// Subtle gradient sweep on the accent line instead of a flat tint — one
+	// small premium touch that costs nothing in layout stability.
+	background: linear-gradient(100deg, var(--amber-brand-400) 0%, #7dd3fc 55%, var(--amber-brand-400) 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+
+	// Long product phrases (> 26 chars, flagged by the template) shrink so the
+	// single line always fits its column instead of overflowing into the intro.
+	&--long { font-size: 0.78em; }
+}
+
+.erp-svc__desc {
+	margin: 0;
+	font-size: clamp(0.9rem, 0.86rem + 0.2vw, 1.0625rem);
+	line-height: 1.85;
+	color: #9fb0c9;
+
+	@media (min-width: 1024px) {
+		text-align: right;
+		margin-top: 0.75rem;
+	}
+}
+
+// ---- Hairline rule between header and grid ----------------------------------
+.erp-svc__rule {
+	flex-shrink: 0;
+	height: 1px;
+	width: 100%;
+	background: linear-gradient(90deg, transparent, rgba(35, 182, 255, 0.28) 20%, rgba(35, 182, 255, 0.28) 80%, transparent);
+	margin-block: 1rem;
+
+	@media (min-width: 1024px) { margin-block: 2rem 1rem; }
+}
+
+// =============================================================================
+// Services timeline — premium redesign. Same DOM/JS contract as before
+// (modules/erp-services-timeline.js toggles .is-active + inline `left` on the
+// marker; nothing here changes that), restyled as the section's dominant
+// visual element: a glowing progress rail with glassmorphism nodes, feeding a
+// glass info card that visually locks onto whichever node is active.
+// =============================================================================
+.erp-svc__timeline {
+	position: relative;
+	// Local custom properties so both the rail's progress-fill (JS-driven
+	// width) and the connector line (CSS-driven, keyed off nth-child) can
+	// share one accent colour with the rest of the redesign, and the
+	// per-product theming mixin further down this file only has to override
+	// this one value instead of every individual rule.
+	--svc-accent: #23b6ff;
+	--svc-accent-soft: rgba(35, 182, 255, 0.16);
+}
+
+// Horizontal-scroll wrapper on narrow screens — same technique as the Gozzbe
+// hero's .gz-tabs__nav-wrap: the strip scrolls sideways instead of wrapping
+// 10 stops into an unreadable multi-row block. Extra vertical room added for
+// the larger, glowing active node so its halo never clips.
+.erp-svc__line-wrap {
+	overflow-x: auto;
+	overflow-y: visible;
+	overscroll-behavior-x: contain;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	padding-block: 0.75rem 0;
+	&::-webkit-scrollbar { display: none; }
+
+	@media (max-width: 1023.98px) {
+		margin-inline: -1rem;
+		padding-inline: 1rem;
+	}
+}
+
+.erp-svc__line {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	gap: 0;
+	width: max-content;
+	min-width: 100%;
+	padding-top: 0.75rem; // room for the marker + active node's glow to sit above the row
+}
+
+// The rail the nodes sit on — a soft glass groove rather than a flat hairline.
+.erp-svc__line-track {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: calc(0.75rem + 17px); // vertically centred on the 36px node
+	height: 3px;
+	border-radius: 999px;
+	background: rgba(148, 178, 214, 0.16);
+	pointer-events: none;
+	overflow: hidden;
+
+	// Animated progress fill behind the marker — JS only ever sets the
+	// marker's `left`; this reads that same value via the CSS custom
+	// property `--svc-progress` (set alongside `left` — see the JS diff) so
+	// the rail visibly "fills in" as the visitor moves through the steps,
+	// exactly like a product-onboarding progress bar.
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		width: var(--svc-progress, 0%);
+		background: linear-gradient(90deg, var(--svc-accent, #23b6ff), #7dd3fc);
+		border-radius: inherit;
+		transition: width var(--amber-dur) var(--amber-ease);
+	}
+}
+
+// Small glyph that slides along the track to the active point — now a
+// brighter comet-style puck with a soft trailing glow. Positioned by JS
+// (left: <px>) — see modules/erp-services-timeline.js.
+.erp-svc__line-marker {
+	position: absolute;
+	top: calc(0.75rem + 17px);
+	left: 0;
+	width: 10px;
+	height: 10px;
+	margin-top: -4.5px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow:
+		0 0 0 3px rgba(255, 255, 255, 0.25),
+		0 0 12px 3px var(--svc-accent, #23b6ff),
+		0 0 28px 6px rgba(35, 182, 255, 0.45);
+	pointer-events: none;
+	transition: left var(--amber-dur) var(--amber-ease);
+	z-index: 2;
+}
+
+.erp-svc__point {
+	position: relative;
+	z-index: 1;
+	flex: 1 0 auto;
+	width: clamp(92px, 9vw, 132px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0 0.35rem;
+	background: none;
+	border: 0;
+	cursor: pointer;
+	font-family: var(--amber-font-sans);
+	color: #7d8ba3;
+	transition: color var(--amber-dur-fast) ease, transform var(--amber-dur-fast) var(--amber-ease);
+
+	// Whole-node lift on hover — the "smooth hover for every node" ask —
+	// rather than only recolouring the dot, so every stop feels tangible.
+	&:hover:not(.is-active),
+	&:focus-visible:not(.is-active) {
+		color: #dce6f5;
+		transform: translateY(-3px);
+	}
+	&:focus-visible { outline: 2px solid var(--svc-accent, #23b6ff); outline-offset: 4px; border-radius: 8px; }
+
+	&:hover:not(.is-active) .erp-svc__point-dot {
+		background: rgba(35, 182, 255, 0.16);
+		border-color: rgba(125, 211, 252, 0.55);
+		box-shadow: 0 0 0 6px rgba(35, 182, 255, 0.08);
+	}
+}
+
+// Glassmorphism node — blurred translucent glass instead of a flat tinted
+// circle, with a thin gradient ring. This is the resting (inactive) state;
+// .is-active below layers the glow/scale on top of the same base.
+.erp-svc__point-dot {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(10px) saturate(140%);
+	-webkit-backdrop-filter: blur(10px) saturate(140%);
+	border: 1px solid rgba(148, 178, 214, 0.3);
+	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 2px 8px rgba(0, 0, 0, 0.25);
+	font-size: 0.7rem;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.01em;
+	color: #a9bad4;
+	transition: background var(--amber-dur-fast) ease, border-color var(--amber-dur-fast) ease,
+		color var(--amber-dur-fast) ease, transform var(--amber-dur) var(--amber-ease),
+		box-shadow var(--amber-dur) var(--amber-ease), width var(--amber-dur) var(--amber-ease),
+		height var(--amber-dur) var(--amber-ease);
+}
+
+.erp-svc__point-label {
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: -0.005em;
+	line-height: 1.35;
+	text-align: center;
+	// Clamp to 2 lines so uneven title lengths don't stretch some points
+	// taller than others and break the shared baseline the dots sit on.
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	transition: opacity var(--amber-dur-fast) ease;
+}
+
+// ---- Active node: enlarged, glassmorphism + soft glow pulse ---------------
+.erp-svc__point.is-active {
+	color: #fff;
+
+	.erp-svc__point-dot {
+		width: 52px;
+		height: 52px;
+		font-size: 0.9rem;
+		background: linear-gradient(155deg, rgba(35, 182, 255, 0.35), rgba(35, 182, 255, 0.12));
+		border: 1.5px solid rgba(255, 255, 255, 0.55);
+		color: #fff;
+		// The breathing glow keyframe below can't itself take a per-product
+		// colour (CSS keyframes are declared once, globally — they don't read
+		// the custom properties of whichever element happens to be animating),
+		// so the two box-shadow STATES it animates between are hoisted into
+		// custom properties here instead. The mixin further down this file
+		// only has to override these two variables to re-tint the glow for
+		// Zoomie/Gozzbe/POS — the keyframe itself never needs touching.
+		--svc-glow-rest: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 0 8px rgba(35, 182, 255, 0.1), 0 0 24px 4px rgba(35, 182, 255, 0.45);
+		--svc-glow-peak: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 0 11px rgba(35, 182, 255, 0.14), 0 0 34px 8px rgba(35, 182, 255, 0.6);
+		box-shadow: var(--svc-glow-rest);
+		// Gentle breathing glow — reads as "alive", stays subtle enough not to
+		// distract from the label/panel beside it.
+		animation: erp-svc-node-glow 2.6s ease-in-out infinite;
+	}
+
+	.erp-svc__point-label {
+		font-weight: 700;
+	}
+}
+
+@keyframes erp-svc-node-glow {
+	0%, 100% { box-shadow: var(--svc-glow-rest); }
+	50%      { box-shadow: var(--svc-glow-peak); }
+}
+
+// ---- Connector: a short vertical thread from the active node down to the
+// info card, so the card visibly "belongs" to that node rather than sitting
+// disconnected underneath the whole rail. Pure CSS — same trick as the
+// marker's positioning, but reading the node's own `--svc-progress` offset
+// isn't needed here since this connector is centred under the ACTIVE point
+// specifically via a small inline custom property JS already has the data
+// for (see the JS diff: sets --svc-connector-x alongside the marker).
+.erp-svc__connector {
+	position: absolute;
+	top: 100%;
+	left: var(--svc-connector-x, 50%);
+	width: 1px;
+	height: clamp(1.5rem, 1.1rem + 1.5vw, 2.25rem);
+	background: linear-gradient(180deg, rgba(35, 182, 255, 0.55), transparent);
+	transform: translateX(-50%);
+	pointer-events: none;
+
+	@media (max-width: 1023.98px) { display: none; } // the scroll-strip makes a fixed x unreliable on mobile
+}
+
+// ---- Content panel — premium glassmorphism card ----------------------------
+.erp-svc__panels {
+	position: relative;
+	margin-top: clamp(2.5rem, 1.8rem + 2.5vw, 4rem);
+	min-height: 11rem; // holds the layout steady across panels of varying length
+}
+
+.erp-svc__panel {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	gap: 1.5rem;
+	max-width: 46rem;
+	padding: clamp(1.5rem, 1.25rem + 1vw, 2.25rem);
+	border-radius: 24px;
+	// Frosted glass body...
+	background: linear-gradient(155deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+	backdrop-filter: blur(18px) saturate(160%);
+	-webkit-backdrop-filter: blur(18px) saturate(160%);
+	// ...held inside a 1px gradient border (padding-box/border-box double
+	// background trick — no extra wrapper element needed) and a soft outer
+	// shadow so the card visibly lifts off the grid behind it.
+	border: 1px solid transparent;
+	background-image:
+		linear-gradient(155deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+		linear-gradient(155deg, rgba(255, 255, 255, 0.5), rgba(35, 182, 255, 0.35) 45%, rgba(35, 182, 255, 0.08));
+	background-origin: border-box;
+	background-clip: padding-box, border-box;
+	box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.6), 0 2px 0 rgba(255, 255, 255, 0.04) inset;
+
+	// Fade + rise in as it becomes active (JS toggles .is-active the same
+	// frame it un-hides the panel).
+	opacity: 0;
+	transform: translateY(14px) scale(0.985);
+	transition: opacity var(--amber-dur) var(--amber-ease), transform var(--amber-dur) var(--amber-ease);
+
+	&[hidden] { display: none; }
+	&.is-active { opacity: 1; transform: none; }
+}
+
+.erp-svc__panel-num {
+	flex-shrink: 0;
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: 20px;
+	background: linear-gradient(155deg, rgba(35, 182, 255, 0.28), rgba(35, 182, 255, 0.08));
+	border: 1px solid rgba(255, 255, 255, 0.28);
+	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 8px 20px -8px rgba(35, 182, 255, 0.6);
+	font-family: var(--amber-font-sans);
+	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+	font-size: 1.2rem;
+	color: #fff;
+
+	@media (min-width: 768px) { width: 4.25rem; height: 4.25rem; font-size: 1.4rem; border-radius: 22px; }
+}
+
+.erp-svc__panel-body {
+	min-width: 0; // let the title/text ellipsize/wrap inside the flex row instead of pushing the card wide
+}
+
+.erp-svc__panel-title {
+	margin: 0 0 0.5rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	letter-spacing: -0.015em;
+	font-size: clamp(1.15rem, 0.98rem + 0.7vw, 1.65rem);
+	color: #fff;
+}
+
+.erp-svc__panel-text {
+	margin: 0;
+	font-size: clamp(0.85rem, 0.82rem + 0.15vw, 0.9625rem);
+	line-height: 1.85;
+	color: #b9c6db;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.erp-svc__bgcell,
+	.erp-svc__particle,
+	.erp-svc__point-dot.is-active,
+	.erp-svc__point.is-active .erp-svc__point-dot { animation: none; }
+	.erp-svc__dot { display: none; }
+	.erp-svc__particle { display: none; }
+	.erp-svc__line-marker,
+	.erp-svc__line-track::after,
+	.erp-svc__point,
+	.erp-svc__point-dot,
+	.erp-svc__panel { transition: none; }
+}
+
+// =============================================================================
+// FAQ — split layout per the reference: dot eyebrow + big heading + a
+// "book a call" card on the left, a flat hairline accordion with +/× icons on
+// the right. Sits above the pinned Key Features section (position: sticky,
+// z-index 1) so it slides over it like the black services panel does.
+// =============================================================================
+
+.section--erp-faq {
+	position: relative;
+	z-index: 2;
+}
+
+.erp-faq__grid {
+	display: grid;
+	gap: 2.5rem;
+
+	@media (min-width: 1024px) {
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		gap: clamp(3rem, 2rem + 3vw, 5.5rem);
+		align-items: start;
+	}
+}
+
+// ---- Left column: eyebrow, heading, call card --------------------------------
+.erp-faq__eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 600;
+	font-size: var(--amber-fs-sm);
+	color: var(--amber-brand-600);
+
+	// Leading dot marker, per the reference.
+	&::before {
+		content: "";
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--amber-brand);
+	}
+}
+
+.erp-faq__heading {
+	margin: 0 0 clamp(1.5rem, 1.25rem + 1vw, 2.25rem);
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.15;
+	font-size: clamp(1.9rem, 1.4rem + 2vw, 2.75rem);
+	color: var(--amber-ink);
+	max-width: 14ch;
+}
+
+.erp-faq__card {
+	max-width: 380px;
+	padding: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
+	background: #fff;
+	border: 1px solid var(--amber-line);
+	border-radius: 18px;
+	box-shadow: var(--amber-shadow-sm);
+}
+
+.erp-faq__avatar {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: 50%;
+	overflow: hidden;
+
+	.erp-faq__avatar-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	// No photo set — branded gradient medallion with a support icon.
+	&.is-empty {
+		background: var(--amber-gradient);
+		color: #fff;
+
+		svg { width: 1.5rem; height: 1.5rem; }
+	}
+}
+
+.erp-faq__card-title {
+	margin: 0.9rem 0 0.4rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	font-size: 1.15rem;
+	color: var(--amber-ink);
+}
+
+.erp-faq__card-text {
+	margin: 0 0 1.25rem;
+	font-size: var(--amber-fs-sm);
+	line-height: 1.7;
+	color: var(--amber-muted);
+}
+
+// ---- Right column: flat hairline accordion with +/× icons --------------------
+// Overrides the global card-style .accordion scoped to this section.
+.section--erp-faq .accordion {
+	gap: 0;
+
+	.accordion__item {
+		background: transparent;
+		border: 0;
+		border-bottom: 1px solid var(--amber-line);
+		border-radius: 0;
+
+		&.is-open {
+			border-color: var(--amber-line);
+			box-shadow: none;
+		}
+	}
+
+	.accordion__trigger {
+		padding: 1.35rem 0.25rem;
+		font-size: clamp(1rem, 0.95rem + 0.3vw, 1.1875rem);
+	}
+
+	// Circular +/× toggle: the theme's × icon rotated 45° reads as a plus;
+	// opening rotates it back to a true ×, per the reference.
+	.accordion__icon {
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		background: var(--amber-brand-50);
+		color: var(--amber-brand-600);
+		transform: rotate(45deg);
+
+		svg { width: 0.85rem; height: 0.85rem; }
+	}
+
+	.accordion__trigger[aria-expanded='true'] .accordion__icon,
+	.accordion__item.is-open .accordion__icon {
+		transform: rotate(0deg);
+		background: var(--amber-brand);
+		color: #fff;
+	}
+
+	.accordion__answer {
+		padding: 0 3rem 1.35rem 0.25rem;
+	}
+}
+
+// =============================================================================
+// Industries We Serve — per the reference: intro + outline CTA left, staggered
+// columns of white icon cards right, with a soft brand blob behind them.
+// Opaque + z-index 2 so it slides over the pinned Key Features section.
+// =============================================================================
+
+.section--erp-industries {
+	position: relative;
+	z-index: 2;
+	overflow: hidden;
+}
+
+// Soft rounded blob hugging the right edge, like the reference's blue shape.
+.erp-ind__blob {
+	position: absolute;
+	top: 50%;
+	right: -12%;
+	width: clamp(18rem, 32vw, 32rem);
+	aspect-ratio: 0.82;
+	transform: translateY(-50%);
+	background: radial-gradient(closest-side, rgba(56, 189, 248, 0.18), rgba(56, 189, 248, 0.08) 65%, transparent 100%);
+	border-radius: 48% 52% 44% 56% / 55% 45% 55% 45%;
+	pointer-events: none;
+}
+
+.erp-ind__grid {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	gap: 2.5rem;
+
+	@media (min-width: 1024px) {
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		gap: clamp(2.5rem, 1.5rem + 3vw, 5rem);
+		align-items: center;
+	}
+}
+
+// ---- Left: heading, intro, CTA ------------------------------------------------
+.erp-ind__heading {
+	margin: 0 0 1rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.15;
+	font-size: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+	color: var(--amber-ink);
+	white-space: nowrap;
+}
+
+.erp-ind__desc {
+	margin: 0 0 1.75rem;
+	max-width: 38ch;
+	font-size: var(--amber-fs-base);
+	line-height: 1.8;
+	color: var(--amber-body);
+}
+
+// ---- Right: staggered card columns --------------------------------------------
+.erp-ind__cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: clamp(1rem, 0.75rem + 1vw, 1.5rem);
+	align-items: start;
+}
+
+.erp-ind__col {
+	display: grid;
+	gap: clamp(1rem, 0.75rem + 1vw, 1.5rem);
+
+	// Stagger: columns step upward left → right, per the reference.
+	&--1 { padding-top: clamp(2.5rem, 2rem + 2vw, 4.5rem); }
+	&--2 { padding-top: clamp(1.25rem, 1rem + 1vw, 2.25rem); }
+	&--3 { padding-top: 0; }
+}
+
+.erp-ind__card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.9rem;
+	padding: clamp(1.5rem, 1.2rem + 1vw, 2.25rem) 1rem;
+	background: #fff;
+	border: 1px solid rgba(15, 23, 42, 0.06);
+	border-radius: 16px;
+	box-shadow: 0 14px 34px -18px rgba(12, 16, 36, 0.16);
+	text-align: center;
+	transition: transform 0.3s var(--amber-ease), box-shadow 0.3s ease, border-color 0.3s ease;
+
+	&:hover {
+		transform: translateY(-5px);
+		border-color: rgba(14, 165, 233, 0.3);
+		box-shadow: 0 24px 48px -20px rgba(12, 16, 36, 0.22);
+
+		.erp-ind__icon { transform: scale(1.08); }
+	}
+}
+
+// Standard icon medallion: blue background, white glyph.
+.erp-ind__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 4rem;
+	height: 4rem;
+	border-radius: 50%;
+	background: var(--amber-gradient);
+	color: #fff;
+	box-shadow: 0 10px 20px -8px rgba(14, 165, 233, 0.55);
+	transition: transform 0.3s var(--amber-ease);
+
+	svg { width: 1.75rem; height: 1.75rem; }
+}
+
+.erp-ind__label {
+	font-family: var(--amber-font-sans);
+	font-weight: 600;
+	font-size: var(--amber-fs-sm);
+	color: var(--amber-ink-700);
+}
+
+// Mobile/tablet: drop the stagger, flow all cards into a simple grid. Single
+// column on the smallest screens — at 320px a 2-up row left ~132px per card,
+// which wrapped the labels badly. Two columns from 360px up.
+@media (max-width: 767.98px) {
+	.erp-ind__cards { grid-template-columns: 1fr; }
+	.erp-ind__col { display: contents; }
+}
+@media (min-width: 360px) and (max-width: 767.98px) {
+	.erp-ind__cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+// =============================================================================
+// POS Benefits — "Benefits of POS software" (reference: GoFrugal's benefits
+// grid). Cream section background + a 3-column grid of boxed white cards
+// (fixed-ish height, generous padding, soft shadow — matching the reference's
+// .off-bnft-container), and a centered primary-button CTA underneath.
+// POS page only.
+// =============================================================================
+
+.section--pos-benefits.is-bg-surface {
+	// Reference's exact cream page background (rgb(248, 243, 231)) rather than
+	// the theme's default grey --amber-surface token.
+	background: #f8f3e7;
+}
+
+.pos-bnft__grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+
+	@media (min-width: 576px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@media (min-width: 992px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+.pos-bnft__card {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	// Same footprint as the reference card (~455px wide / ~530px tall at 3-up
+	// desktop widths) so every card reads as one consistent tile regardless of
+	// how much copy each benefit has.
+	min-height: 21rem;
+	padding: clamp(1.75rem, 1.5rem + 1vw, 2.5rem);
+	border-radius: var(--amber-radius-lg, 18px);
+	background: #fff;
+	box-shadow: 0 12px 32px -18px rgba(17, 24, 39, 0.18);
+}
+
+.pos-bnft__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.5rem;
+	height: 3.5rem;
+	margin-bottom: 1.5rem;
+	border-radius: var(--amber-radius);
+	background: var(--amber-brand-50);
+	color: var(--amber-brand-600);
+
+	svg { width: 1.75rem; height: 1.75rem; }
+}
+
+.pos-bnft__title {
+	margin: 0 0 0.75rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	font-size: 1.3rem;
+	line-height: 1.3;
+	color: var(--amber-ink);
+}
+
+.pos-bnft__text {
+	margin: 0;
+	font-size: 0.98rem;
+	line-height: 1.65;
+	color: var(--amber-body);
+}
+
+.pos-bnft__cta {
+	display: flex;
+	justify-content: center;
+	margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+}
+
+// =============================================================================
+// POS Why — "Why choose Amber POS software" split band (reference: GoFrugal's
+// off-one section). Copy + 3-button CTA row on the left (~46% width, matching
+// the reference), a product screenshot on the right. POS page only.
+// =============================================================================
+
+// Sits directly under the hero, whose own padding-bottom (_gozzbe-hero.scss)
+// already separates it from the trust-logo strip — without this override the
+// section's default top padding (--amber-section-y) stacks on top of that and
+// reads as an oversized gap.
+.section--pos-why {
+	padding-top: 0;
+}
+
+.pos-why__row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(2.5rem, 5vw, 4.5rem);
+	align-items: center;
+
+	// Copy column shrinks to ~38% (was 46%) so the media column gets more
+	// room — the product-shot image has generous built-in whitespace around
+	// the device mockups, so a narrow column was making it read as small.
+	@media (min-width: 992px) {
+		grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+	}
+}
+
+.pos-why__title {
+	margin: 0 0 1.1rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.6rem);
+	line-height: 1.3;
+	color: var(--amber-ink);
+}
+
+.pos-why__text {
+	margin: 0 0 2rem;
+	font-size: clamp(0.98rem, 0.94rem + 0.2vw, 1.08rem);
+	line-height: 1.7;
+	color: var(--amber-ink);
+}
+
+.pos-why__cta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+.pos-why__media {
+	line-height: 0;
+
+	.pos-why__media-img,
+	img {
+		display: block;
+		// Scale past the column's own edge on wide screens rather than
+		// stopping at width:100% — the source graphic has a lot of built-in
+		// whitespace around its device mockups, so filling just the column
+		// still read as a small image; this lets it bleed larger.
+		width: 100%;
+		max-width: none;
+		height: auto;
+		border-radius: var(--amber-radius-lg, 18px);
+
+		@media (min-width: 992px) {
+			width: 126%;
+		}
+	}
+}
+
+// =============================================================================
+// Brands — "Connect [Product] with your favorite tools and apps": centered
+// heading + subtitle, then a static 6-column grid of full-colour partner
+// logos (per the CleanCloud integrations-page reference), and a two-button
+// row (solid primary + gray secondary) beneath.
+// =============================================================================
+
+.section--erp-brands {
+	position: relative;
+	z-index: 2;
+	padding: clamp(3rem, 2.25rem + 3vw, 6rem) 0;
+	text-align: center;
+}
+
+.erp-brands__container {
+	max-width: 80rem;
+}
+
+.erp-brands__head {
+	max-width: 56rem;
+	margin: 0 auto clamp(2rem, 1.5rem + 2vw, 3rem);
+}
+
+// Matches the reference's Tailwind `text-4xl sm:text-5xl lg:text-5xl
+// font-bold leading-tight` exactly: 700 weight, 1rem line-height (leading-
+// tight = 1.25, but Tailwind's text-5xl ships its own line-height: 1), capped
+// at 3rem (text-5xl) from the sm breakpoint up — no further clamp growth.
+.erp-brands__heading {
+	max-width: 56rem;
+	margin: 0 auto 1.5rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 700;
+	line-height: 1.25;
+	font-size: 2.25rem;
+	color: var(--amber-ink);
+	-webkit-font-smoothing: antialiased;
+
+	@media (min-width: 640px) {
+		font-size: 3rem;
+		line-height: 1;
+	}
+}
+
+.erp-brands__sub {
+	max-width: 48rem;
+	margin: 0 auto;
+	font-size: clamp(1rem, 0.95rem + 0.25vw, 1.1875rem);
+	line-height: 1.7;
+	color: var(--amber-body);
+}
+
+// Logo grid — 3 cols mobile / 4 tablet / 6 desktop, generous gap, centered
+// items, each logo capped to a consistent height so mixed-ratio marks align.
+.erp-brands__grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	align-items: center;
+	justify-items: center;
+	gap: clamp(1.75rem, 1.25rem + 2vw, 4rem) clamp(1.5rem, 1rem + 2vw, 3rem);
+	margin: 0 auto clamp(2.5rem, 2rem + 2vw, 4rem);
+
+	@media (min-width: 640px)  { grid-template-columns: repeat(4, 1fr); }
+	@media (min-width: 1024px) { grid-template-columns: repeat(6, 1fr); }
+}
+
+.erp-brands__logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	// Height is what sizes these marks — every client logo on file is taller
+	// than it is wide relative to the column, so none reaches the cell width
+	// before the cap bites. 5.5rem is the ceiling that keeps the widest mark
+	// (~1.8:1) inside its column at the 6-across desktop layout; past that the
+	// wide ones would start being clipped by width instead and stop growing.
+	height: clamp(3rem, 2rem + 3vw, 5.5rem);
+	transition: transform 0.3s var(--amber-ease, ease);
+
+	&:hover {
+		transform: scale(1.05);
+	}
+
+	img {
+		height: 100%;
+		max-height: 100%;
+		width: auto;
+		max-width: 100%;
+		object-fit: contain;
+		filter: none;
+	}
+}
+
+.erp-brands__wordmark {
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	font-size: 1.35rem;
+	color: var(--amber-ink-700);
+	white-space: nowrap;
+}
+
+// Two-button row — matches the reference's `cc-btn-primary` (solid brand
+// blue pill) + `cc-btn-gray` (light gray pill) pair exactly, stacked on
+// mobile / side-by-side from sm up (reference's flex-col sm:flex-row).
+.erp-brands__actions {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+
+	@media (min-width: 640px) {
+		flex-direction: row;
+	}
+}
+
+.erp-brands__btn-primary,
+.erp-brands__btn-gray {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 14px 28px;
+	line-height: 1;
+	font-family: var(--amber-font-sans);
+	font-weight: 600;
+	border-radius: var(--amber-radius-pill, 999px);
+	text-decoration: none;
+	transition: background 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+}
+
+.erp-brands__btn-primary {
+	color: #fff;
+	background: var(--amber-brand);
+
+	&:hover {
+		background: var(--amber-brand-600);
+		transform: translateY(-2px);
+		box-shadow: 0 12px 24px -8px rgba(14, 165, 233, 0.45);
+	}
+}
+
+.erp-brands__btn-gray {
+	color: var(--amber-ink);
+	background: #f1f5f9;
+
+	&:hover {
+		background: #e2e8f0;
+		transform: translateY(-2px);
+	}
+}
+
+// =============================================================================
+// CTA — "Try free / Talk to an expert" split per the reference: two equal
+// solid brand-blue cards, each a heading + text + white pill button on top,
+// and a full-width screenshot flush against the card's bottom edge. Opaque +
+// z-index 2 (slides over the pinned features).
+// =============================================================================
+
+.section--erp-cta {
+	position: relative;
+	z-index: 2;
+	padding: clamp(2rem, 1.5rem + 2vw, 3rem) 0;
+}
+
+.erp-cta__row {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 2rem;
+	// Wider + tighter-gutter than the shared `.container` this row also carries
+	// in the markup (max-width: 1200px + a fluid ~2.5rem gutter) — the reference
+	// uses a 1280px container with only a 1rem gutter, so its cards read
+	// noticeably wider/closer to the screen edge than the theme default gave.
+	max-width: 1280px;
+	padding-inline: 1rem;
+
+	@media (min-width: 1024px) {
+		flex-direction: row;
+		justify-content: space-between;
+		padding-inline: 0;
+	}
+}
+
+.erp-cta__card {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	overflow: hidden;
+	width: 100%;
+	// Exact reference blue (#1f77da) rather than the theme's --amber-brand —
+	// this card pair intentionally matches the CleanCloud reference colour,
+	// not the per-product palette, across every sibling page.
+	background: #1f77da;
+	border-radius: 1rem;
+
+	@media (min-width: 1024px) {
+		width: 50%;
+	}
+}
+
+.erp-cta__card-body {
+	padding: clamp(1.75rem, 1.4rem + 1.5vw, 3rem);
+	text-align: center;
+
+	@media (min-width: 1024px) {
+		text-align: left;
+	}
+}
+
+.erp-cta__card-heading {
+	margin: 0 0 1rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 700;
+	line-height: 1.25;
+	font-size: 1.5rem;
+	color: #fff;
+
+	@media (min-width: 640px) {
+		font-size: 2.25rem;
+	}
+}
+
+.erp-cta__card-text {
+	margin: 0 0 1.5rem;
+	font-size: var(--amber-fs-base);
+	line-height: 1.6;
+	color: #fff;
+}
+
+.erp-cta__card-action {
+	display: flex;
+	justify-content: center;
+
+	@media (min-width: 1024px) {
+		justify-content: flex-start;
+	}
+}
+
+.erp-cta__card-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.75rem 1.5rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 500;
+	font-size: var(--amber-fs-base);
+	color: var(--amber-ink-700, #1f2937);
+	background: #fff;
+	border: 1px solid var(--amber-line, #9ca3af);
+	border-radius: 0.5rem;
+	box-shadow: var(--amber-shadow-sm);
+	text-decoration: none;
+	transition: background 0.3s ease;
+
+	&:hover {
+		background: #f3f4f6;
+	}
+}
+
+.erp-cta__card-media {
+	width: 100%;
+	line-height: 0;
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+}
+
+// =============================================================================
+// Product themes — the sibling product pages (Zoomie / Gozzbe / POS) reuse the
+// whole ERP page design re-tinted. The mixin overrides the brand custom
+// properties (which most rules consume) and re-declares every rule that bakes
+// in a literal cyan value.
+// =============================================================================
+
+@mixin erp-product-theme($c, $c-light, $c-dark, $c-50, $c-700) {
+	// Var-driven rules (accents, eyebrows, icons, medallions, FAQ, gradients).
+	--amber-brand: #{$c};
+	--amber-brand-400: #{$c-light};
+	--amber-brand-600: #{$c-dark};
+	--amber-brand-700: #{$c-700};
+	--amber-brand-100: #{rgba($c, 0.16)};
+	--amber-brand-50: #{$c-50};
+	--amber-gradient: linear-gradient(135deg, #{$c-light} 0%, #{$c} 50%, #{$c-dark} 100%);
+	--amber-glow: radial-gradient(circle, #{rgba($c-light, 0.45)}, transparent 60%);
+
+	// Hero button stays solid black across every product (reference style);
+	// no per-product override needed here.
+
+	// Services (dark timeline panel): grid, particles, cells, dots, rail,
+	// nodes, connector, glass card. `--svc-accent`/`--svc-accent-soft` alone
+	// cover most of the redesign's colour (line-track fill, panel border
+	// gradient), so only the rules with a literal cyan baked directly into a
+	// property (not routed through the custom property) need re-declaring.
+	.erp-svc__timeline {
+		--svc-accent: #{$c-light};
+		--svc-accent-soft: #{rgba($c-light, 0.16)};
+	}
+	.section--erp-services::before {
+		background:
+			linear-gradient(to right, rgba($c-light, 0.06) 1px, transparent 1px),
+			linear-gradient(to bottom, rgba($c-light, 0.06) 1px, transparent 1px);
+		background-size: 96px 96px, 96px 96px;
+	}
+	.erp-svc__bgcell { background: rgba($c-light, 0.05); }
+	.erp-svc__particle {
+		background: $c-light;
+		box-shadow: 0 0 6px 1px #{rgba($c-light, 0.7)};
+	}
+	.erp-svc__dot { background: $c; box-shadow: 0 0 8px 1.5px #{rgba($c, 0.55)}; }
+	.erp-svc__rule { background: linear-gradient(90deg, transparent, #{rgba($c-light, 0.28)} 20%, #{rgba($c-light, 0.28)} 80%, transparent); }
+	.erp-svc__line-marker {
+		box-shadow:
+			0 0 0 3px rgba(255, 255, 255, 0.25),
+			0 0 12px 3px $c-light,
+			0 0 28px 6px #{rgba($c-light, 0.45)};
+	}
+	.erp-svc__point:hover:not(.is-active) .erp-svc__point-dot {
+		background: rgba($c-light, 0.16);
+		box-shadow: 0 0 0 6px #{rgba($c-light, 0.08)};
+	}
+	.erp-svc__point.is-active .erp-svc__point-dot {
+		background: linear-gradient(155deg, #{rgba($c-light, 0.35)}, #{rgba($c-light, 0.12)});
+		// Re-tint the two breathing-glow states the keyframe animates between
+		// (see the note on .erp-svc__point.is-active .erp-svc__point-dot in
+		// the base rules — the keyframe itself reads these custom properties
+		// rather than a hardcoded colour, precisely so this single override
+		// is enough to re-colour the whole animation per product).
+		--svc-glow-rest: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 0 8px #{rgba($c-light, 0.1)}, 0 0 24px 4px #{rgba($c-light, 0.45)};
+		--svc-glow-peak: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 0 0 11px #{rgba($c-light, 0.14)}, 0 0 34px 8px #{rgba($c-light, 0.6)};
+		box-shadow: var(--svc-glow-rest);
+	}
+	.erp-svc__connector { background: linear-gradient(180deg, #{rgba($c-light, 0.55)}, transparent); }
+	.erp-svc__panel {
+		background-image:
+			linear-gradient(155deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
+			linear-gradient(155deg, rgba(255, 255, 255, 0.5), #{rgba($c-light, 0.35)} 45%, #{rgba($c-light, 0.08)});
+	}
+	.erp-svc__panel-num {
+		background: linear-gradient(155deg, #{rgba($c-light, 0.28)}, #{rgba($c-light, 0.08)});
+		box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 8px 20px -8px #{rgba($c-light, 0.6)};
+	}
+
+	// Industries: blob + card hover.
+	.erp-ind__blob { background: radial-gradient(closest-side, rgba($c-light, 0.18), rgba($c-light, 0.08) 65%, transparent 100%); }
+	.erp-ind__card:hover { border-color: rgba($c, 0.3); }
+	.erp-ind__icon { box-shadow: 0 10px 20px -8px rgba($c, 0.55); }
+
+	// CTA cards: background is var(--amber-brand) directly, so the override
+	// above already re-tints them — nothing product-specific needed here.
+}
+
+// Scoped to .site-main so the site header/footer keep the global sky-blue
+// brand — only the page content re-tints.
+//
+// All three sibling products now use the SAME blue palette as the Amber ERP
+// page (the --amber-brand* token values from settings/_tokens.scss), so every
+// product page reads as one brand rather than four colours. The mixin is kept
+// rather than deleted so a product can be re-tinted later by passing a
+// different palette here — nothing else in the file needs to change.
+//
+// Palette = ($c, $c-light, $c-dark, $c-50, $c-700)
+//         =  #0ea5e9, #38bdf8, #0284c7, #f0f9ff, #0369a1
+
+// Zoomie Restaurant — was lime green, now Amber blue.
+body.page-template-page-zoomie .site-main {
+	@include erp-product-theme(#0ea5e9, #38bdf8, #0284c7, #f0f9ff, #0369a1);
+}
+
+// Gozzbe Laundry — was orange, now Amber blue.
+body.page-template-page-gozzbe .site-main {
+	@include erp-product-theme(#0ea5e9, #38bdf8, #0284c7, #f0f9ff, #0369a1);
+}
+
+// POS Software — was yellow, now Amber blue.
+body.page-template-page-pos .site-main {
+	@include erp-product-theme(#0ea5e9, #38bdf8, #0284c7, #f0f9ff, #0369a1);
+}

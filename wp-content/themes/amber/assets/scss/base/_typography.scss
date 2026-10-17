@@ -1,0 +1,67 @@
+// =============================================================================
+// Base · Typography
+// =============================================================================
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--amber-font-display);
+	color: var(--amber-ink);
+	line-height: var(--amber-lh-tight);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	text-wrap: balance;
+}
+
+h1 { font-size: var(--amber-fs-3xl); }
+h2 { font-size: var(--amber-fs-2xl); }
+h3 { font-size: var(--amber-fs-lg); }
+h4 { font-size: var(--amber-fs-md); }
+
+p { text-wrap: pretty; }
+
+strong, b { font-weight: 700; color: var(--amber-ink-700); }
+
+small { font-size: var(--amber-fs-sm); }
+
+blockquote {
+	font-size: var(--amber-fs-md);
+	color: var(--amber-ink-700);
+	border-left: 3px solid var(--amber-brand);
+	padding-left: var(--amber-space-5);
+}
+
+code, pre {
+	font-family: ui-monospace, 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+	font-size: 0.9em;
+}
+code { background: var(--amber-surface-2); padding: 0.15em 0.4em; border-radius: 6px; }
+pre {
+	background: var(--amber-ink);
+	color: #e6e8f2;
+	padding: var(--amber-space-5);
+	border-radius: var(--amber-radius);
+	overflow: auto;
+	code { background: none; padding: 0; color: inherit; }
+}
+
+// Long-form content (post/page body, FAQ answers, WYSIWYG)
+.entry-content {
+	font-size: var(--amber-fs-md);
+	color: var(--amber-body);
+
+	> * + * { margin-top: var(--amber-space-5); }
+
+	h2 { margin-top: var(--amber-space-8); }
+	h3 { margin-top: var(--amber-space-7); }
+
+	a { text-decoration: underline; text-underline-offset: 3px; }
+
+	ul, ol { padding-left: 1.4em; }
+	li + li { margin-top: 0.4em; }
+	ul { list-style: disc; }
+	ol { list-style: decimal; }
+
+	img, figure { border-radius: var(--amber-radius); }
+	figcaption { font-size: var(--amber-fs-sm); color: var(--amber-muted); margin-top: var(--amber-space-2); }
+
+	.wp-block-image { margin-top: var(--amber-space-6); }
+}

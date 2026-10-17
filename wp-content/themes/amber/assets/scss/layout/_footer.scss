@@ -1,0 +1,170 @@
+// =============================================================================
+// Layout · Footer — compact centred stack:
+// logo lockup, one row of pipe-separated links, circular social icons,
+// a hairline rule and the copyright line.
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+.site-footer {
+	background: #0a0d12;
+	color: rgba(255, 255, 255, 0.8);
+	padding: clamp(2.25rem, 1.9rem + 1.4vw, 3.25rem) 0 clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+	text-align: center;
+}
+
+// ---- Brand --------------------------------------------------------------------
+.site-footer__brand {
+	display: flex;
+	justify-content: center;
+}
+
+.site-footer__logo {
+	display: inline-flex;
+	align-items: center;
+	text-decoration: none;
+	color: #fff;
+
+	// No invert filter here — the Amber wordmark is blue artwork on a
+	// transparent ground and reads fine on the dark footer as-is; flattening
+	// it to white would lose the two-tone mark.
+	img {
+		height: clamp(2rem, 1.75rem + 1vw, 2.75rem);
+		width: auto;
+		max-width: 100%;
+	}
+}
+
+// ---- Links — a single centred row separated by hairline pipes -------------------
+.site-footer__nav {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin-top: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+}
+
+.footer-menu {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	align-items: center;
+	// Half the visual gap sits either side of each pipe separator.
+	gap: 0 clamp(0.85rem, 0.5rem + 1vw, 1.6rem);
+	row-gap: 0.5rem;
+
+	li {
+		display: flex;
+		align-items: center;
+
+		// Pipe separator between items — never before the first one, and the
+		// negative margins keep it centred inside the shared gap.
+		+ li::before {
+			content: '';
+			width: 1px;
+			height: 0.9em;
+			margin-inline: calc(clamp(0.85rem, 0.5rem + 1vw, 1.6rem) / -2) calc(clamp(0.85rem, 0.5rem + 1vw, 1.6rem) / 2);
+			background: rgba(255, 255, 255, 0.22);
+		}
+	}
+
+	a {
+		font-family: var(--amber-font-sans);
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: rgba(255, 255, 255, 0.78);
+		text-decoration: none;
+		transition: color var(--amber-dur-fast) ease;
+
+		&:hover { color: var(--amber-brand-400); }
+	}
+}
+
+// Two flattened menus sit side by side in the same row; drop the leading pipe
+// of the second list so the separators stay even.
+.site-footer__nav .footer-menu + .footer-menu {
+	margin-left: clamp(0.85rem, 0.5rem + 1vw, 1.6rem);
+}
+
+// On narrow screens the pipes read as clutter once the row wraps.
+@include bp.down('md') {
+	.footer-menu {
+		gap: 0.5rem 1rem;
+
+		li + li::before { display: none; }
+	}
+}
+
+// ---- Social — centred outlined circles ----------------------------------------
+.social-list {
+	list-style: none;
+	margin: clamp(1rem, 0.8rem + 0.7vw, 1.5rem) 0 0;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	gap: 0.75rem;
+}
+
+.social-list__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border: 1px solid rgba(255, 255, 255, 0.28);
+	border-radius: 50%;
+	color: rgba(255, 255, 255, 0.8);
+	transition: color var(--amber-dur-fast) ease, border-color var(--amber-dur-fast) ease,
+		transform 0.25s var(--amber-ease);
+
+	svg { width: 0.875rem; height: 0.875rem; }
+
+	&:hover {
+		color: #fff;
+		border-color: var(--amber-brand-400);
+		transform: translateY(-2px);
+	}
+}
+
+// ---- Hairline rule ------------------------------------------------------------
+.site-footer__rule {
+	height: 1px;
+	width: 100%;
+	margin: clamp(1.25rem, 1rem + 0.8vw, 1.75rem) 0 clamp(0.85rem, 0.7rem + 0.5vw, 1.15rem);
+	background: rgba(255, 255, 255, 0.14);
+}
+
+// ---- Copyright — centred, tiny ------------------------------------------------
+.site-footer__copy {
+	margin: 0;
+	text-align: center;
+	font-family: var(--amber-font-sans);
+	font-size: 0.8125rem;
+	letter-spacing: 0.01em;
+	color: rgba(255, 255, 255, 0.45);
+}
+
+// Optional legal menu under the copyright.
+.site-footer__legal {
+	margin-top: 0.6rem;
+
+	.legal-menu {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 1.25rem;
+
+		a {
+			font-size: 0.75rem;
+			color: rgba(255, 255, 255, 0.45);
+			text-decoration: none;
+
+			&:hover { color: var(--amber-brand-400); }
+		}
+	}
+}

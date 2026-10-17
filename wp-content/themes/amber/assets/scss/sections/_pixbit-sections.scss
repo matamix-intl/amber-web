@@ -1,0 +1,714 @@
+// =============================================================================
+// Sections · Stats Counters + Scroll-Fill Text Reveal
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// -----------------------------------------------------------------------------
+// Counters — centered heading over large blue-gradient numbers
+// -----------------------------------------------------------------------------
+.counters__heading {
+	max-width: 64rem;
+	margin: 0 auto var(--amber-space-7);
+	text-align: center;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	font-size: clamp(1.9rem, 1.4rem + 2vw, 2.75rem);
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	color: var(--amber-ink);
+
+	@include bp.up('lg') {
+		white-space: nowrap;
+	}
+}
+
+.counters__highlight {
+	display: block;
+	color: var(--amber-brand);
+}
+
+.counters {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: clamp(1.5rem, 1rem + 3vw, 3rem) clamp(1rem, 0.5rem + 2vw, 2.5rem);
+	@include bp.up('lg') { grid-template-columns: repeat(3, 1fr); }
+}
+
+.counter {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+	align-items: center;
+	text-align: center;
+
+	@include bp.up('lg') {
+		gap: 0.35rem;
+	}
+
+	&__num {
+		font-family: var(--amber-font-display);
+		font-weight: 700;
+		font-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
+		line-height: 1;
+		white-space: nowrap;
+		letter-spacing: -0.03em;
+		color: var(--amber-ink);
+	}
+
+	&__label {
+		font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.15rem);
+		font-weight: 500;
+		color: var(--amber-muted);
+		line-height: 1.25;
+		max-width: 14rem;
+	}
+}
+
+// -----------------------------------------------------------------------------
+// Text Reveal — words fill from faded to solid as you scroll
+// -----------------------------------------------------------------------------
+.section--textreveal {
+	position: relative;
+	background: var(--amber-white);
+
+	@include bp.up('lg') {
+		// Scroll runway for the word-by-word fill (text-reveal.js paces the
+		// fill on height − 100vh). The sticky box hugs its content, so the
+		// section ends right after the CTA — no blank gap before the next
+		// section.
+		height: 150vh;
+		// Full-width content with a tight 30px gutter on desktop.
+		.container { max-width: none; padding-inline: 30px; }
+	}
+	@include bp.down('lg') {
+		padding-block: clamp(3.5rem, 9vw, 6rem);
+		padding-inline: var(--amber-gutter);
+	}
+}
+
+.textreveal__sticky {
+	@include bp.up('lg') {
+		position: sticky;
+		// Pin roughly centred in the viewport. No 100vh frame: the box hugs
+		// its content, so once it unpins nothing empty trails behind it.
+		top: 28vh;
+	}
+}
+
+.textreveal__heading {
+	font-family: var(--amber-font-display);
+	font-weight: 600;
+	letter-spacing: -0.02em;
+	text-align: center;
+	// Tight, editorial line-height for large display text.
+	line-height: 1.1;
+	font-size: clamp(2rem, 1rem + 3.6vw, 4.25rem);
+	// Centred, comfortable measure → ~3 balanced lines (Pixbit-style). On
+	// narrow screens it falls back to the container's 30px gutter.
+	max-width: min(1100px, 100%);
+	margin-inline: auto;
+	color: var(--amber-ink);
+	// Optical line balancing → even line lengths, fewer ragged breaks.
+	text-wrap: balance;
+}
+
+.textreveal__word {
+	// Faded by default; lit up by text-reveal.js (or fully lit on mobile/no-JS).
+	color: var(--amber-ink);
+	transition: opacity 0.18s ease;
+
+	.js & { opacity: 0.12; }
+}
+
+.textreveal__cta {
+	text-align: center;
+	margin-top: clamp(2rem, 4vw, 4rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.js .textreveal__word { opacity: 1; }
+}
+
+// -----------------------------------------------------------------------------
+// From Concept To Success — ambient grid backdrop + client marquee
+// A dark "infrastructure" band. An 80px background grid plus a few soft glow
+// cells that read as ambient light sources (sky/blue, never yellow) — meant to
+// be noticed only on a second look, never as UI cards. Adapted from the Pixbit
+// "From Concept To Success" section.
+// -----------------------------------------------------------------------------
+.section--concept {
+	position: relative;
+	overflow: hidden;   // clip the glow bleed
+	isolation: isolate; // own stacking context so content always sits above
+
+	// Near-black field (#050505) — flat, no tint. The compound `.is-bg-navy`
+	// selector is needed to beat the generic navy fill on specificity (same trick
+	// as hero), otherwise `.section.is-bg-navy` would win and paint it navy.
+	background: #050505;
+	&.is-bg-navy { background: #050505; }
+
+	// Everything real sits above the decorative grid.
+	.container,
+	.concept__marquee {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+// Blue grid lines on the black field. The grid covers the whole section, but a
+// two-corner mask reveals it ONLY at the top-left and bottom-right, dissolving
+// to nothing across the middle — so the squares cluster in those two corners.
+.concept__grid {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background-image:
+		linear-gradient(to right, rgba(56, 189, 248, 0.14) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(56, 189, 248, 0.14) 1px, transparent 1px);
+	background-size: 80px 80px;
+
+	// Each radial reveals one corner; the two layers add together, leaving the
+	// center empty.
+	-webkit-mask-image:
+		radial-gradient(60% 60% at 0% 0%, #000 0%, rgba(0, 0, 0, 0.35) 42%, transparent 72%),
+		radial-gradient(60% 60% at 100% 100%, #000 0%, rgba(0, 0, 0, 0.35) 42%, transparent 72%);
+	        mask-image:
+		radial-gradient(60% 60% at 0% 0%, #000 0%, rgba(0, 0, 0, 0.35) 42%, transparent 72%),
+		radial-gradient(60% 60% at 100% 100%, #000 0%, rgba(0, 0, 0, 0.35) 42%, transparent 72%);
+}
+
+// A single grid cell, filled in blue — the one accent in the field.
+.concept__fill {
+	position: absolute;
+	top: 160px;
+	left: 240px;
+	width: 80px;   // exactly one grid module
+	height: 80px;
+	background: rgba(56, 189, 248, 0.45);   // #38BDF8 filled
+	box-shadow:
+		inset 0 0 0 1px rgba(56, 189, 248, 0.65),
+		0 0 60px 4px rgba(56, 189, 248, 0.35);
+
+	@include bp.down('md') {
+		top: 96px;
+		left: 96px;
+	}
+}
+
+.concept__head {
+	max-width: 60rem;
+	margin-inline: auto;
+	text-align: center;
+}
+
+.concept__title {
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	line-height: 1.05;
+	letter-spacing: -0.02em;
+	font-size: clamp(2.25rem, 1.2rem + 4.4vw, 4.75rem);
+
+	&-accent {
+		background: var(--amber-gradient);
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+		color: transparent;
+	}
+
+	&-plain { color: #fff; }
+}
+
+.concept__intro {
+	margin: clamp(1.25rem, 2vw, 1.75rem) auto 0;
+	max-width: 52rem;
+	color: var(--amber-on-navy-muted);
+	font-size: clamp(1rem, 0.95rem + 0.3vw, 1.2rem);
+	line-height: 1.7;
+}
+
+.concept__marquee {
+	margin-top: clamp(3rem, 6vw, 5rem);
+	padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
+
+	// Premium enterprise-SaaS logo band: a very subtle blue-tinted panel spanning
+	// the full width over the near-black field, hairline blue rules top & bottom,
+	// and an extremely soft ambient blue glow. Understated, never saturated — the
+	// logos float on a faint pool of brand light rather than on raw black.
+	background: linear-gradient(
+		90deg,
+		rgba(56, 189, 248, 0.04) 0%,
+		rgba(56, 189, 248, 0.08) 50%,
+		rgba(56, 189, 248, 0.04) 100%
+	);
+	border-top: 1px solid rgba(56, 189, 248, 0.08);
+	border-bottom: 1px solid rgba(56, 189, 248, 0.08);
+	box-shadow: 0 0 120px rgba(56, 189, 248, 0.06);
+
+	// Demo-fallback wordmarks read as soft white on the dark band.
+	.logos__wordmark { color: rgba(255, 255, 255, 0.72); }
+
+	// Roomier spacing between logos than the default trusted-by strip.
+	.logos__track { gap: clamp(3.5rem, 7vw, 6.5rem); }
+
+	// Real client logos rendered as clean white silhouettes — the enterprise look.
+	// Quiet at rest (60% opacity), full strength with a faint blue glow on hover.
+	// NOTE: `brightness(0) invert(1)` only reads correctly for TRANSPARENT logos
+	// (PNG/SVG). An opaque logo (e.g. a JPEG with a white background) fills its
+	// whole box with white — upload transparent assets to avoid that.
+	.logos__item {
+		height: auto;
+		opacity: 0.6;
+		transition: opacity var(--amber-dur-fast) ease;
+
+		&:hover { opacity: 1; }
+	}
+
+	.logos__img {
+		height: clamp(44px, 5vw, 68px);
+		max-height: 68px;
+		width: auto;
+		max-width: 220px;
+		object-fit: contain;
+		filter: brightness(0) invert(1);
+		transition: filter var(--amber-dur-fast) ease;
+	}
+
+	// Slight blue tint/glow on hover.
+	.logos__item:hover .logos__img {
+		filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(56, 189, 248, 0.45));
+	}
+}
+
+// -----------------------------------------------------------------------------
+// Featured Case Studies — full-bleed scroll-snap card rail + paging dots
+// A light band right after the dark "Concept" section: flagship projects as tall
+// image cards that reveal a short summary on hover. The rail is native horizontal
+// scroll (works with no JS / on touch); case-studies.js layers on synced dots.
+// Adapted from the Pixbit "Featured Case Studies" section.
+// -----------------------------------------------------------------------------
+.section--casestudies {
+	overflow: hidden;   // clip the full-bleed rail
+	isolation: isolate;
+}
+
+.cases__head {
+	max-width: 60rem;
+	margin-inline: auto;
+	text-align: center;
+}
+
+.cases__title {
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	line-height: 1.05;
+	letter-spacing: -0.02em;
+	font-size: clamp(2.25rem, 1.2rem + 4.4vw, 4.75rem);
+
+	&-plain { color: var(--amber-ink); }
+
+	// Sky-blue brand accent (matching the Concept heading), not Pixbit's yellow.
+	&-accent {
+		background: var(--amber-gradient);
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+		color: transparent;
+	}
+}
+
+.cases__intro {
+	margin: clamp(1.25rem, 2vw, 1.75rem) auto 0;
+	max-width: 46rem;
+	color: var(--amber-body);
+	font-size: clamp(1rem, 0.95rem + 0.3vw, 1.2rem);
+	line-height: 1.7;
+}
+
+// 3D barrel-curve carousel ---------------------------------------------------
+// The Pixbit effect: equal-size, fully-opaque cards in one continuous strip that
+// slides horizontally, while each card pivots in Y by its distance from the
+// viewport centre — folding the strip into a shallow cylinder with convex
+// top/bottom edges. case-studies.js translates the whole track and rotates each
+// slide. Before JS boots it's a plain scroll rail (the `:not(.is-carousel)`
+// fallback), so the cards are always usable with no JS / on touch.
+.cases {
+	margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.cases__rail {
+	position: relative;
+	padding-inline: clamp(0px, 4vw, 4rem);   // room for the nav buttons
+}
+
+// --- no-JS / pre-init fallback: a simple horizontal scroll rail --------------
+.cases:not(.is-carousel) {
+	.cases__stage {
+		overflow-x: auto;
+		overflow-y: hidden;
+		scroll-snap-type: x mandatory;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		&::-webkit-scrollbar { display: none; }
+	}
+	.cases__track {
+		display: flex;
+		gap: 12px;
+		padding-inline: max(var(--amber-gutter), calc((100% - var(--amber-container)) / 2));
+	}
+	.cases__slide {
+		flex: 0 0 auto;
+		width: min(560px, 86vw);
+		transform: none;
+		scroll-snap-align: center;
+	}
+	.cases__nav { display: none; }
+}
+
+// --- active carousel: flat sliding strip clipped into a barrel "C" band ------
+// The Pixbit showcase silhouette, done cleanly: the cards are a plain flat strip
+// that slides horizontally, and the WHOLE band is clipped by a single CSS mask on
+// the stage. The mask makes the band a vertical BARREL ("C" cross-section): the
+// centre is at full height and the top edge slopes DOWN toward both sides while
+// the bottom edge slopes UP toward both sides, so the left/right ends pinch in —
+// like the outside of a horizontal cylinder. One continuous smooth curve, no
+// per-card 3D (so no poking corners / triangle artifacts). The stage is
+// full-bleed so the side cards run right to the screen edges.
+.cases.is-carousel {
+	// Break the stage out of the page container to the full viewport width, so the
+	// left/right cards bleed to the screen edges (the reference's edge-to-edge band).
+	.cases__stage {
+		position: relative;
+		width: 100vw;
+		margin-left: calc(50% - 50vw);        // centre the 100vw block under the container
+		overflow: hidden;
+		height: 460px;                        // taller cards
+		touch-action: pan-y;                  // vertical page scroll passes through
+		cursor: grab;
+		user-select: none;
+
+		@include bp.up('lg') { height: 620px; }
+		@include bp.up('xxl') { height: 680px; }
+
+		&.is-dragging { cursor: grabbing; }
+
+		// The curved-band mask (desktop only). White = kept. This matches the
+		// reference: the TOP edge is HIGH at both ends (y=0) and dips DOWN toward the
+		// centre (y=56) — a shallow valley; the BOTTOM edge mirrors it, LOW at the
+		// ends and rising in the centre. So the band's ends splay taller and the
+		// middle pinches — the reference's concave "smile" silhouette.
+		// `preserveAspectRatio="none"` stretches it across the full width.
+		@include bp.up('lg') {
+			--cases-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201440%20640'%20preserveAspectRatio='none'%3E%3Cpath%20fill='%23fff'%20d='M0%200Q720%2056%201440%200V640Q720%20584%200%20640Z'/%3E%3C/svg%3E");
+			-webkit-mask-image: var(--cases-mask);
+			        mask-image: var(--cases-mask);
+			-webkit-mask-size: 100% 100%;
+			        mask-size: 100% 100%;
+			-webkit-mask-repeat: no-repeat;
+			        mask-repeat: no-repeat;
+		}
+	}
+
+	// The strip. Left edge pinned to stage centre; JS translates it to bring the
+	// active card to the middle.
+	.cases__track {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		height: 100%;
+		display: flex;
+		gap: 10px;                            // the tight seam from the reference
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+		will-change: transform;
+
+		&.is-instant { transition: none; }    // teleport on loop-wrap (no slide-across)
+	}
+
+	// Each card: a taller, narrower flat showcase panel. No 3D.
+	// Width is a third of the viewport (minus the two seams) so exactly THREE full
+	// cards always fill the screen — the centred card plus one on each side — with
+	// a sensible cap so cards don't get oversized on ultra-wide monitors. On mobile
+	// it's a single near-full-width card.
+	.cases__slide {
+		position: relative;
+		flex: 0 0 auto;
+		// Mobile: one near-full-width card (matches the no-JS fallback above).
+		width: min(560px, 86vw);
+		height: 100%;
+
+		@include bp.up('lg') {
+			// (viewport − 4 gaps) / 3 keeps three whole cards on screen; cap at 560px.
+			width: min(560px, calc((100vw - 40px) / 3));
+		}
+	}
+}
+
+// The card itself: a full-bleed image with the caption overlay, filling its
+// slide. The hover-lift lives here so it composites on top of the slide's 3D
+// rotation without fighting it.
+.case-card {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 100%;               // fill the slot (which is sized by the stage)
+	border-radius: var(--amber-radius-lg);
+	overflow: hidden;
+	isolation: isolate;
+	text-decoration: none;
+	background: var(--amber-navy);
+	box-shadow: 0 30px 70px -28px rgba(3, 7, 18, 0.7);
+	transition: transform var(--amber-dur) var(--amber-ease),
+		box-shadow var(--amber-dur) var(--amber-ease);
+
+	// In the plain scroll fallback the slide has no fixed height, so give the card
+	// an explicit one. min-height, not height: a long case-study title at a
+	// narrow width needs to push the card taller rather than be clipped.
+	.cases:not(.is-carousel) & {
+		min-height: 460px;
+		@include bp.up('lg') { min-height: 560px; }
+	}
+
+	// On desktop the wave caps shape the band, so the cards go square-edged like
+	// the reference (rounded only on mobile / the scroll fallback).
+	.cases.is-carousel & {
+		@include bp.up('lg') {
+			border-radius: 0;
+			box-shadow: none;
+		}
+	}
+
+	@media (hover: hover) {
+		&:hover {
+			transform: translateY(-8px);
+			box-shadow: 0 40px 90px -30px rgba(3, 7, 18, 0.8);
+		}
+	}
+}
+
+// The centred card gets a slightly brighter frame so the hero reads.
+.cases.is-carousel .cases__slide.is-active .case-card {
+	box-shadow: 0 44px 100px -30px rgba(3, 7, 18, 0.85),
+		0 0 0 1px rgba(56, 189, 248, 0.18);
+}
+
+.case-card__media {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+}
+
+.case-card__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.9s var(--amber-ease);
+}
+
+.case-card:hover .case-card__img { transform: scale(1.05); }
+
+// Placeholder (no featured image): a brand-gradient field with a faint watermark
+// icon. Gradients vary by position so a demo rail reads as six distinct cards.
+.case-card--placeholder .case-card__media { background: var(--amber-gradient); }
+.cases__slide:nth-child(6n + 2) .case-card--placeholder .case-card__media { background: linear-gradient(140deg, #0b2a4a, #0ea5e9); }
+.cases__slide:nth-child(6n + 3) .case-card--placeholder .case-card__media { background: linear-gradient(140deg, #0e7490, #22d3ee); }
+.cases__slide:nth-child(6n + 4) .case-card--placeholder .case-card__media { background: linear-gradient(140deg, #1e3a8a, #38bdf8); }
+.cases__slide:nth-child(6n + 5) .case-card--placeholder .case-card__media { background: linear-gradient(140deg, #0f172a, #0284c7); }
+.cases__slide:nth-child(6n + 6) .case-card--placeholder .case-card__media { background: linear-gradient(140deg, #155e75, #38bdf8); }
+
+.case-card__watermark {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	color: rgba(255, 255, 255, 0.16);
+
+	svg { width: 38%; height: auto; }
+}
+
+.case-card__overlay {
+	position: relative;
+	z-index: 1;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	padding: clamp(1.5rem, 2.4vw, 2.5rem);
+	// Strong dark gradient bottom→top for caption readability.
+	background: linear-gradient(
+		to top,
+		rgba(3, 7, 18, 0.92) 4%,
+		rgba(3, 7, 18, 0.5) 38%,
+		rgba(3, 7, 18, 0.06) 70%,
+		rgba(3, 7, 18, 0.14) 100%
+	);
+	transition: background var(--amber-dur) var(--amber-ease);
+
+	@include bp.up('lg') {
+		padding-inline: clamp(1.75rem, 2.4vw, 3rem);
+		// Extra bottom room so the caption clears the white bottom wave cap that
+		// overlaps the lower edge of the card.
+		.cases.is-carousel & { padding-bottom: clamp(3rem, 4vw, 4.5rem); }
+	}
+}
+
+// Hover: darken the overlay a touch so the caption pops.
+.case-card:hover .case-card__overlay {
+	background: linear-gradient(
+		to top,
+		rgba(3, 7, 18, 0.96) 4%,
+		rgba(3, 7, 18, 0.62) 40%,
+		rgba(3, 7, 18, 0.18) 74%,
+		rgba(3, 7, 18, 0.28) 100%
+	);
+}
+
+.case-card__title {
+	margin: 0;
+	color: #fff;
+	font-family: var(--amber-font-display);
+	font-weight: 600;
+	line-height: 1.18;
+	font-size: clamp(1.3rem, 1rem + 1.1vw, 2rem);
+	transition: color var(--amber-dur) var(--amber-ease);
+}
+
+.case-card:hover .case-card__title { color: var(--amber-brand-400); }
+
+.case-card__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 0.9rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.case-card__tag {
+	border: 1px solid rgba(56, 189, 248, 0.45);
+	border-radius: var(--amber-radius-pill);
+	padding: 0.4rem 0.85rem;
+	font-size: var(--amber-fs-xs);
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.92);
+	background: rgba(56, 189, 248, 0.08);
+	transition: background-color var(--amber-dur-fast) ease;
+}
+
+.case-card:hover .case-card__tag { background: rgba(56, 189, 248, 0.2); }
+
+.case-card__desc {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.82);
+	font-size: var(--amber-fs-sm);
+	line-height: 1.6;
+	// Clamp to three lines so long excerpts never blow out the card.
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+
+	// Hidden by default; revealed on hover (desktop, hover-capable pointers).
+	max-height: 0;
+	opacity: 0;
+	transform: translateY(8px);
+	transition: opacity var(--amber-dur) var(--amber-ease),
+		transform var(--amber-dur) var(--amber-ease),
+		max-height var(--amber-dur) var(--amber-ease),
+		margin-top var(--amber-dur) var(--amber-ease);
+}
+
+// Reveal the description on the centred (active) card and on hover — so the
+// hero card always shows its summary, and side cards reveal it when pointed at.
+@include bp.up('lg') {
+	.cases__slide.is-active .case-card__desc,
+	.case-card:hover .case-card__desc {
+		max-height: 7rem;
+		margin-top: 0.9rem;
+		opacity: 1;
+		transform: none;
+	}
+}
+
+// Prev / next controls -------------------------------------------------------
+.cases__nav {
+	position: absolute;
+	top: 50%;
+	z-index: 20;
+	display: grid;
+	place-items: center;
+	width: clamp(44px, 3.5vw, 56px);
+	height: clamp(44px, 3.5vw, 56px);
+	margin: 0;
+	padding: 0;
+	transform: translateY(-50%);
+	border: 1px solid var(--amber-line);
+	border-radius: var(--amber-radius-pill);
+	background: rgba(255, 255, 255, 0.9);
+	color: var(--amber-ink);
+	cursor: pointer;
+	backdrop-filter: blur(6px);
+	box-shadow: var(--amber-shadow-md);
+	transition: background-color var(--amber-dur-fast) ease,
+		color var(--amber-dur-fast) ease,
+		transform var(--amber-dur-fast) ease;
+
+	svg { width: 18px; height: 18px; }
+
+	&:hover {
+		background: var(--amber-brand);
+		color: #04121f;
+		border-color: transparent;
+	}
+
+	// Hidden until the carousel initialises (see `.cases:not(.is-carousel)`).
+	&--prev {
+		left: clamp(-6px, 0.5vw, 12px);
+		svg { transform: rotate(180deg); }   // reuse the arrow-right icon
+	}
+	&--next {
+		right: clamp(-6px, 0.5vw, 12px);
+	}
+
+	@include bp.down('md') { display: none; }   // dots + swipe drive it on mobile
+}
+
+// Pagination dots (built + synced by case-studies.js) ------------------------
+.cases__dots {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+	margin-top: clamp(1.5rem, 3vw, 2.25rem);
+	min-height: 8px;
+
+	&[hidden] { display: none; }
+}
+
+.cases__dot {
+	width: 8px;
+	height: 8px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--amber-radius-pill);
+	background: var(--amber-line);
+	cursor: pointer;
+	transition: width var(--amber-dur-fast) var(--amber-ease),
+		background-color var(--amber-dur-fast) ease;
+
+	&.is-active {
+		width: 26px;
+		background: var(--amber-brand);
+	}
+}
+
+.cases__cta {
+	display: flex;
+	justify-content: center;
+	margin-top: clamp(2rem, 4vw, 3.25rem);
+}

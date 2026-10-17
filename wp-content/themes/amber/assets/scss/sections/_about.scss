@@ -1,0 +1,436 @@
+// =============================================================================
+// Sections · About Us page — premium enterprise-SaaS layout (sky-blue brand)
+// Composition: a full-bleed photographic banner hero (deep-navy scrim,
+// left-aligned display headline, lead line, pill CTA), an "About our company"
+// split (image left, copy right) and a Mission & Vision band. The closing CTA
+// reuses the ERP page's .erp-cta panel (styles in sections/_erp.scss).
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// -----------------------------------------------------------------------------
+// Page-level rhythm
+// -----------------------------------------------------------------------------
+.about-saas {
+	// A touch tighter than the global rhythm for a compact editorial feel.
+	.section { padding-block: clamp(3rem, 2rem + 4vw, 5.5rem); }
+	.container { max-width: 1200px; }
+}
+
+// -----------------------------------------------------------------------------
+// 1 · Hero — full-bleed photographic banner: photo + navy scrim, left copy, CTA
+// -----------------------------------------------------------------------------
+.section--about-hero {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+	display: flex;
+	align-items: center;
+	// Pull the banner up behind the floating header (the body carries the
+	// header offset as padding-top), then repay that offset as extra top
+	// padding so the photo bleeds to the very top of the viewport while the
+	// copy still clears the header pill — like the reference.
+	margin-top: calc(-1 * (64px + clamp(1.5rem, 3.2vw, 3rem)));
+	min-height: min(100vh, 58rem);
+	padding-top: calc(64px + clamp(1.5rem, 3.2vw, 3rem) + clamp(3.5rem, 2.5rem + 4vw, 7rem)) !important;
+	padding-bottom: clamp(4rem, 3rem + 4vw, 7rem) !important;
+	// Deep navy behind everything — paints before the photo loads.
+	background: var(--amber-navy);
+}
+
+// Background photo, stretched edge-to-edge under the scrim.
+.about-banner__media {
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+}
+
+// Legibility scrim: heavier over the copy on the left, fading to let the
+// photo breathe on the right (rgb values = --amber-navy #071226).
+.about-banner__scrim {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	background:
+		linear-gradient(90deg, rgba(7, 18, 38, 0.88) 0%, rgba(7, 18, 38, 0.6) 48%, rgba(7, 18, 38, 0.18) 100%),
+		linear-gradient(180deg, rgba(7, 18, 38, 0.4) 0%, transparent 32%, transparent 72%, rgba(7, 18, 38, 0.45) 100%);
+}
+
+.about-banner__inner {
+	position: relative;
+	z-index: 1;
+}
+
+.about-banner__content {
+	max-width: 44rem;
+}
+
+.about-banner__title {
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	letter-spacing: -0.025em;
+	line-height: 1.1;
+	// Fluid with the viewport (~27px on a small phone up to 64px on large) so
+	// the headline holds exactly two lines at every width: the size scales
+	// with the same vw the text has to fit into.
+	font-size: clamp(1.7rem, 0.9rem + 3.6vw, 4rem);
+	color: #fff;
+	// Wide enough for "Driving Business Growth" on one line, narrow enough
+	// that the headline can never sit on one; `balance` then breaks before
+	// "Through Technology" exactly like the reference.
+	max-width: 21ch;
+	text-wrap: balance;
+	margin: 0;
+}
+
+// The single highlighted word carries a light sky gradient (readable on navy).
+.about-banner__highlight {
+	background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 55%, #0ea5e9 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	// Fallback for browsers without background-clip (keeps text visible).
+	@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+		color: var(--amber-brand-400);
+	}
+}
+
+.about-banner__lead {
+	margin-top: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+	// ~59 characters per line: the lead reads as two balanced lines on
+	// desktop, breaking after "and" like the reference.
+	max-width: 39rem;
+	font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.88);
+	text-wrap: balance;
+}
+
+.about-banner__actions {
+	margin-top: clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem);
+}
+
+// Near-black pill CTA on the photo (per the reference); lifts and flips to
+// white on hover.
+.about-banner__cta {
+	padding: 1rem 2.4rem;
+	border-radius: var(--amber-radius-pill);
+	background: var(--amber-ink);
+	color: #fff;
+	box-shadow: 0 12px 30px rgba(2, 8, 20, 0.35);
+
+	&:hover,
+	&:focus-visible {
+		background: #fff;
+		color: var(--amber-ink);
+		transform: translateY(-2px);
+	}
+}
+
+// -----------------------------------------------------------------------------
+// 1b · About our company — reference: D Max Dental "Creating Healthy Smiles"
+// split. Left: an absolutely-positioned photo collage (wide top-left, small
+// top-right, tall bottom-right portrait, stat badge overlapping
+// bottom-left, two accent dots) inside a fixed-ratio 480×520 box — pixel-
+// matched to the reference's dmax-about__left markup. Right: dash-flanked
+// eyebrow, bold heading, one short paragraph and a checkmark list.
+// -----------------------------------------------------------------------------
+.about-co__grid {
+	display: grid;
+	gap: clamp(2rem, 1.5rem + 3vw, 4.5rem);
+	align-items: start;
+
+	@include bp.up('lg') {
+		grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+	}
+}
+
+// ---- Collage -----------------------------------------------------------
+// Pixel-matched to the reference (dmax-about__left): a fixed-size positioned
+// box — NOT a CSS grid — with three photo tiles and the stat badge each
+// absolutely placed inside it (wide top-left, small top-right, tall
+// bottom-right portrait, badge overlapping the bottom-left corner). The
+// 480×520px reference footprint is kept as a max-width/aspect-ratio pair so
+// it scales down on narrower columns instead of overflowing.
+.about-co__collage {
+	position: relative;
+	width: 100%;
+	max-width: 480px;
+	aspect-ratio: 480 / 520;
+}
+
+.about-co__photo {
+	position: absolute;
+	border-radius: var(--amber-radius-lg);
+	overflow: hidden;
+	background: var(--amber-surface-2);
+	line-height: 0;
+	box-shadow: 0 20px 40px -24px rgba(15, 23, 42, 0.25);
+
+	.about-co__img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	// Top-left wide tile.
+	&--a {
+		top: 0;
+		left: 0;
+		width: 60%;
+		height: 46%;
+	}
+
+	// Top-right small tile.
+	&--b {
+		top: 0;
+		right: 0;
+		width: 36%;
+		height: 30%;
+	}
+
+	// Bottom-right tall portrait tile — the reference's dominant image,
+	// running the full remaining height beside the stat badge.
+	&--c {
+		right: 0;
+		bottom: 0;
+		width: 55%;
+		height: 66%;
+	}
+}
+
+// Stat badge — pinned bottom-left, overlapping the wide top-left photo's
+// bottom edge and the tall portrait's left edge, exactly like the
+// reference's dmax-badge.
+.about-co__stat {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 42%;
+	padding: clamp(1.1rem, 0.9rem + 1vw, 1.5rem);
+	border-radius: var(--amber-radius-lg);
+	background: var(--amber-gradient);
+	color: #fff;
+	box-shadow: 0 20px 40px -20px rgba(14, 165, 233, 0.45);
+}
+
+.about-co__stat-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 0.5rem;
+	font-size: 1.5rem;
+	line-height: 1;
+	font-weight: 300;
+	opacity: 0.85;
+}
+
+.about-co__stat-num {
+	display: block;
+	font-family: var(--amber-font-display);
+	font-weight: 800;
+	font-size: clamp(2rem, 1.6rem + 1.2vw, 2.5rem);
+	line-height: 1;
+	letter-spacing: -0.02em;
+}
+
+.about-co__stat-label {
+	display: block;
+	margin-top: 0.4rem;
+	font-size: var(--amber-fs-xs, 0.75rem);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.about-co__stat-text {
+	margin: 0.4rem 0 0;
+	font-size: var(--amber-fs-xs, 0.75rem);
+	line-height: 1.5;
+	color: rgba(255, 255, 255, 0.85);
+}
+
+// Small decorative accent dots, matching the reference's dmax-dot pair —
+// purely ornamental, hidden from assistive tech via aria-hidden in markup.
+.about-co__dot {
+	position: absolute;
+	border-radius: 50%;
+
+	&--a {
+		top: -10px;
+		right: 18%;
+		width: 14px;
+		height: 14px;
+		background: var(--amber-brand-400, #38bdf8);
+	}
+
+	&--b {
+		bottom: 10%;
+		left: -10px;
+		width: 10px;
+		height: 10px;
+		background: var(--amber-brand-700, #0284c7);
+	}
+}
+
+// ---- Copy column ---------------------------------------------------------
+// Dash-flanked eyebrow ("— ABOUT US —"), matching the reference exactly.
+.about-co__badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+	color: var(--amber-brand-600);
+	font-size: var(--amber-fs-sm);
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	margin-bottom: clamp(1rem, 0.75rem + 0.8vw, 1.5rem);
+}
+
+.about-co__badge-dash {
+	width: 28px;
+	height: 1px;
+	background: currentColor;
+}
+
+.about-co__title {
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.18;
+	// Capped lower than the previous 3rem ceiling so both hard-broken lines
+	// ("Empowering Business Growth" / "Through Smart Digital Solutions")
+	// actually fit their column without the browser re-wrapping either one.
+	font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+	color: var(--amber-ink);
+	margin: 0;
+
+	// Below md, nowrap alone isn't enough (the narrow column would just
+	// overflow instead of wrapping) — drop the floor further so each
+	// hard-broken half has room to fit a single line at phone widths too.
+	@include bp.down('md') {
+		font-size: clamp(1.375rem, 1.1rem + 2vw, 1.75rem);
+	}
+
+	// The PHP side emits exactly one hard <br> between the two lines (no
+	// reliance on natural wrapping — text-wrap: balance previously fought
+	// that break by re-flowing words across it). Each line refuses to wrap a
+	// second time once there's enough width for it to be reasonable.
+	white-space: nowrap;
+}
+
+.about-co__body {
+	margin: clamp(1.25rem, 1rem + 1vw, 1.75rem) 0 0;
+	max-width: 56ch;
+	color: var(--amber-body);
+	font-size: var(--amber-fs-md);
+	line-height: 1.75;
+}
+
+.about-co__list {
+	display: grid;
+	gap: 0.85rem;
+	margin: clamp(1.5rem, 1.2rem + 1vw, 2rem) 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.about-co__item {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75rem;
+	font-size: var(--amber-fs-base);
+	line-height: 1.5;
+	color: var(--amber-ink);
+}
+
+.about-co__check {
+	flex-shrink: 0;
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	margin-top: 0.5em;
+	border-radius: 50%;
+	background: var(--amber-brand);
+}
+
+// -----------------------------------------------------------------------------
+// 1c · Mission & Vision — alternating badge-image / copy rows on a light band
+// (the reference's lavender band, here in the Amber light-sky tint)
+// -----------------------------------------------------------------------------
+.section--about-mv {
+	background: var(--amber-brand-50);
+}
+
+.about-mv__row {
+	display: grid;
+	gap: clamp(1.75rem, 1.25rem + 2.5vw, 4rem);
+	align-items: center;
+
+	@include bp.up('md') { grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr); }
+
+	& + & { margin-top: clamp(3rem, 2rem + 4vw, 6rem); }
+}
+
+// Vision row mirrors the composition: copy left, badge right.
+.about-mv__row--flip {
+	@include bp.up('md') {
+		grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+
+		.about-mv__media { order: 2; }
+		.about-mv__copy {
+			order: 1;
+			border-left: 0;
+			border-right: 3px solid var(--amber-brand-400);
+			padding-left: 0;
+			padding-right: clamp(1.75rem, 1.25rem + 2vw, 3rem);
+		}
+	}
+}
+
+.about-mv__media {
+	img {
+		display: block;
+		width: min(100%, 22rem);
+		height: auto;
+		margin-inline: auto;
+	}
+}
+
+// Thin vertical brand rule beside the copy, like the reference's accent bar.
+.about-mv__copy {
+	@include bp.up('md') {
+		border-left: 3px solid var(--amber-brand-400);
+		padding-left: clamp(1.75rem, 1.25rem + 2vw, 3rem);
+	}
+}
+
+.about-mv__title {
+	font-family: var(--amber-font-display);
+	font-weight: 500;
+	letter-spacing: -0.02em;
+	line-height: 1.15;
+	font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+	color: var(--amber-ink);
+	margin: 0;
+}
+
+.about-mv__text {
+	margin-top: clamp(1rem, 0.8rem + 0.8vw, 1.5rem);
+	max-width: 62ch;
+	color: var(--amber-body);
+	font-size: var(--amber-fs-md);
+	line-height: 1.75;
+	// Justified copy, per the reference.
+	text-align: justify;
+}
+

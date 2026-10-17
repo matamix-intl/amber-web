@@ -1,0 +1,205 @@
+// =============================================================================
+// Sections · Global Presence / Our Locations
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+.pill-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--amber-space-2);
+	padding: 0.5rem 1.1rem;
+	margin-bottom: var(--amber-space-4);
+	border-radius: var(--amber-radius-pill);
+	background: var(--amber-surface);
+	border: 1px solid var(--amber-line);
+	box-shadow: var(--amber-shadow-sm);
+	font-size: var(--amber-fs-sm);
+	font-weight: 600;
+	color: var(--amber-ink-700);
+	svg { width: 16px; height: 16px; color: var(--amber-brand); }
+}
+
+.loc-title-accent { color: var(--amber-brand); }
+
+// ---- Full-bleed video band -------------------------------------------------
+// The section paints a video across its whole width with the reseller cards
+// floating on top as frosted glass. It carries the theme's `is-bg-ink` dark
+// variant, so the navy it paints is what shows before the (lazily attached)
+// video has a frame — the light copy is legible from the first render rather
+// than only once a 30MB file arrives — and headings/subtitles already come
+// out light without this file restating them.
+.section--locations.loc--video {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+
+	// The cards sit three-up here, so the band takes the wider container to
+	// keep each one wide enough for a full email address on one line.
+	> .container { max-width: var(--amber-container-wide); }
+}
+
+.loc-media {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+}
+
+.loc-media__video {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	// Fades in once a src is attached, so the band never flashes an empty
+	// element between the dark base and the first painted frame.
+	opacity: 0;
+	transition: opacity 0.6s var(--amber-ease);
+
+	&.is-loaded { opacity: 1; }
+}
+
+// Darkens the footage enough for white text to clear AA contrast, and keeps
+// the brand hue present rather than reading as a plain grey wash.
+.loc-media__scrim {
+	position: absolute;
+	inset: 0;
+	background:
+		linear-gradient(180deg, rgba(2, 6, 23, 0.82) 0%, rgba(2, 6, 23, 0.68) 45%, rgba(2, 6, 23, 0.86) 100%),
+		linear-gradient(120deg, rgba(2, 132, 199, 0.35), rgba(2, 6, 23, 0) 60%);
+}
+
+// The header's own colours come from `is-bg-ink`; only the pieces it doesn't
+// know about need restating over footage — the accent word lifts to the light
+// brand tint, and the eyebrow pill turns to glass like the cards.
+.loc--video {
+	.loc-title-accent { color: var(--amber-brand-400); }
+
+	.pill-badge {
+		background: rgba(255, 255, 255, 0.12);
+		border-color: rgba(255, 255, 255, 0.28);
+		color: var(--amber-white);
+		backdrop-filter: blur(8px);
+		svg { color: var(--amber-white); }
+	}
+}
+
+// One row of cards across the band — two-up from 'md', three-up from 'xl'
+// where there is finally room for a full email address per card.
+.loc-grid {
+	display: grid;
+	gap: clamp(1rem, 0.6rem + 1.2vw, 1.75rem);
+	grid-template-columns: 1fr;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	@include bp.up('md') { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	@include bp.up('xl') { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+// Frosted glass over the video: a translucent white wash plus a blur, so the
+// footage reads through the card without the copy losing contrast. The blur is
+// progressive enhancement — browsers without backdrop-filter get a heavier
+// tint from the @supports fallback below, which is opaque enough on its own.
+.loc-card {
+	display: flex;
+	flex-direction: column;
+	padding: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
+	border-radius: var(--amber-radius-lg);
+	background: rgba(255, 255, 255, 0.16);
+	border: 1px solid rgba(255, 255, 255, 0.24);
+	box-shadow: 0 18px 40px rgba(2, 6, 23, 0.28);
+	transition: transform 0.25s var(--amber-ease), background 0.25s var(--amber-ease),
+		border-color 0.25s var(--amber-ease);
+
+	@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+		background: rgba(255, 255, 255, 0.1);
+		-webkit-backdrop-filter: blur(16px) saturate(140%);
+		backdrop-filter: blur(16px) saturate(140%);
+	}
+
+	&:hover {
+		transform: translateY(-4px);
+		background: rgba(255, 255, 255, 0.18);
+		border-color: rgba(255, 255, 255, 0.42);
+	}
+}
+
+.loc-card__city {
+	display: flex;
+	align-items: center;
+	gap: var(--amber-space-2);
+	margin: 0;
+	font-size: var(--amber-fs-md);
+	font-weight: 700;
+	color: var(--amber-white);
+}
+
+.loc-card__flag { font-size: 1.25em; line-height: 1; }
+
+// Local operating company — the card's strongest line after the country. The
+// brand blue is too dark against the footage, so it lifts to the tint.
+.loc-card__company {
+	margin: 0.35rem 0 0;
+	font-size: var(--amber-fs-sm);
+	font-weight: 600;
+	color: var(--amber-brand-400);
+}
+
+// Icon + text rows share one alignment grid so the copy lines up under itself
+// rather than wrapping beneath the icon.
+.loc-card__address,
+.loc-card__link {
+	display: grid;
+	grid-template-columns: 1rem 1fr;
+	gap: 0.6rem;
+	align-items: start;
+	font-size: var(--amber-fs-sm);
+	line-height: 1.55;
+}
+
+.loc-card__address {
+	margin: 0.85rem 0 0;
+	color: rgba(255, 255, 255, 0.76);
+}
+
+.loc-card__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 1.35em; // optical centring against the first text line
+	color: var(--amber-brand-400);
+
+	svg { width: 1rem; height: 1rem; }
+}
+
+// Contact links sit in a group separated by a hairline, pinned to the card
+// bottom so cards in a row end together regardless of address length.
+.loc-card__contact {
+	display: grid;
+	gap: 0.5rem;
+	margin-top: auto;
+	padding-top: 0.9rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+// Space above the rule only when an address precedes it.
+.loc-card__address + .loc-card__contact { margin-top: 1rem; }
+
+.loc-card__link {
+	font-weight: 600;
+	color: var(--amber-white);
+	text-decoration: none;
+	// Long addresses like support@amalgamatetechnologies.com must break
+	// cleanly instead of overflowing the card. The template also seeds <wbr>
+	// at the @ and dots so a break lands there first.
+	overflow-wrap: anywhere;
+	transition: color var(--amber-dur-fast) ease;
+
+	&:hover { color: var(--amber-brand-400); }
+}
+
+.loc-card__email,
+.loc-card__website {
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.86);
+}

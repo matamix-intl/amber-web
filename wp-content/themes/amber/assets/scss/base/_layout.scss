@@ -1,0 +1,132 @@
+// =============================================================================
+// Base · Layout primitives (container, section, backgrounds, a11y)
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// Safety net: decorative absolutely-positioned elements (glow blobs, blurred
+// shapes) are meant to bleed past their own section's edge but stay clipped
+// within it via that section's own overflow:hidden. Some of those still
+// contribute to the *document's* scrollWidth even while rendering clipped,
+// causing an unwanted page-level horizontal scrollbar — this catches that
+// case globally instead of chasing it section by section.
+//
+// MUST be `clip`, never `hidden`. `overflow-x: hidden` forces the computed
+// `overflow-y` to `auto`, which turns <body> into a scroll container — and
+// `position: sticky` descendants then stick to *body* instead of the viewport,
+// i.e. they silently never pin at all. That broke the scroll-zoom reveal
+// (.reveal__stage tracked scroll 1:1 and left the section's black background
+// filling the viewport). `clip` does the same visual clipping WITHOUT
+// establishing a scroll container, so sticky keeps working.
+html, body {
+	overflow-x: clip;
+}
+
+.container {
+	width: 100%;
+	max-width: var(--amber-container);
+	margin-inline: auto;
+	padding-inline: var(--amber-gutter);
+
+	&--narrow { max-width: var(--amber-container-narrow); }
+	&--wide { max-width: var(--amber-container-wide); }
+}
+
+// Section vertical rhythm + background tokens
+.section {
+	position: relative;
+	padding-block: var(--amber-section-y);
+
+	&.is-space-large { padding-block: var(--amber-section-y-lg); }
+	&.is-space-small { padding-block: var(--amber-section-y-sm); }
+	&.is-space-none { padding-block: 0; }
+
+	&.is-bg-white { background: var(--amber-white); }
+	&.is-bg-surface { background: var(--amber-surface); }
+	&.is-bg-gradient { background: var(--amber-gradient); color: #fff; }
+
+	// "ink" and "navy" both render the deep-navy dark theme.
+	&.is-bg-ink,
+	&.is-bg-navy {
+		background: var(--amber-navy);
+		color: var(--amber-on-navy);
+
+		h1, h2, h3, h4 { color: #fff; }
+		.section-header__subtitle { color: var(--amber-on-navy-muted); }
+	}
+}
+
+// The page hero used by archives / standard pages
+.page-hero {
+	padding-block: clamp(2.5rem, 1.5rem + 5vw, 5rem);
+	text-align: center;
+
+	&__title { font-size: var(--amber-fs-2xl); margin-top: var(--amber-space-3); }
+	&__lead { max-width: 60ch; margin: var(--amber-space-4) auto 0; color: var(--amber-muted); font-size: var(--amber-fs-md); }
+
+	.breadcrumbs { justify-content: center; }
+}
+
+// Shared section header
+.section-header {
+	max-width: 52rem;
+	margin-bottom: var(--amber-space-7);
+
+	&.is-align-center { margin-inline: auto; text-align: center; }
+	&.is-align-center &__subtitle { margin-inline: auto; }
+	&.is-align-left { text-align: left; }
+
+	&__eyebrow {
+		display: inline-block;
+		font-family: var(--amber-font-sans);
+		font-weight: 600;
+		font-size: var(--amber-fs-sm);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--amber-brand);
+		margin-bottom: var(--amber-space-3);
+	}
+
+	&__title { font-size: var(--amber-fs-2xl); }
+
+	&__subtitle {
+		margin-top: var(--amber-space-4);
+		max-width: 60ch;
+		font-size: var(--amber-fs-md);
+		color: var(--amber-muted);
+	}
+}
+
+// Accessibility helpers
+.screen-reader-text {
+	position: absolute !important;
+	width: 1px; height: 1px;
+	padding: 0; margin: -1px;
+	overflow: hidden; clip: rect(0,0,0,0);
+	white-space: nowrap; border: 0;
+}
+
+.amber-skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 1000;
+	background: #fff;
+	color: var(--amber-ink);
+	padding: 0.75rem 1.25rem;
+	border-radius: var(--amber-radius-sm);
+	box-shadow: var(--amber-shadow);
+	font-weight: 600;
+
+	&:focus { left: 1rem; top: 1rem; }
+}
+
+// Generic grids reused by blog/archive/search
+.posts-grid {
+	display: grid;
+	gap: var(--amber-space-6);
+	grid-template-columns: 1fr;
+
+	@include bp.up('md') { grid-template-columns: repeat(2, 1fr); }
+	@include bp.up('lg') { grid-template-columns: repeat(3, 1fr); }
+}

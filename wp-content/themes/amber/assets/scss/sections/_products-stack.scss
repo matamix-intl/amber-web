@@ -1,0 +1,426 @@
+// =============================================================================
+// Sections · Products — 3D scroll sequence
+//
+// One image on screen at a time, inside a single pinned window. Scrolling down
+// runs each product through two moves in turn:
+//
+//   1. the image on screen zooms OUT — scaled down and pushed back along Z, so
+//      it recedes into the distance and fades away;
+//   2. only once it has gone does the next image rise UP into the empty window,
+//      at full size, with no scaling of its own.
+//
+// The two phases barely overlap, so it reads as a sequence rather than a pile:
+// nothing slides over anything, and no card is ever partly hidden by another.
+// Scrolling up runs the identical values backwards — the current image drops
+// back down, the previous one grows out of the distance to full size.
+//
+// The perspective lives on the stage, so every image recedes toward the same
+// vanishing point. That shared vanishing point is what makes the zoom-out read
+// as travelling away rather than merely shrinking.
+//
+// modules/products-stack.js writes per card:
+//   --out  0 in place → 1 fully zoomed away into the distance.
+//   --in   1 waiting below the window → 0 risen into place.
+//   --dim  a light darkening as the image leaves.
+//
+// With JS off nothing is written, every card sits in place, and the fallback
+// below lays them out as a plain readable list.
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+.pstack {
+	--pstack-top: clamp(5.5rem, 4.5rem + 3vw, 7.5rem); // clears the floating header
+	--pstack-radius: clamp(1.25rem, 0.75rem + 1.6vw, 2rem);
+	// Scroll length per image — the speed dial. Note the real pacing is not
+	// this number: the pinned stage eats one stage-height out of the total, so
+	// each transition gets (count x this - stage) / (count - 1). At 4 images
+	// that makes 75vh here land at ~74vh per transition. Cutting this too far
+	// makes the move flash past before it can be read.
+	--pstack-scroll: 75vh;
+	// What's left of the screen once the stage is pinned, less a little
+	// breathing room — the tallest a card can be and still sit fully in view.
+	// svh so a mobile browser's collapsing toolbar can't clip it.
+	--pstack-fit: calc(100svh - var(--pstack-top) - 1.25rem);
+	// Ceiling on that, so the images don't become letterbox-tall on a big
+	// monitor. This is the other half of the height: on a short screen --fit
+	// wins, on a tall one this does. Raised past the point where the viewport
+	// is usually the binding limit, so on most screens the window now simply
+	// takes whatever height is left under the pin.
+	--pstack-max-h: 54rem;
+	// How far a leaving image is pushed back along Z. Paired with the stage's
+	// perspective this is most of how small it gets before it disappears.
+	--pstack-depth: 900px;
+	// How far below the window an image waits before rising into it. A full
+	// window-height, so a waiting image sits entirely outside the window and
+	// the clipping hides it completely — at anything less, part of it would be
+	// parked inside the frame, and with nothing fading any more it would simply
+	// be sitting there in view.
+	--pstack-rise: 100%;
+
+	position: relative;
+	margin-top: var(--amber-space-7);
+	// The stage is pinned, so this wrapper's height IS the scroll budget for
+	// the whole sequence — one image's worth of scrolling per image.
+	height: calc(var(--pstack-count, 4) * var(--pstack-scroll));
+	// Held to the content measure rather than running edge to edge, so the
+	// product shots read at a comfortable size instead of filling the screen.
+	width: min(76rem, 100%);
+	margin-inline: auto;
+	padding-inline: clamp(1rem, 0.5rem + 2vw, 2rem);
+}
+
+// The pinned window the sequence plays inside, and the holder of the shared
+// vanishing point. Because the perspective is here rather than on each card,
+// they all recede toward the same place — that is the difference between depth
+// and plain scaling.
+.pstack__stage {
+	position: sticky;
+	top: var(--pstack-top);
+	height: min(var(--pstack-fit), var(--pstack-max-h));
+	// `perspective` is all the depth needs: it puts the cards' translateZ into
+	// this element's 3D space.
+	//
+	// No background, border or shadow of its own — it is a window, not a panel.
+	// It does clip, though: with nothing fading in or out any more, an image
+	// waiting below has to be genuinely out of sight rather than transparent,
+	// and this is what keeps it there until it rises.
+	perspective: 1400px;
+	perspective-origin: 50% 45%;
+	overflow: hidden;
+}
+
+.pstack__card {
+	// Every image fills the same window. Normal paint order — a later image
+	// rises in FRONT of the one it replaces, which is behind it going inward.
+	position: absolute;
+	inset: 0;
+	z-index: calc(var(--i) + 1);
+
+	display: grid;
+	grid-template-columns: 1fr;
+	align-items: end;
+	overflow: hidden;
+	border-radius: var(--pstack-radius);
+	background: var(--amber-navy, #0b1220);
+	box-shadow: 0 24px 60px rgba(2, 6, 23, 0.22);
+
+	// Two moves, one per phase of an image's life:
+	//   --in   rising up from below the window, at FULL size — no scaling, so
+	//          it arrives as itself rather than growing into place.
+	//   --out  going inward: scaled down and pushed back along Z together, so
+	//          it recedes into the section's own darkness rather than shrinking
+	//          in place.
+	//
+	// No transition: both are rewritten every frame from the scroll position,
+	// so scrolling itself is the timeline. A duration on top would leave the
+	// values chasing a moving target one frame behind, which reads as stutter —
+	// the smoothing is an easing curve applied to the values in JS instead.
+	transform:
+		translateY(calc(var(--in, 0) * var(--pstack-rise)))
+		translateZ(calc(var(--out, 0) * var(--pstack-depth) * -1))
+		scale(calc(1 - var(--out, 0) * 0.25));
+	// Centre origin so a leaving image pulls away from its middle on all four
+	// sides — an edge origin would make it shrink toward that edge and read as
+	// sliding off instead of receding.
+	transform-origin: 50% 50%;
+	// Fully opaque at every point of the move. Fading the two images across
+	// each other is what let you see one through the other; instead an image
+	// is hidden by geometry — clipped below the window while it waits, and
+	// covered by the next image once that has risen over it.
+	opacity: 1;
+	backface-visibility: hidden;
+	will-change: transform, opacity;
+	// Only the image actually in the window should be clickable; JS marks it.
+	pointer-events: none;
+
+	&.is-active { pointer-events: auto; }
+
+	// Media and body share the same grid cell — the copy sits over the image.
+	> * { grid-area: 1 / 1; }
+}
+
+.pstack__media {
+	position: relative;
+	height: 100%;
+	border-radius: inherit;
+	overflow: hidden;
+
+	// Darkens as the card leaves focus in either direction, so only the card
+	// at depth 0 reads as fully lit. A solid layer fading in rather than a
+	// filter on the image: opacity composites on the GPU, while a filter
+	// re-rasterises the whole shot on every frame of the scroll.
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: #05080f;
+		opacity: var(--dim, 0);
+		pointer-events: none;
+	}
+}
+
+.pstack__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+// The accent now TINTS the screenshot instead of covering it. At a flat 58%
+// the wash was strong enough to flatten the product shot into one blue field —
+// the thing behind it stopped reading as an image at all. Two changes fix that
+// without giving up the brand colour:
+//
+//   1. the accent drops to a light tint, so the screenshot stays legible;
+//   2. legibility for the copy no longer comes from the wash at all — the
+//      frosted panel on .pstack__body carries it, so this layer is free to be
+//      subtle. A gentle floor of darkness at the bottom keeps the panel from
+//      sitting on a blown-out highlight.
+//
+// Kept as one layered `background` so it is still a single composited layer.
+.pstack__scrim {
+	position: absolute;
+	inset: 0;
+	background:
+		linear-gradient(
+			to top,
+			rgba(3, 8, 18, 0.62) 0%,
+			rgba(3, 8, 18, 0.28) 38%,
+			rgba(3, 8, 18, 0) 70%
+		),
+		linear-gradient(
+			135deg,
+			color-mix(in srgb, var(--accent) 30%, transparent) 0%,
+			color-mix(in srgb, var(--accent) 14%, transparent) 55%,
+			transparent 100%
+		);
+}
+
+.pstack__placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	// Flat too, for the same reason as the scrim — only ever seen when a
+	// product has no image on file.
+	background: color-mix(in srgb, var(--accent) 26%, #0b1220);
+
+	svg {
+		width: clamp(3rem, 6vw, 5rem);
+		height: auto;
+		color: color-mix(in srgb, var(--accent) 70%, #fff);
+	}
+}
+
+// The copy now sits on a real frosted panel rather than floating on the wash.
+// This is where the glass lives: it blurs and saturates the screenshot behind
+// it, so the card keeps its picture AND the text keeps its contrast — the two
+// things the flat accent wash was trading off against each other.
+//
+// The tint is built from `--accent`, so each product's panel picks up its own
+// colour instead of every card sharing one blue. Note the accent goes into a
+// DARK base, not a white one: mixing toward white gave the washed-out, milky
+// look: mixing into navy keeps it glassy and keeps white text readable on top.
+.pstack__body {
+	position: relative;
+	z-index: 1;
+	align-self: end;
+	justify-self: start;
+	display: grid;
+	justify-items: start;
+	gap: clamp(0.6rem, 0.4rem + 0.6vw, 1rem);
+	margin: clamp(0.9rem, 0.5rem + 1.6vw, 1.75rem);
+	padding: clamp(1.25rem, 0.9rem + 2vw, 2.4rem);
+	max-width: 46rem;
+	color: #fff;
+	border-radius: clamp(0.85rem, 0.55rem + 1vw, 1.35rem);
+
+	// Diagonal so the glass has a lit edge and a shaded one, the way a real
+	// pane does — a flat fill reads as a plain box.
+	background:
+		linear-gradient(
+			145deg,
+			color-mix(in srgb, var(--accent) 30%, rgba(7, 15, 28, 0.58)) 0%,
+			color-mix(in srgb, var(--accent) 12%, rgba(7, 15, 28, 0.72)) 100%
+		);
+	backdrop-filter: blur(20px) saturate(155%);
+	-webkit-backdrop-filter: blur(20px) saturate(155%);
+
+	// Hairline in the accent + an inset top highlight: together these are what
+	// sell the edge of a pane. Without the highlight the panel reads as flat
+	// translucent plastic.
+	border: 1px solid color-mix(in srgb, var(--accent) 38%, rgba(255, 255, 255, 0.2));
+	box-shadow:
+		0 18px 46px rgba(2, 6, 23, 0.42),
+		inset 0 1px 0 rgba(255, 255, 255, 0.22);
+
+	// Much lighter than before — the panel does the legibility work now, so the
+	// text no longer needs a heavy halo baked around every glyph.
+	text-shadow: 0 1px 6px rgba(2, 6, 23, 0.32);
+}
+
+// No backdrop-filter support: the panel would be a flat translucent block and
+// the screenshot would show straight through the text. Fall back to an opaque
+// enough tint that white copy still reads.
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+	.pstack__body {
+		background:
+			linear-gradient(
+				145deg,
+				color-mix(in srgb, var(--accent) 34%, rgba(7, 15, 28, 0.88)) 0%,
+				color-mix(in srgb, var(--accent) 14%, rgba(7, 15, 28, 0.94)) 100%
+			);
+	}
+}
+
+.pstack__index {
+	font-family: var(--amber-font-display);
+	font-size: var(--amber-fs-sm);
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	color: color-mix(in srgb, var(--accent) 65%, #fff);
+}
+
+.pstack__pill {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.4rem 0.95rem;
+	border-radius: var(--amber-radius-pill);
+	background: color-mix(in srgb, var(--accent) 88%, #fff);
+	font-size: var(--amber-fs-sm);
+	font-weight: 600;
+	color: #06121f;
+	text-shadow: none; // solid pill, no need to fight the image
+}
+
+.pstack__title {
+	margin: 0;
+	font-family: var(--amber-font-display);
+	font-size: clamp(1.75rem, 1.1rem + 2.6vw, 3.25rem);
+	font-weight: 700;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	color: #fff;
+}
+
+// Product descriptions run long, and over an image the whole paragraph is more
+// than anyone reads anyway — the card is a teaser with "View Details" for the
+// rest. Capped so the copy block stays a predictable height inside the card.
+.pstack__desc {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	overflow: hidden;
+	margin: 0;
+	font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.075rem);
+	line-height: 1.65;
+	color: rgba(255, 255, 255, 0.82);
+}
+
+// Hover used to mix the accent toward WHITE (85% accent, 15% #fff) while the
+// label stayed near-black. On a card already flooded with that same accent the
+// button lost its edge against the background at exactly the moment it was
+// being pointed at — the state read as the button dimming, not lighting up.
+// It also lifted 2px with nothing else moving, so the arrow sat inert.
+//
+// Now hover goes the other way: a deeper, more saturated accent with white
+// text, so contrast against both the panel and the label goes UP, the arrow
+// commits to the direction it points, and the lift is backed by a shadow so it
+// reads as rising rather than sliding.
+.pstack__cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin-top: 0.35rem;
+	padding: 0.75rem 1.5rem;
+	border-radius: var(--amber-radius-pill);
+	background-color: #fff;
+	font-weight: 600;
+	color: #06121f;
+	text-decoration: none;
+	text-shadow: none; // solid button, no need to fight the image
+	box-shadow: 0 6px 18px rgba(2, 6, 23, 0.28);
+	// background-color, not the `background` shorthand: the shorthand also
+	// covers background-image, and naming the longhand keeps the transition to
+	// the one property that actually changes.
+	transition:
+		background-color 0.28s var(--amber-ease),
+		color 0.28s var(--amber-ease),
+		box-shadow 0.28s var(--amber-ease),
+		transform 0.28s var(--amber-ease);
+
+	svg {
+		width: 1.05em;
+		height: 1.05em;
+		transition: transform 0.28s var(--amber-ease);
+	}
+
+	&:hover,
+	&:focus-visible {
+		background-color: color-mix(in srgb, var(--accent) 88%, #04101d);
+		color: #fff;
+		transform: translateY(-3px);
+		box-shadow: 0 16px 32px rgba(2, 6, 23, 0.45);
+
+		svg { transform: translateX(4px); }
+	}
+
+	// Pressing should undo most of the lift, otherwise the button stays floating
+	// under the finger and the click has no physical read.
+	&:active {
+		transform: translateY(-1px);
+		box-shadow: 0 6px 16px rgba(2, 6, 23, 0.4);
+	}
+
+	// The card sits on a busy screenshot, so the focus ring needs its own
+	// contrast rather than relying on the browser default.
+	&:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 3px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.pstack__cta,
+	.pstack__cta svg {
+		transition-duration: 0.01ms;
+	}
+
+	.pstack__cta:hover,
+	.pstack__cta:focus-visible {
+		transform: none;
+
+		svg { transform: none; }
+	}
+}
+
+// ---- Fallbacks --------------------------------------------------------------
+// Small screens: pinning fights the address bar and a depth stack is hard to
+// read on a narrow screen, so the cards become a plain vertical list. Reduced
+// motion gets the same treatment — the sequence is still fully readable, it
+// just doesn't move.
+@mixin pstack-flat {
+	.pstack { height: auto; }
+	.pstack__stage {
+		position: relative;
+		top: auto;
+		height: auto;
+		perspective: none;
+		display: grid;
+		gap: clamp(1rem, 0.5rem + 2vw, 1.75rem);
+	}
+	.pstack__card {
+		position: relative;
+		inset: auto;
+		z-index: auto;
+		min-height: 22rem;
+		transform: none;
+		opacity: 1;
+		pointer-events: auto;
+	}
+	.pstack__media::after { opacity: 0; }
+	.pstack__desc { -webkit-line-clamp: 4; }
+}
+
+@include bp.down('md') { @include pstack-flat; }
+@media (prefers-reduced-motion: reduce) { @include pstack-flat; }

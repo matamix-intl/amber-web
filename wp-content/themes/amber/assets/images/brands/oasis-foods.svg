@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" width="160" height="44" role="img" aria-label="Oasis Foods">
+	<path d="M14 24 C14 16 20 10 26 10 C26 18 20 24 14 24 Z" fill="#4d7c0f"/>
+	<path d="M14 24 C14 16 8 10 2 10 C2 18 8 24 14 24 Z" fill="#65a30d" transform="translate(10,0)"/>
+	<text x="34" y="20" font-family="Georgia, serif" font-weight="bold" font-size="17" fill="#365314">Oasis</text>
+	<text x="34" y="32" font-family="Arial, sans-serif" font-size="7.5" letter-spacing="1.5" fill="#4d7c0f">FOODS</text>
+</svg>

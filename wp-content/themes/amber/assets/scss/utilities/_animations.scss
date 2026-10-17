@@ -1,0 +1,45 @@
+// =============================================================================
+// Utilities · Animations (scroll reveal + keyframes)
+// JS adds .is-visible to [data-animate] elements when they enter the viewport.
+// All effects are disabled under prefers-reduced-motion.
+// =============================================================================
+
+// Only hide elements when JS is confirmed active (the .js class is set on
+// <html> before first paint). This is "fail-open": if the JS bundle never runs
+// or errors, content stays fully visible — never blank.
+.js [data-animate] {
+	opacity: 0;
+	will-change: transform, opacity;
+	transition:
+		opacity var(--amber-dur) var(--amber-ease),
+		transform var(--amber-dur) var(--amber-ease);
+
+	&[data-animate='fade-up'] { transform: translateY(28px); }
+	&[data-animate='fade-down'] { transform: translateY(-28px); }
+	&[data-animate='fade-left'] { transform: translateX(28px); }
+	&[data-animate='fade-right'] { transform: translateX(-28px); }
+	&[data-animate='scale-in'] { transform: scale(0.94); }
+
+	&.is-visible {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-animate] { opacity: 1 !important; transform: none !important; transition: none !important; }
+	.logos__track.is-animated { animation: none !important; }
+}
+
+// ---- Keyframes ----
+@keyframes amber-spin { to { transform: rotate(360deg); } }
+
+@keyframes amber-marquee {
+	from { transform: translateX(0); }
+	to { transform: translateX(-50%); } // track is duplicated, so -50% loops seamlessly
+}
+
+@keyframes amber-fade-in {
+	from { opacity: 0; transform: translateY(10px); }
+	to { opacity: 1; transform: none; }
+}

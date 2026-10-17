@@ -1,0 +1,538 @@
+// =============================================================================
+// Sections · ERP — violet showcase band (homepage section-erp.php)
+// Solid violet (#864FFE) stage, white type. Row 1: layered faux dashboards
+// (Odoo-style sales dashboard + floating finance card) beside badge / heading /
+// copy / 2-column check list. Row 2: copy + white pill CTA + 3-up stats beside
+// three overlapping mini analytics cards. Pure CSS/SVG — no images.
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+.erp-sec {
+	position: relative;
+	overflow: hidden;
+	background: #864ffe;
+	color: #fff;
+	padding-block: clamp(4.5rem, 4rem + 4vw, 8rem);
+}
+
+.erp-sec__row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(2.5rem, 5vw, 4.5rem);
+	align-items: center;
+
+	& + & { margin-top: clamp(4.5rem, 9vw, 8rem); }
+
+	@include bp.up('lg') {
+		&--intro { grid-template-columns: minmax(0, 46%) minmax(0, 54%); }
+		&--power { grid-template-columns: minmax(0, 55%) minmax(0, 45%); }
+	}
+}
+
+// On mobile the visual reads better after the copy.
+@include bp.down('lg') {
+	.erp-sec__row--intro .erp-sec__visual { order: 2; }
+	.erp-sec__row--intro .erp-sec__content { order: 1; }
+}
+
+// ---- Copy column ---------------------------------------------------------------
+.erp-sec__badge {
+	display: inline-block;
+	padding: 0.45rem 1.05rem;
+	border-radius: var(--amber-radius-pill);
+	background: #fff;
+	color: #1a1a1c;
+	font-size: 0.85rem;
+	font-weight: 600;
+	margin-bottom: 1.25rem;
+}
+
+.erp-sec__title {
+	margin: 0 0 1.1rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 500;
+	font-size: clamp(1.75rem, 1.2rem + 1.9vw, 2.9rem);
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	color: #fff;
+	max-width: 24ch;
+}
+
+.erp-sec__text {
+	margin: 0 0 0.9rem;
+	font-size: clamp(0.98rem, 0.94rem + 0.2vw, 1.08rem);
+	line-height: 1.7;
+	color: rgba(255, 255, 255, 0.88);
+	max-width: 60ch;
+}
+
+.erp-sec__list {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.85rem 1.5rem;
+	margin: 1.5rem 0 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		font-size: 0.95rem;
+		font-weight: 500;
+		color: #fff;
+	}
+
+	@include bp.down('sm') { grid-template-columns: 1fr; }
+}
+.erp-sec__check {
+	display: inline-flex;
+	flex: 0 0 auto;
+	color: #fff;
+	svg { width: 15px; height: 15px; }
+}
+
+// White pill CTA (row 2).
+.erp-sec__btn.btn {
+	--btn-bg: #fff;
+	--btn-fg: #1a1a1c;
+	margin-top: 2rem;
+	padding: 1rem 2.2rem;
+	box-shadow: 0 14px 30px -14px rgba(26, 10, 60, 0.45);
+	&:hover { --btn-bg: #f3efff; --btn-fg: #1a1a1c; transform: translateY(-2px); }
+}
+
+// 3-up stats strip (row 2).
+.erp-sec__stats {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: clamp(1.25rem, 3vw, 2.5rem);
+	margin: clamp(2.25rem, 4vw, 3.25rem) 0 0;
+	padding: 0;
+	list-style: none;
+
+	@include bp.down('sm') { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+.erp-sec__stat {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+.erp-sec__stat-icon {
+	display: inline-flex;
+	color: #fff;
+	opacity: 0.95;
+	margin-bottom: 0.25rem;
+	svg { width: 30px; height: 30px; }
+
+	// The "tasks completed" check reads as a circled tick like the reference.
+	.erp-sec__stat:last-child & {
+		width: 34px; height: 34px;
+		align-items: center;
+		justify-content: center;
+		border: 2.5px solid #fff;
+		border-radius: 50%;
+		svg { width: 16px; height: 16px; }
+	}
+}
+.erp-sec__stat-value {
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.35rem);
+	line-height: 1.1;
+	letter-spacing: -0.01em;
+	color: #fff;
+}
+.erp-sec__stat-label { font-size: 0.92rem; color: rgba(255, 255, 255, 0.82); }
+
+// =============================================================================
+// Row 1 visual — layered dashboards
+// =============================================================================
+.erp-sec__visual {
+	position: relative;
+	width: 100%;
+	max-width: 560px;
+	aspect-ratio: 10 / 8;
+	margin-inline: auto;
+
+	@include bp.up('lg') { margin-inline: 0 auto; }
+}
+
+.erp-shot {
+	position: absolute;
+	border-radius: 14px;
+	background: #fff;
+	box-shadow: 0 40px 80px -30px rgba(20, 6, 60, 0.55);
+}
+
+// ---- Odoo-style sales dashboard (back layer) ----
+.erp-shot--dash {
+	left: 0;
+	bottom: 0;
+	width: 88%;
+	display: flex;
+	overflow: hidden;
+	z-index: 1;
+}
+.erp-shot__side {
+	flex: 0 0 32%;
+	background: #171a2b;
+	color: #cbd2e1;
+	padding: 14px 0 16px;
+}
+.erp-shot__logo {
+	display: block;
+	padding: 0 16px 12px;
+	font-family: var(--amber-font-display);
+	font-weight: 800;
+	font-size: 15px;
+	letter-spacing: -0.02em;
+	color: #fff;
+}
+.erp-shot__menu {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	li {
+		position: relative;
+		padding: 7px 16px 7px 30px;
+		font-size: 10px;
+		white-space: nowrap;
+		&::before {
+			content: '';
+			position: absolute;
+			left: 16px; top: 50%;
+			translate: 0 -50%;
+			width: 7px; height: 7px;
+			border-radius: 2.5px;
+			background: #5b647d;
+		}
+		&.is-on {
+			background: rgba(134, 79, 254, 0.28);
+			color: #fff;
+			&::before { background: #a585ff; }
+			&::after {
+				content: '';
+				position: absolute;
+				left: 0; top: 0; bottom: 0;
+				width: 3px;
+				background: #a585ff;
+			}
+		}
+	}
+}
+.erp-shot__main {
+	flex: 1;
+	min-width: 0;
+	padding: 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	background: #f7f8fb;
+}
+.erp-shot__sale {
+	align-self: flex-start;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 9px 12px;
+	border-radius: 10px;
+	background: #fff;
+	box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+	> span:first-child { font-size: 9px; color: #98a2b3; }
+}
+.erp-shot__sale-row {
+	display: flex;
+	align-items: baseline;
+	gap: 6px;
+	b { font-family: var(--amber-font-display); font-weight: 800; font-size: 15px; color: #101828; }
+	em { font-style: normal; font-size: 8.5px; font-weight: 700; color: #16a34a; background: rgba(34, 197, 94, 0.12); padding: 1px 5px; border-radius: 999px; }
+}
+.erp-shot__panels {
+	display: grid;
+	grid-template-columns: 1.35fr 1fr;
+	gap: 10px;
+	min-width: 0;
+}
+.erp-shot__chart,
+.erp-shot__top {
+	min-width: 0;
+	padding: 9px 10px 8px;
+	border-radius: 10px;
+	background: #fff;
+	box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+}
+.erp-shot__panel-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 7px;
+	b { font-size: 9.5px; color: #101828; }
+	i { font-style: normal; font-size: 8px; color: #98a2b3; white-space: nowrap; }
+}
+.erp-shot__chart svg { display: block; width: 100%; height: 62px; }
+.erp-shot__grid line { stroke: rgba(15, 23, 42, 0.06); stroke-dasharray: 3 5; }
+.erp-shot__line {
+	fill: none;
+	stroke-width: 2;
+	stroke-linecap: round;
+	&--violet { stroke: #864ffe; }
+	&--green { stroke: #22c55e; }
+}
+.erp-shot__months {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 4px;
+	i { font-style: normal; font-size: 7px; color: #cbd5e1; }
+}
+.erp-shot__products {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: grid;
+	gap: 8px;
+	li {
+		display: grid;
+		grid-template-columns: auto 1fr auto;
+		align-items: center;
+		gap: 6px;
+		span { font-size: 8px; color: #475467; white-space: nowrap; }
+		i {
+			display: block;
+			height: 4px;
+			width: var(--w, 50%);
+			border-radius: 2px;
+			background: #864ffe;
+			&.is-green { background: #22c55e; }
+		}
+		b { font-size: 8px; color: #101828; }
+	}
+}
+
+// ---- Floating finance card (front layer) ----
+.erp-shot--fin {
+	top: 0;
+	right: 0;
+	width: 60%;
+	max-width: 300px;
+	z-index: 2;
+	padding: 16px 18px 18px;
+	animation: erp-float 7s ease-in-out infinite;
+}
+.erp-fin__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 10px;
+	b { font-size: 13px; color: #101828; }
+	i { font-style: normal; font-size: 9.5px; color: #667085; }
+}
+.erp-fin__label { display: block; font-size: 9px; color: #98a2b3; }
+.erp-fin__balance {
+	display: block;
+	margin: 2px 0 10px;
+	font-family: var(--amber-font-display);
+	font-weight: 800;
+	font-size: 22px;
+	letter-spacing: -0.01em;
+	color: #6d1fe2;
+}
+.erp-fin__tabs {
+	display: flex;
+	gap: 16px;
+	border-bottom: 1px solid #eef1f6;
+	margin-bottom: 12px;
+	i {
+		font-style: normal;
+		font-size: 10px;
+		font-weight: 600;
+		color: #98a2b3;
+		padding-bottom: 6px;
+		&.is-on { color: #864ffe; box-shadow: inset 0 -2px 0 #864ffe; }
+	}
+}
+.erp-fin__person {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	margin-bottom: 12px;
+}
+.erp-fin__avatar {
+	width: 30px; height: 30px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #fcd9b8, #b98a5e);
+	flex: 0 0 auto;
+}
+.erp-fin__who {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.25;
+	min-width: 0;
+	b { font-size: 10.5px; color: #101828; white-space: nowrap; }
+	small { font-size: 8.5px; color: #98a2b3; white-space: nowrap; }
+}
+.erp-fin__donut {
+	position: relative;
+	margin-left: auto;
+	width: 52px; height: 52px;
+	flex: 0 0 auto;
+	display: grid;
+	place-content: center;
+	text-align: center;
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: 50%;
+		background: conic-gradient(#864ffe 0 78%, #ece8ff 78% 100%);
+		-webkit-mask: radial-gradient(closest-side, transparent 70%, #000 71%);
+		mask: radial-gradient(closest-side, transparent 70%, #000 71%);
+	}
+	b { font-size: 11px; color: #101828; line-height: 1; }
+	small { font-size: 6.5px; color: #98a2b3; }
+}
+.erp-fin__tax {
+	display: flex;
+	gap: 6px;
+	margin: 4px 0 12px;
+	i {
+		font-style: normal;
+		font-size: 9px;
+		font-weight: 600;
+		color: #475467;
+		padding: 4px 10px;
+		border-radius: 7px;
+		background: #f4f5f8;
+		&.is-on { background: #864ffe; color: #fff; }
+	}
+}
+.erp-fin__pay {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 9px 12px;
+	border-radius: 9px;
+	background: #864ffe;
+	color: #fff;
+	font-size: 10.5px;
+	font-weight: 600;
+	svg { width: 12px; height: 12px; transform: rotate(-90deg); }
+}
+
+// =============================================================================
+// Row 2 visual — three overlapping mini analytics cards
+// =============================================================================
+.erp-sec__stack {
+	position: relative;
+	width: 100%;
+	max-width: 460px;
+	aspect-ratio: 10 / 8.5;
+	margin-inline: auto;
+}
+.erp-mini {
+	position: absolute;
+	width: 64%;
+	padding: 13px 15px 14px;
+	border-radius: 13px;
+	background: #fff;
+	box-shadow: 0 30px 60px -26px rgba(20, 6, 60, 0.6);
+	animation: erp-float 7s ease-in-out infinite;
+
+	&--rev { top: 0; left: 0; z-index: 1; }
+	&--orders { top: 31%; right: 0; z-index: 2; animation-delay: -2.4s; }
+	&--team { bottom: 0; left: 6%; z-index: 3; width: 58%; animation-delay: -4.6s; }
+}
+.erp-mini__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+	b { font-size: 11px; color: #101828; }
+	em { font-style: normal; font-size: 9px; font-weight: 700; color: #16a34a; background: rgba(34, 197, 94, 0.12); padding: 1px 6px; border-radius: 999px; }
+}
+.erp-mini__value {
+	display: block;
+	margin: -4px 0 6px;
+	font-family: var(--amber-font-display);
+	font-weight: 800;
+	font-size: 19px;
+	color: #101828;
+}
+.erp-mini--rev svg { display: block; width: 100%; height: 48px; }
+.erp-mini__area { fill: rgba(134, 79, 254, 0.16); }
+.erp-mini__line { fill: none; stroke: #864ffe; stroke-width: 2; stroke-linecap: round; }
+
+.erp-mini__split { display: flex; align-items: center; gap: 12px; }
+.erp-mini__donut {
+	position: relative;
+	width: 58px; height: 58px;
+	flex: 0 0 auto;
+	display: grid;
+	place-items: center;
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: 50%;
+		background: conic-gradient(#864ffe 0 54%, #22c55e 54% 85%, #f59e0b 85% 100%);
+		-webkit-mask: radial-gradient(closest-side, transparent 66%, #000 67%);
+		mask: radial-gradient(closest-side, transparent 66%, #000 67%);
+	}
+	b { font-size: 11px; color: #101828; }
+}
+.erp-mini__legend {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: grid;
+	gap: 5px;
+	flex: 1;
+	min-width: 0;
+	li {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		gap: 8px;
+		padding-left: 12px;
+		font-size: 9px;
+		color: #475467;
+		white-space: nowrap;
+		&::before {
+			content: '';
+			position: absolute;
+			left: 0; top: 50%;
+			translate: 0 -50%;
+			width: 6px; height: 6px;
+			border-radius: 50%;
+		}
+		&.is-violet::before { background: #864ffe; }
+		&.is-green::before { background: #22c55e; }
+		&.is-amber::before { background: #f59e0b; }
+		b { color: #101828; }
+	}
+}
+
+.erp-mini__bars {
+	display: flex;
+	align-items: flex-end;
+	gap: 7px;
+	height: 58px;
+	i {
+		flex: 1;
+		height: var(--h, 50%);
+		border-radius: 4px 4px 0 0;
+		background: rgba(134, 79, 254, 0.35);
+		&.is-peak { background: #864ffe; }
+	}
+}
+
+// ---- Motion ---------------------------------------------------------------------
+@keyframes erp-float {
+	0%, 100% { translate: 0 0; }
+	50% { translate: 0 -8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.erp-shot--fin, .erp-mini { animation: none !important; }
+}

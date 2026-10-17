@@ -1,0 +1,404 @@
+// =============================================================================
+// Sections · CTA banner & Contact
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// ---- CTA ----
+// Pixel-matched to a reference "pricing CTA" band (sn-pricecta): a centered
+// panel on a soft gradient wash, with a triangle outline pinned near the top
+// left and a diamond outline pinned on the right — both floating at the
+// section's own edges, not inside the copy column. Re-tinted from the
+// reference's cream/orange palette to the Amber sky-blue brand: light-blue
+// gradient wash, navy (--amber-ink) heading/shapes/button.
+.cta-banner {
+	position: relative;
+	overflow: hidden;
+	background: linear-gradient(180deg, var(--amber-brand-50) 0%, var(--amber-brand-100) 100%);
+	padding: clamp(3.5rem, 7vw, 5.5rem) 0;
+	text-align: center;
+}
+
+.cta-banner__inner {
+	max-width: 46rem;
+	margin-inline: auto;
+}
+
+.cta-banner__title {
+	margin: 0;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	line-height: 1.25;
+	font-size: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+	color: var(--amber-ink);
+}
+
+.cta-banner__text {
+	margin: var(--amber-space-4) 0 0;
+	font-size: var(--amber-fs-md);
+	color: var(--amber-body);
+}
+
+.cta-banner__btn {
+	margin-top: var(--amber-space-6);
+}
+
+// Outline shapes in navy, pinned at the section's own corners (percentage
+// offsets so they stay roughly in place across section heights/widths,
+// matching the reference's fixed-but-responsive placement).
+.cta-banner__deco {
+	position: absolute;
+	display: none;
+	width: 40px;
+	height: 40px;
+	color: var(--amber-ink);
+	opacity: 0.35;
+	pointer-events: none;
+
+	@include bp.up('md') { display: block; }
+
+	&--tri {
+		top: 18%;
+		left: 6%;
+	}
+
+	&--diamond {
+		top: 62%;
+		right: 6%;
+		width: 34px;
+		height: 34px;
+	}
+}
+
+// ---- Contact ----
+// The section doubles as the Contact page's banner, so it carries the same
+// aurora backdrop as the homepage hero (.aurora-bg, defined in _hero.scss).
+// That needs it to be a stage of its own: a white ground for the teal/cyan to
+// glow against, clipped edges so the blurred bands don't bleed into the next
+// section, and its own stacking context so they stay behind the content.
+.section--contact {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+
+	// Fuller across the top than the hero's. The hero is a 100svh stage whose
+	// copy sits centred, so two corner bands are all it needs; this section is
+	// a banner with content starting straight away, and at the hero's settings
+	// the colour read as two smudges either side of a white gap. Wider bands
+	// pushed further in (the mask holds solid to 44% and only clears at the
+	// far edge) close that gap into one continuous wash.
+	//
+	// The band is also pulled well above the top edge on purpose. Each gradient
+	// starts pale (the right one especially: #a5f3fc against the left's #5eead4)
+	// and only reaches full strength around a third of the way down, so a small
+	// negative offset left the top edge washed out — and unevenly, since the two
+	// gradients start at different intensities. Hoisting 28% of a 78% band off
+	// the top puts both at their saturated middle exactly where the screen
+	// begins, so the colour is strong and even from the first pixel, including
+	// behind the header. The band still reaches ~50% down the section.
+	--aurora-top: -28%;
+	--aurora-height: 78%;
+	--aurora-width: 52%;
+	--aurora-inset: -10%;
+	--aurora-blur: 56px;
+	--aurora-solid: 44%;
+	--aurora-mid: 74%;
+	--aurora-fade: 100%;
+
+	> .container {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+// This section IS the Contact page's banner, so the page drops the body's top
+// offset (body.has-overlay-hero) and the section runs to the top of the window
+// with the floating header over it — the aurora reads as a full wash from the
+// very top rather than starting below a white header band. That makes the
+// section responsible for clearing the pill itself: it is 66px tall and sits
+// clamp(0.75rem, 1.6vw, 1.5rem) from the top, so ~7rem is the floor before the
+// eyebrow would collide with it.
+.page-contact .section--contact {
+	padding-top: clamp(7.5rem, 6rem + 5vw, 10rem);
+}
+
+// Logged-in admins get the WP admin bar above everything, which the fixed
+// header already offsets against — the banner has to clear both.
+.admin-bar.page-contact .section--contact {
+	padding-top: clamp(9.5rem, 8rem + 5vw, 12rem);
+}
+
+// =============================================================================
+// Contact Us page — premium enterprise-SaaS visual pass (Stripe/Linear/Vercel-
+// style). Scoped entirely to .page-contact: layout, markup and copy are
+// untouched — only colour, depth, spacing and motion change.
+// =============================================================================
+.page-contact {
+	// Soft page wash instead of pure white, plus a few very low-opacity blue
+	// glows for ambient depth. Fixed positioning on the pseudo-elements keeps
+	// them from adding scrollable height. Uses the shared surface token so the
+	// page and its sections wash to exactly the same off-white — a one-off hex
+	// here left a faint seam wherever a section ended.
+	position: relative;
+	background: var(--amber-surface);
+	isolation: isolate;
+
+	&::before,
+	&::after {
+		content: '';
+		position: fixed;
+		z-index: -1;
+		border-radius: 50%;
+		filter: blur(70px);
+		pointer-events: none;
+	}
+	&::before {
+		top: -12%;
+		right: -8%;
+		width: clamp(20rem, 34vw, 34rem);
+		aspect-ratio: 1;
+		background: radial-gradient(closest-side, rgba(14, 165, 233, 0.08), transparent 100%);
+	}
+	&::after {
+		bottom: -14%;
+		left: -10%;
+		width: clamp(18rem, 30vw, 30rem);
+		aspect-ratio: 1;
+		background: radial-gradient(closest-side, rgba(99, 102, 241, 0.06), transparent 100%);
+	}
+
+	// Hero heading — subtle radial glow behind the title, no illustration.
+	.section-header {
+		position: relative;
+
+		&::before {
+			content: '';
+			position: absolute;
+			top: -2rem;
+			left: 50%;
+			transform: translateX(-50%);
+			width: min(46rem, 90vw);
+			height: 20rem;
+			background: radial-gradient(closest-side, rgba(14, 165, 233, 0.1), transparent 72%);
+			pointer-events: none;
+			z-index: -1;
+		}
+	}
+	.section-header__eyebrow { color: var(--amber-brand); }
+	.section-header__title {
+		color: #0f172a;
+		line-height: 1.15;
+	}
+	.section-header__subtitle {
+		color: #64748b;
+		line-height: 1.75;
+	}
+
+	// Generous section rhythm so the page reads as spacious, not cramped.
+	.section--contact .container { padding-block: clamp(1rem, 0.5rem + 2vw, 2.5rem); }
+}
+
+.contact__grid {
+	display: grid;
+	gap: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+	grid-template-columns: 1fr;
+	align-items: stretch; // form + details panels match height on the row
+	@include bp.up('lg') { grid-template-columns: 1.3fr 1fr; }
+}
+
+// Floating panel treatment shared by both cards.
+.contact__form-wrap,
+.contact__details {
+	display: flex;
+	flex-direction: column;
+	padding: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+	border-radius: 22px;
+	background: #ffffff;
+	border: 1px solid #e7edf5;
+	box-shadow: 0 20px 50px rgba(15, 23, 42, 0.06);
+	transition: box-shadow var(--amber-dur) var(--amber-ease), transform var(--amber-dur) var(--amber-ease);
+
+	&:hover {
+		box-shadow: 0 28px 64px rgba(15, 23, 42, 0.09);
+		transform: translateY(-2px);
+	}
+}
+
+.contact__form-heading,
+.contact__details-heading {
+	font-size: var(--amber-fs-lg);
+	color: #0f172a;
+}
+.contact__form-text,
+.contact__details-text {
+	margin-top: var(--amber-space-2);
+	margin-bottom: var(--amber-space-5);
+	font-size: var(--amber-fs-sm);
+	line-height: 1.75;
+	color: #64748b;
+}
+.contact__details-eyebrow {
+	display: flex; align-items: center; gap: var(--amber-space-3);
+	font-size: var(--amber-fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+	color: var(--amber-brand);
+	&::before { content: ''; width: 1.25rem; height: 1px; background: currentColor; }
+}
+.contact__details-heading { margin-top: var(--amber-space-2); }
+
+// ---- Contact details list — icon chips, breathing room, thin dividers ----
+.contact-info {
+	display: grid; gap: var(--amber-space-5);
+	margin-bottom: var(--amber-space-5);
+	li {
+		display: flex; gap: 0.9rem; align-items: flex-start;
+		padding-bottom: var(--amber-space-5);
+		border-bottom: 1px solid #eef2f8;
+		&:last-child { padding-bottom: 0; border-bottom: none; }
+	}
+	&__icon {
+		flex-shrink: 0;
+		display: inline-flex; align-items: center; justify-content: center;
+		width: 40px; height: 40px; border-radius: 12px;
+		background: #eaf4ff; color: var(--amber-brand);
+		transition: transform var(--amber-dur-fast) var(--amber-ease), background var(--amber-dur-fast) var(--amber-ease);
+		svg { width: 18px; height: 18px; }
+	}
+	li:hover &__icon { transform: translateY(-1px); background: #ddedfe; }
+	&__body { display: flex; flex-direction: column; gap: 0.2rem; font-size: var(--amber-fs-sm); }
+	&__label {
+		font-size: var(--amber-fs-xs); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+		color: #475569;
+	}
+	a { color: #1e293b; font-weight: 500; transition: color var(--amber-dur-fast) ease; &:hover { color: var(--amber-brand); } }
+}
+.contact__details-follow {
+	display: flex; align-items: center; gap: var(--amber-space-4);
+	padding-top: var(--amber-space-5);
+	border-top: 1px solid #eef2f8;
+}
+.contact__details-follow-label {
+	font-size: var(--amber-fs-xs); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+	color: #475569;
+}
+.contact-social {
+	display: flex; gap: 0.6rem; list-style: none; margin: 0; padding: 0;
+	&__link {
+		display: inline-flex; align-items: center; justify-content: center;
+		width: 38px; height: 38px; border-radius: 12px;
+		background: #eaf4ff;
+		border: 1px solid #e7edf5;
+		color: #1e293b;
+		transition: all var(--amber-dur-fast) var(--amber-ease);
+		svg { width: 16px; height: 16px; }
+		&:hover { background: var(--amber-brand); border-color: var(--amber-brand); color: #fff; transform: translateY(-2px); }
+	}
+}
+.contact__map {
+	border-radius: var(--amber-radius);
+	overflow: hidden;
+	box-shadow: var(--amber-shadow-sm);
+	border: 1px solid #e7edf5;
+	iframe { display: block; }
+}
+
+// ---- Contact Form 7 markup (used by the "Contact Us" page template) ----
+// CF7's shortcode renders plain <p><label>…</label><br><input class="wpcf7-*">
+// wrapped in <form class="wpcf7-form"> — there are no .form-row/.form-group
+// classes to hook into, so style the real wpcf7-* output directly.
+.wpcf7-form {
+	flex: 1; // fills .contact__form-wrap so it matches the details panel height
+	display: flex;
+	flex-direction: column;
+
+	// The CF7 form body (authored in the CF7 editor) is:
+	//   <div class="contact7-form">
+	//     <div class="form-row">  Name | Email   </div>
+	//     <div class="form-row">  Number | Country </div>
+	//     <div class="form-group full-width"> Message </div>
+	//     <div class="submit-btn"> Send </div>
+	//   </div>
+	// wpautop wraps each label+field in a <p> with a <br> after the label.
+	.contact7-form {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.form-row {
+		display: grid;
+		gap: var(--amber-space-4) var(--amber-space-5);
+		grid-template-columns: 1fr;
+		margin-bottom: var(--amber-space-4);
+		@include bp.up('md') { grid-template-columns: 1fr 1fr; }
+	}
+	.form-group,
+	.full-width {
+		margin-bottom: var(--amber-space-4);
+	}
+	p { margin: 0; }
+	label + br { display: none; } // wpautop's <br> — the label margin is enough
+	label {
+		display: block;
+		margin-bottom: var(--amber-space-2);
+		font-weight: 600;
+		font-size: var(--amber-fs-xs);
+		color: #475569;
+	}
+	.submit-btn {
+		margin-top: auto;
+		padding-top: var(--amber-space-2);
+		text-align: center;
+	}
+	.wpcf7-form-control {
+		width: 100%;
+		padding: 0.75rem 1rem;
+		border: 1px solid #e7edf5;
+		border-radius: 12px;
+		background: #fafbfd;
+		font-size: var(--amber-fs-xs);
+		font-family: inherit;
+		color: var(--amber-ink);
+		transition: border-color var(--amber-dur-fast) var(--amber-ease),
+			box-shadow var(--amber-dur-fast) var(--amber-ease),
+			background var(--amber-dur-fast) var(--amber-ease);
+
+		&:hover { border-color: #cbd8ea; }
+		&:focus {
+			outline: none;
+			border-color: var(--amber-brand);
+			background: #fff;
+			box-shadow: 0 0 0 4px var(--amber-brand-50);
+		}
+	}
+	textarea.wpcf7-form-control {
+		height: 8rem;
+		resize: vertical;
+	}
+	.wpcf7-form-control.wpcf7-submit {
+		width: auto;
+		padding: 0.85rem 2.25rem;
+		border: none;
+		border-radius: var(--amber-radius-pill);
+		background: linear-gradient(135deg, var(--amber-brand) 0%, var(--amber-brand-600) 100%);
+		color: #fff;
+		font-weight: 600;
+		font-size: var(--amber-fs-sm);
+		cursor: pointer;
+		box-shadow: 0 12px 28px -10px rgba(14, 165, 233, 0.45);
+		transition: transform var(--amber-dur-fast) var(--amber-ease), box-shadow var(--amber-dur-fast) var(--amber-ease);
+		&:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -10px rgba(14, 165, 233, 0.55); }
+		&:active { transform: translateY(0); }
+	}
+	.wpcf7-not-valid-tip { color: #dc2626; font-size: var(--amber-fs-xs); margin-top: var(--amber-space-1); }
+	.wpcf7-response-output { margin-top: var(--amber-space-4); border-radius: var(--amber-radius-sm); font-size: var(--amber-fs-sm); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.contact__form-wrap,
+	.contact__details,
+	.contact-info__icon,
+	.contact-social__link,
+	.wpcf7-form-control,
+	.wpcf7-form-control.wpcf7-submit {
+		transition: none;
+	}
+}

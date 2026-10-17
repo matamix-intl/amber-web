@@ -1,0 +1,30 @@
+// =============================================================================
+// Settings · Breakpoints & responsive mixins
+// Mobile-first. Use bp.up('md') to add styles from a breakpoint upward.
+// =============================================================================
+
+@use 'sass:map';
+
+$breakpoints: (
+	'sm': 480px,   // small mobile
+	'md': 768px,   // tablet
+	'lg': 1024px,  // laptop
+	'xl': 1280px,  // desktop
+	'xxl': 1536px, // large desktop
+);
+
+@mixin up($name) {
+	@if map.has-key($breakpoints, $name) {
+		@media (min-width: map.get($breakpoints, $name)) {
+			@content;
+		}
+	} @else {
+		@error "Unknown breakpoint: #{$name}";
+	}
+}
+
+@mixin down($name) {
+	@media (max-width: (map.get($breakpoints, $name) - 0.02px)) {
+		@content;
+	}
+}

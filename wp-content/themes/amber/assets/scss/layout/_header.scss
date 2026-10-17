@@ -1,0 +1,467 @@
+// =============================================================================
+// Layout · Header — enterprise SaaS nav, Products mega menu, mobile drawer
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// ---- Announcement bar ----
+.announcement-bar {
+	position: relative;
+	z-index: 120;
+	background: var(--amber-navy-700);
+	color: #d8e3f5;
+	font-size: var(--amber-fs-sm);
+	text-align: center;
+	padding-block: 0.6rem;
+
+	&__link {
+		color: #fff; font-weight: 600;
+		display: inline-flex; align-items: center; gap: 0.35rem;
+		svg { width: 1em; height: 1em; }
+		&:hover { color: #fff; text-decoration: underline; }
+	}
+}
+
+// =============================================================================
+// Floating navigation capsule — a pill that floats over the hero
+// =============================================================================
+.site-header {
+	position: fixed;
+	top: clamp(0.75rem, 1.6vw, 1.5rem);
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 100;
+	// Compact pill — logo left, menu dead-centre, CTA right. Narrower than the
+	// content container so a 3-item menu doesn't leave dead space.
+	width: min(900px, calc(100% - 2rem));
+	transition: transform 0.45s var(--amber-ease), opacity 0.35s ease;
+
+	// Hidden while the scroll-zoom reveal is full-bleed (toggled by reveal-zoom.js).
+	&.is-hidden {
+		transform: translateX(-50%) translateY(-185%);
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	// The pill itself — clean white glass with a hairline border and a soft,
+	// diffuse shadow, matching the light aurora hero.
+	&__inner {
+		// 1fr | auto | 1fr keeps the menu mathematically centred regardless of
+		// how wide the logo and the CTA are. Below `lg` the centre nav column
+		// is hidden (see .site-nav), so the 3-column split would otherwise
+		// pull brand/actions inward instead of to the pill's true edges —
+		// switch to a plain 2-item flex row there instead.
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		align-items: center;
+		gap: var(--amber-space-4);
+		height: 66px;
+		padding: 0 0.5rem 0 1.5rem;
+		background: rgba(255, 255, 255, 0.92);
+		border: 1px solid rgba(15, 23, 42, 0.06);
+		border-radius: var(--amber-radius-pill);
+		backdrop-filter: saturate(180%) blur(24px);
+		-webkit-backdrop-filter: saturate(180%) blur(24px);
+		box-shadow:
+			0 24px 60px -28px rgba(15, 23, 42, 0.22),
+			0 2px 8px -4px rgba(15, 23, 42, 0.1);
+		transition: background var(--amber-dur-fast) ease, border-color var(--amber-dur-fast) ease,
+			height var(--amber-dur) var(--amber-ease), box-shadow var(--amber-dur-fast) ease;
+
+		@include bp.down('lg') {
+			display: flex;
+			justify-content: space-between;
+		}
+	}
+
+	// Slightly more solid + tighter once scrolled.
+	&.is-shrunk &__inner {
+		height: 58px;
+		background: #fff;
+		border-color: rgba(15, 23, 42, 0.08);
+		box-shadow: 0 26px 64px -26px rgba(15, 23, 42, 0.28);
+	}
+
+	&__brand { justify-self: start; }
+	&__actions { display: flex; align-items: center; gap: var(--amber-space-3); justify-self: end; }
+	&__cta { @include bp.down('sm') { display: none; } }
+}
+
+// Floating header => offset inner pages. Pages that lead with a full-bleed
+// banner (home hero, Contact) flow under it instead, so their background runs
+// to the top of the window; those sections carry their own top padding to keep
+// the copy clear of the pill.
+body { padding-top: calc(64px + clamp(1.5rem, 3.2vw, 3rem)); }
+body.has-overlay-hero { padding-top: 0; }
+
+// Sit below the WordPress admin bar when logged in.
+.admin-bar .site-header { top: calc(32px + clamp(0.5rem, 1.4vw, 1rem)); }
+@include bp.down('md') { .admin-bar .site-header { top: calc(46px + 0.5rem); } }
+
+// ---- Brand lockup ----
+.site-logo { display: inline-flex; align-items: center; &__img { max-height: 42px; width: auto; } }
+.custom-logo-link img { max-height: 42px; width: auto; }
+
+.brand-lockup {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+
+	&__mark { display: inline-flex; filter: drop-shadow(0 4px 10px rgba(56, 189, 248, 0.35)); }
+	&__text { display: flex; flex-direction: column; line-height: 1; }
+	&__name {
+		font-family: var(--amber-font-display);
+		font-weight: 800;
+		font-size: 1.4rem;
+		color: #101828;
+		letter-spacing: -0.04em;
+	}
+	&__sub {
+		font-size: 0.6rem;
+		font-weight: 600;
+		letter-spacing: 0.34em;
+		color: #475467;
+		margin-top: 2px;
+	}
+}
+
+// =============================================================================
+// Desktop navigation
+// =============================================================================
+.site-nav {
+	@include bp.down('lg') { display: none; }
+
+	&__menu { display: flex; align-items: center; gap: 0.35rem; }
+}
+
+.nav-item { position: static; }            // static so the mega can span the header
+.nav-item--mega { position: relative; }
+
+.nav-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 0.6rem 0.95rem;
+	border-radius: var(--amber-radius-sm);
+	font-family: var(--amber-font-sans);
+	font-weight: 500;
+	font-size: 1rem;
+	color: #374151;
+	background: none;
+	cursor: pointer;
+	transition: color var(--amber-dur-fast) ease, background var(--amber-dur-fast) ease;
+
+	// Animated underline.
+	position: relative;
+	&::after {
+		content: '';
+		position: absolute;
+		left: 0.95rem; right: 0.95rem; bottom: 0.4rem;
+		height: 2px;
+		background: var(--amber-brand, #0ea5e9);
+		border-radius: 2px;
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform var(--amber-dur-fast) var(--amber-ease);
+	}
+	&:hover, &:focus-visible { color: #101828; }
+	&:hover::after { transform: scaleX(1); }
+
+	&__caret {
+		display: inline-flex;
+		transition: transform var(--amber-dur-fast) ease;
+		svg { width: 16px; height: 16px; }
+	}
+}
+
+// Current page + open dropdown highlight in the brand blue.
+.current-menu-item > .nav-link,
+.nav-item--mega.is-open .nav-link--mega { color: var(--amber-brand, #0ea5e9); }
+.nav-item--mega.is-open .nav-link__caret { transform: rotate(180deg); }
+
+// =============================================================================
+// Products mega menu
+// =============================================================================
+.mega {
+	position: absolute;
+	top: calc(100% + 14px);
+	left: 50%;
+	transform: translateX(-50%) translateY(10px);
+	width: min(1040px, calc(100vw - 2.5rem));
+	padding: 0;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition: opacity var(--amber-dur-fast) var(--amber-ease),
+		transform var(--amber-dur-fast) var(--amber-ease),
+		visibility var(--amber-dur-fast);
+	z-index: 90;
+
+	// Invisible bridge over the gap between the trigger and the panel (the
+	// panel sits `top: calc(100% + 14px)` below the <li>) so moving the mouse
+	// straight down from the trigger toward a link doesn't exit the hoverable
+	// area and prematurely close the menu.
+	&::before {
+		content: '';
+		position: absolute;
+		top: -14px;
+		left: 0;
+		right: 0;
+		height: 14px;
+	}
+
+	&__inner {
+		background: rgba(255, 255, 255, 0.96);
+		backdrop-filter: saturate(180%) blur(22px);
+		-webkit-backdrop-filter: saturate(180%) blur(22px);
+		border: 1px solid rgba(15, 23, 42, 0.07);
+		border-radius: var(--amber-radius-lg);
+		box-shadow: 0 40px 80px -30px rgba(15, 23, 42, 0.35);
+		padding: var(--amber-space-6);
+	}
+
+	&__title {
+		font-family: var(--amber-font-sans);
+		font-size: var(--amber-fs-xs);
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: #7c5cfc;
+		margin-bottom: var(--amber-space-4);
+	}
+
+	&__grid {
+		display: grid;
+		gap: var(--amber-space-4);
+		grid-template-columns: repeat(2, 1fr);
+		@include bp.up('xl') { grid-template-columns: repeat(4, 1fr); }
+	}
+}
+
+// Compact list variant — the Services dropdown (reference design: white
+// rounded panel with plain links + an arrow that slides in on hover).
+.mega--list {
+	width: auto;
+	min-width: 280px;
+
+	.mega__inner {
+		border-radius: 20px;
+		padding: 0.85rem;
+	}
+}
+
+.mega-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+
+	&__link {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding: 0.65rem 0.85rem;
+		border-radius: 12px;
+		font-family: var(--amber-font-sans);
+		font-weight: 500;
+		font-size: 0.95rem;
+		white-space: nowrap;
+		color: #475467;
+		transition: color var(--amber-dur-fast) ease, background var(--amber-dur-fast) ease;
+
+		&:hover, &:focus-visible { color: #101828; background: #f1f5f9; }
+	}
+
+	&__arrow {
+		display: inline-flex;
+		opacity: 0;
+		transform: translateX(-4px);
+		transition: opacity var(--amber-dur-fast) ease, transform var(--amber-dur-fast) var(--amber-ease);
+		svg { width: 14px; height: 14px; }
+	}
+	&__link:hover &__arrow, &__link:focus-visible &__arrow { opacity: 1; transform: translateX(0); }
+}
+
+// Open state — driven by JS (.is-open) and hover/focus for resilience.
+.nav-item--mega.is-open .mega,
+.nav-item--mega:hover .mega,
+.nav-item--mega:focus-within .mega {
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+	transform: translateX(-50%) translateY(0);
+}
+
+.mega-card {
+	--accent: #38bdf8;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	padding: var(--amber-space-5);
+	border-radius: var(--amber-radius);
+	background: #f8fafc;
+	border: 1px solid #eef2f7;
+	color: #475467;
+	transition: transform var(--amber-dur-fast) var(--amber-ease),
+		border-color var(--amber-dur-fast) ease, background var(--amber-dur-fast) ease,
+		box-shadow var(--amber-dur-fast) ease;
+
+	&:hover {
+		transform: translateY(-4px);
+		background: #fff;
+		border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+		box-shadow: 0 18px 36px -18px rgba(15, 23, 42, 0.3), 0 0 26px -10px color-mix(in srgb, var(--accent) 45%, transparent);
+		color: #344054;
+	}
+
+	&__icon {
+		display: inline-flex; align-items: center; justify-content: center;
+		width: 42px; height: 42px;
+		border-radius: 11px;
+		color: var(--accent);
+		background: color-mix(in srgb, var(--accent) 16%, transparent);
+		border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+		margin-bottom: 0.3rem;
+		svg { width: 22px; height: 22px; }
+	}
+	&__name { font-family: var(--amber-font-display); font-weight: 700; font-size: 1.05rem; color: #101828; }
+	&__desc { font-size: 0.8rem; color: #667085; line-height: 1.4; }
+
+	&__features { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.5rem; }
+	&__feature {
+		display: flex; align-items: center; gap: 0.4rem;
+		font-size: 0.8rem; color: #475467;
+		svg { width: 14px; height: 14px; color: var(--accent); flex-shrink: 0; }
+	}
+
+	&__cta {
+		display: inline-flex; align-items: center; gap: 0.3rem;
+		margin-top: var(--amber-space-4);
+		font-size: var(--amber-fs-sm); font-weight: 600; color: var(--accent);
+		opacity: 0;
+		transform: translateX(-4px);
+		transition: opacity var(--amber-dur-fast) ease, transform var(--amber-dur-fast) var(--amber-ease);
+		svg { width: 16px; height: 16px; }
+	}
+	&:hover &__cta { opacity: 1; transform: translateX(0); }
+}
+
+// =============================================================================
+// "Contact us" CTA — solid brand-blue pill
+// =============================================================================
+.site-header__cta {
+	--btn-bg: var(--amber-brand, #0ea5e9);
+	--btn-fg: #fff;
+	border-radius: var(--amber-radius-pill);
+	padding: 0.8rem 1.6rem;
+	box-shadow: 0 10px 26px -10px rgba(14, 165, 233, 0.6);
+
+	&:hover { --btn-bg: #0284c7; box-shadow: 0 16px 38px -10px rgba(14, 165, 233, 0.7); transform: translateY(-2px); }
+}
+
+// =============================================================================
+// Mobile toggle + drawer
+// =============================================================================
+.nav-toggle {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	width: 44px; height: 44px;
+	border-radius: var(--amber-radius-sm);
+	color: #101828;
+	@include bp.down('lg') { display: inline-flex; }
+
+	&__close { display: none; }
+	&[aria-expanded='true'] &__open { display: none; }
+	&[aria-expanded='true'] &__close { display: inline-flex; }
+}
+
+.mobile-menu {
+	position: fixed;
+	inset: 0 0 0 auto;
+	width: min(88vw, 380px);
+	z-index: 200;
+	background: #fff;
+	border-left: 1px solid rgba(15, 23, 42, 0.06);
+	box-shadow: var(--amber-shadow-lg);
+	transform: translateX(100%);
+	transition: transform var(--amber-dur) var(--amber-ease);
+	overflow-y: auto;
+	padding: calc(var(--amber-header-h) + 1rem) var(--amber-space-5) var(--amber-space-6);
+
+	&[hidden] { display: block; } // animated, not display:none
+	&.is-open { transform: translateX(0); }
+
+	&__list {
+		display: grid;
+		gap: 0.15rem;
+		.menu-item > a, .menu-item > .menu-item__label {
+			display: block;
+			padding: 0.9rem 0.5rem;
+			font-weight: 600;
+			font-size: var(--amber-fs-md);
+			color: #101828;
+			border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+		}
+		.sub-menu {
+			padding-left: var(--amber-space-4);
+			.menu-item > a { font-weight: 500; font-size: var(--amber-fs-sm); color: #475467; border-bottom: 0; padding-block: 0.6rem; }
+		}
+
+		// Parent item with a submenu-toggle: label + "+" button sit on one row,
+		// the submenu (full width) wraps to the next row.
+		.menu-item-has-children {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+
+			> a, > .menu-item__label {
+				flex: 1 1 auto;
+				border-bottom: none; // the <li> itself carries the divider below
+			}
+			.sub-menu { flex: 1 0 100%; }
+		}
+		.menu-item-has-children { border-bottom: 1px solid rgba(15, 23, 42, 0.07); }
+
+		.submenu-toggle {
+			flex: 0 0 auto;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 44px;
+			height: 44px;
+			color: #101828;
+			background: rgba(14, 165, 233, 0.12);
+			border-radius: 6px;
+			font-size: 1.1rem;
+		}
+	}
+
+	&__actions {
+		margin-top: var(--amber-space-5);
+		// Drawer CTA matches the header's blue pill.
+		.btn--primary {
+			--btn-bg: var(--amber-brand, #0ea5e9);
+			box-shadow: 0 10px 26px -10px rgba(14, 165, 233, 0.6);
+			&:hover { --btn-bg: #0284c7; }
+		}
+	}
+}
+
+.mobile-menu-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(4, 10, 22, 0.6);
+	z-index: 150;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity var(--amber-dur) ease;
+	&.is-visible { opacity: 1; visibility: visible; }
+}
+
+body.is-menu-open { overflow: hidden; }
+
+// Respect reduced motion for nav micro-interactions.
+@media (prefers-reduced-motion: reduce) {
+	.nav-link::after, .mega, .mega-card, .mega-card__cta { transition: none !important; }
+}

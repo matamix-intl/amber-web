@@ -1,0 +1,81 @@
+// =============================================================================
+// Sections · Blog (post cards, single post, archive)
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// ---- Post card ----
+.post-card {
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	border: 1px solid var(--amber-line);
+	border-radius: var(--amber-radius-lg);
+	overflow: hidden;
+	transition: transform var(--amber-dur) var(--amber-ease), box-shadow var(--amber-dur) ease, border-color var(--amber-dur) ease;
+	&:hover { transform: translateY(-6px); box-shadow: var(--amber-shadow); border-color: var(--amber-brand-100); }
+
+	&__media {
+		display: block;
+		aspect-ratio: 16 / 10;
+		overflow: hidden;
+		background: var(--amber-surface-2);
+		img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--amber-dur) var(--amber-ease); }
+	}
+	&:hover &__media img { transform: scale(1.05); }
+
+	&__body { display: flex; flex-direction: column; flex: 1; padding: var(--amber-space-5); }
+	&__cat { font-size: var(--amber-fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--amber-brand); }
+	&__title { margin-top: var(--amber-space-2); font-size: var(--amber-fs-md); a { color: var(--amber-ink); &:hover { color: var(--amber-brand); } } }
+	&__excerpt { margin-top: var(--amber-space-3); font-size: var(--amber-fs-sm); color: var(--amber-muted); flex: 1; }
+	&__meta { display: flex; gap: 0.5rem; align-items: center; margin-top: var(--amber-space-4); font-size: var(--amber-fs-xs); color: var(--amber-muted); }
+}
+
+.blog-preview__cta { margin-top: var(--amber-space-7); text-align: center; }
+.blog-preview__empty { text-align: center; color: var(--amber-muted); }
+
+// ---- Single post ----
+.single-post {
+	&__hero { padding-block: clamp(2.5rem, 1.5rem + 5vw, 4.5rem); text-align: center; }
+	&__cat a { font-weight: 700; text-transform: uppercase; font-size: var(--amber-fs-xs); letter-spacing: 0.05em; color: var(--amber-brand); }
+	&__title { margin-top: var(--amber-space-3); font-size: var(--amber-fs-2xl); max-width: 22ch; margin-inline: auto; }
+	&__meta { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: var(--amber-space-4); color: var(--amber-muted); font-size: var(--amber-fs-sm); }
+
+	&__media {
+		margin-top: var(--amber-space-6);
+		img { width: 100%; border-radius: var(--amber-radius-lg); box-shadow: var(--amber-shadow); aspect-ratio: 16 / 8; object-fit: cover; }
+	}
+
+	&__layout {
+		display: grid;
+		gap: var(--amber-space-8);
+		grid-template-columns: 1fr;
+		&--has-sidebar { @include bp.up('lg') { grid-template-columns: minmax(0, 1fr) 320px; } }
+	}
+	&__content { max-width: var(--amber-container-narrow); margin-inline: auto; width: 100%; }
+	&__sidebar { align-self: start; @include bp.up('lg') { position: sticky; top: calc(var(--amber-header-h) + 1.5rem); } }
+}
+
+// ---- Comments ----
+.comments {
+	max-width: var(--amber-container-narrow);
+	margin: var(--amber-space-8) auto 0;
+	&__title { font-size: var(--amber-fs-lg); margin-bottom: var(--amber-space-5); }
+	&__list {
+		display: grid; gap: var(--amber-space-5);
+		.children { margin-top: var(--amber-space-5); padding-left: var(--amber-space-5); border-left: 2px solid var(--amber-line); display: grid; gap: var(--amber-space-5); }
+	}
+	.comment-body { background: var(--amber-surface); border-radius: var(--amber-radius); padding: var(--amber-space-5); }
+	.comment-author { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; .avatar { border-radius: 50%; } }
+	.comment-meta { font-size: var(--amber-fs-xs); color: var(--amber-muted); margin: 0.25rem 0 0.75rem; }
+}
+
+// ---- Page article ----
+.page-article .entry-content { max-width: var(--amber-container-narrow); margin-inline: auto; }
+
+// ---- 404 ----
+.error-404__inner { text-align: center; }
+.error-404__code { font-family: var(--amber-font-display); font-weight: 800; font-size: clamp(5rem, 18vw, 11rem); line-height: 1; background: var(--amber-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.error-404__title { margin-top: var(--amber-space-3); font-size: var(--amber-fs-2xl); }
+.error-404__text { margin: var(--amber-space-4) auto var(--amber-space-6); max-width: 46ch; color: var(--amber-muted); }
+.error-404__actions { margin-top: var(--amber-space-5); }

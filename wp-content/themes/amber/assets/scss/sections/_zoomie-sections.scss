@@ -1,0 +1,895 @@
+// =============================================================================
+// Sections · Zoomie-only mid-page sections (stats, crucial features, core
+// solutions, three-step benefits, restaurant types, testimonials) — inserted
+// between the Zoomie hero (.gz-hero--zoomie, see _gozzbe-hero.scss) and the
+// shared ERP-page tail (services/brands/FAQ/CTA, see _erp.scss). Reference:
+// restorapos.com homepage flow, rebuilt with original copy/markup.
+//
+// Most of these reuse existing shared CSS components as-is (.counters,
+// .pos-bnft__*, .pos-key__*, .erp-ind__*, .reviews-sec/.review-card) — only
+// the pieces with no existing equivalent (solutions cards, step bullet list,
+// and a compact icon-only variant of the benefit card) get new rules here.
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+// .gz-hero's own bottom padding is trimmed to ~0 (see .gz-hero in
+// _gozzbe-hero.scss), so this section's own is-space-small top padding
+// (up to 4rem/64px) was the whole gap between the hero and the stats
+// heading. Trimmed to a small fixed gap instead of flush/0, so the two
+// sections still read as visually distinct — no change to the bottom
+// padding (which still separates it from "Crucial Features" below).
+.section--counters.is-space-small {
+	padding-top: 32px;
+}
+
+// ---- Stats heading: reference (restorapos.com) sets the whole heading on
+// ONE line — plain dark text, then the final phrase continuing in brand
+// colour on that SAME line, not dropped to its own row. The shared
+// .counters__highlight (_pixbit-sections.scss) is `display: block` for the
+// homepage's own two-line stat heading, which doesn't fit that. Scoped to
+// just the Zoomie stats section (`.section--counters` is only used there)
+// rather than changing the shared component's default for every other page.
+.section--counters .counters__highlight {
+	display: inline;
+	color: var(--amber-brand);
+}
+
+// The shared component's font-size ceiling (2.75rem) combined with its
+// `white-space: nowrap` at lg+ is sized for the homepage's own (shorter)
+// one-line headings; this section's full heading + inline highlight phrase
+// runs measurably longer, so it needs a lower ceiling to still fit one line
+// without clipping past the viewport edge at common desktop widths.
+.section--counters .counters__heading {
+	max-width: 72rem;
+	font-size: clamp(1.5rem, 1rem + 1.6vw, 2.15rem);
+}
+
+// Reference shows exactly 3 stats in one row at desktop width, each label on
+// a single unwrapped line — but forcing both a 3-column grid AND
+// `white-space: nowrap` unconditionally meant a long label (e.g.
+// "Restaurants Relies On Amber Restaurant Software") set its column's
+// content-driven width past what a narrow viewport actually has, and
+// `nowrap` blocked the only thing that would have kept it in bounds —
+// pushing the ENTIRE PAGE into horizontal scroll, not just this section.
+// Both overrides are scoped to bp.up('md') now, so mobile falls back to the
+// shared .counters component's own default 2-column, wrapping-label layout
+// (safe at any width) and only switches to the reference's 3-across
+// single-line look once there's room for it.
+@include bp.up('md') {
+	.section--counters .counters {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.section--counters .counter__label {
+		max-width: none;
+		white-space: nowrap;
+	}
+}
+
+// ---- Smart Solutions — image + two-column arrow-bullet checklist ----------
+// Reference: sigai.ae/products/dine "At A Glance" panel (Bootstrap col-lg-5 /
+// col-lg-7 split, plain right-arrow + one-line-copy rows in a 2-column list,
+// no card/border/shadow styling — deliberately plainer than the rest of this
+// page's card-heavy sections, matching the reference's minimal treatment).
+.zm-smart {
+	// Compact: reference/original padding topped out at 100px — trimmed
+	// down so the whole panel reads closer to the requested ~420px-tall
+	// container instead of a full-height marketing section.
+	padding-block: clamp(2rem, 1.5rem + 1.5vw, 3rem);
+	background: #fff;
+
+	// Wider than the theme's default 1200px .container — same pattern the
+	// ERP Key-Features/Why sections use (_erp.scss) to claim the free
+	// left/right margin either side of the standard column, rather than
+	// leaving it empty. A larger fixed side padding (not just the shared
+	// --amber-gutter token) keeps a visible breathing gap on very wide
+	// viewports, where the second list column was otherwise running flush
+	// against the browser edge.
+	.container {
+		max-width: 1500px;
+		padding-inline: clamp(1.25rem, 0.5rem + 3vw, 3.5rem);
+	}
+}
+
+.zm-smart__row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+	align-items: center;
+
+	// Exact 40/60 split, matching the requested container proportions.
+	@include bp.up('lg') {
+		grid-template-columns: 40% 60%;
+	}
+}
+
+.zm-smart__media {
+	line-height: 0;
+	// A 6/5 box (close to the source file's own portrait-ish ratio) with
+	// object-fit: contain below, so nothing gets cropped. Given a taller
+	// min-height than the ratio alone would produce at narrower viewports,
+	// so the image reads larger within its 40% column instead of shrinking
+	// to fit a short box.
+	aspect-ratio: 6 / 5;
+	min-height: 22rem;
+	overflow: hidden;
+	border-radius: var(--amber-radius-lg, 18px);
+}
+
+.zm-smart__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	// contain (not cover): nothing gets cropped off the top/bottom of the
+	// illustration — it scales to fit the box whole, letterboxing on
+	// whichever axis has spare room instead of trimming the artwork.
+	object-fit: contain;
+	object-position: center;
+}
+
+.zm-smart__heading {
+	margin: 0 0 clamp(1rem, 0.8rem + 0.8vw, 1.5rem);
+	font-family: var(--amber-font-sans);
+	font-weight: 800;
+	// Sized to stretch across the 60% column at the target ~1379px
+	// container width (≈827px column) without wrapping a third line.
+	font-size: clamp(1.6rem, 1rem + 2.2vw, 2.5rem);
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	color: var(--amber-ink);
+
+	// The PHP side emits exactly one hard <br> between the two requested
+	// lines ("Smart Solutions for Every" / "Restaurant Setup") — each one
+	// should hold that line without re-wrapping on its own once there's
+	// enough width for it to be reasonable.
+	@include bp.up('md') {
+		white-space: nowrap;
+	}
+}
+
+.zm-smart__list {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1rem 2rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	@include bp.up('md') {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+.zm-smart__item {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75rem;
+
+	p {
+		margin: 0;
+		font-size: var(--amber-fs-base, 1rem);
+		line-height: 1.6;
+		color: var(--amber-body);
+		// Strictly two lines: longer points (e.g. "Cloud-based restaurant
+		// management system integrated with Zoomie ERP.") were running to
+		// three, unbalancing the row against its shorter neighbour. Clamped
+		// rather than shortened, so no copy has to be rewritten — content
+		// past the 2nd line truncates with an ellipsis.
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		overflow: hidden;
+	}
+}
+
+.zm-smart__arrow {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	margin-top: 0.15rem;
+	color: var(--amber-brand);
+
+	svg { width: 1.15rem; height: 1.15rem; }
+}
+
+// =============================================================================
+// Zoomie Modules (#zm-features) — pixel-matched to an explicit design brief
+// referencing sigai.ae/products/dine's "DINE MODULES" panel: fixed ~320px
+// text-only nav | fixed-ratio photo (~470px) | heading/description/
+// "Key Highlights" bullet-list panel, all top-aligned on one row. This is a
+// deliberate exception to the theme's usual card/icon-grid section styling —
+// no cards, no shadows, no rounded corners, no centred alignment — per the
+// brief's explicit "do not redesign" instruction.
+// =============================================================================
+
+.zm-modules__container {
+	// Matches .zm-smart's container (see above) so this section's content
+	// starts/ends at the exact same left/right edges as "Smart Solutions"
+	// and the stats/features sections above it, instead of sitting on the
+	// narrower default .container and reading as narrower/misaligned.
+	max-width: 1500px;
+	padding-inline: clamp(1.25rem, 0.5rem + 3vw, 3.5rem);
+}
+
+.zm-modules__eyebrow {
+	margin: 0 0 2rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 700;
+	font-size: 1.5rem;
+	letter-spacing: -0.01em;
+	color: #111111;
+}
+
+.zm-modules {
+	display: flex;
+	align-items: flex-start;
+	gap: 40px;
+}
+
+// ---- Left: module list ------------------------------------------------------
+.zm-modules__nav {
+	flex: 0 0 320px;
+	width: 320px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: #fff;
+	align-self: stretch;
+}
+
+.zm-modules__nav-item {
+	position: relative;
+	padding: 22px 28px;
+	font-family: var(--amber-font-sans);
+	font-weight: 600;
+	font-size: 1rem; // 16px
+	line-height: 1.3;
+	color: #111111;
+	background: #fff;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover { background: #f4f4f4; }
+
+	// Active: light-grey fill + a thin solid black bar on the right edge —
+	// no rounded corners, no shadow, per the brief.
+	&.is-active {
+		background: #f4f4f4;
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			width: 3px;
+			background: #000;
+		}
+	}
+}
+
+// ---- Middle: fixed-ratio photo ----------------------------------------------
+// One stacked box per module (only the active one visible via [hidden]) so
+// the swap is a plain show/hide, matching the reference's static-per-view
+// image rather than a crossfade.
+.zm-modules__media {
+	flex: 0 0 470px;
+	width: 470px;
+	aspect-ratio: 470 / 560;
+	overflow: hidden;
+	line-height: 0;
+
+	&.is-active { display: block; }
+}
+
+.zm-modules__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+// ---- Right: heading, description, Key Highlights ---------------------------
+.zm-modules__panel {
+	flex: 1 1 auto;
+	min-width: 0;
+
+	&.is-active { display: block; }
+}
+
+.zm-modules__heading {
+	margin: 0 0 20px;
+	font-family: var(--amber-font-sans);
+	font-weight: 700;
+	font-size: clamp(1.5rem, 1.3rem + 1vw, 2rem); // ~24-32px at desktop
+	line-height: 1.25;
+	color: #111111;
+}
+
+.zm-modules__text {
+	margin: 0 0 24px;
+	// Widened from a 620px cap (which left the panel reading narrower than
+	// its actual available flex width, out of step with "Smart Solutions"
+	// and the stats/features sections either side of it) up to 760px — long
+	// enough to use the space without lines running edge-to-edge.
+	max-width: 760px;
+	font-family: var(--amber-font-sans);
+	font-weight: 400;
+	font-size: 1rem; // 16px
+	line-height: 1.7;
+	color: #555555;
+}
+
+.zm-modules__kh {
+	margin: 0 0 1rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 700;
+	font-size: 1.125rem; // 18px
+	color: #111111;
+}
+
+.zm-modules__points {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	max-width: 760px;
+
+	li {
+		position: relative;
+		margin-bottom: 16px;
+		padding-left: 1.25rem;
+		font-family: var(--amber-font-sans);
+		font-weight: 400;
+		font-size: 0.9375rem; // 15px
+		line-height: 1.7;
+		color: #555555;
+
+		&:last-child { margin-bottom: 0; }
+
+		// Bullet aligned with the first line of text, not the block centre.
+		&::before {
+			content: '•';
+			position: absolute;
+			left: 0;
+			top: 0;
+			color: #555555;
+		}
+
+		strong {
+			font-weight: 600;
+			color: #111111;
+		}
+	}
+}
+
+// ---- Responsive ---------------------------------------------------------
+// Tablet: nav on top (full width), image below, content below the image —
+// per the brief, not a 2-column reflow.
+@include bp.down('lg') {
+	.zm-modules {
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	.zm-modules__nav {
+		flex-basis: auto;
+		width: 100%;
+	}
+
+	.zm-modules__media {
+		flex-basis: auto;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+	}
+}
+
+// Mobile: nav becomes a horizontally scrolling tab row instead of a stacked
+// list, per the brief.
+@include bp.down('md') {
+	.zm-modules__nav {
+		display: flex;
+		gap: 4px;
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		&::-webkit-scrollbar { display: none; }
+	}
+
+	.zm-modules__nav-item {
+		flex: 0 0 auto;
+		padding: 16px 20px;
+		white-space: nowrap;
+
+		&.is-active::after {
+			top: auto;
+			right: 0;
+			left: 0;
+			bottom: 0;
+			width: auto;
+			height: 3px;
+		}
+	}
+}
+
+// ---- Core Solutions: image + title + text + link card grid ----------------
+.zm-sol__grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+
+	@media (min-width: 576px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@media (min-width: 1200px) {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+.zm-sol__card {
+	display: flex;
+	flex-direction: column;
+	padding: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+	background: #fff;
+	border: 1px solid rgba(15, 23, 42, 0.06);
+	border-radius: var(--amber-radius-lg, 18px);
+	box-shadow: 0 12px 32px -18px rgba(17, 24, 39, 0.18);
+	transition: transform 0.3s var(--amber-ease), box-shadow 0.3s ease;
+
+	&:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 20px 42px -20px rgba(17, 24, 39, 0.24);
+	}
+}
+
+.zm-sol__media {
+	margin-bottom: 1.25rem;
+	border-radius: 12px;
+	overflow: hidden;
+	background: var(--amber-surface);
+	line-height: 0;
+}
+
+.zm-sol__img {
+	display: block;
+	width: 100%;
+	height: 10rem;
+	object-fit: cover;
+}
+
+.zm-sol__title {
+	margin: 0 0 0.5rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 700;
+	font-size: 1.05rem;
+	line-height: 1.35;
+	color: var(--amber-ink);
+}
+
+.zm-sol__text {
+	margin: 0 0 1rem;
+	font-size: var(--amber-fs-sm, 0.9rem);
+	line-height: 1.65;
+	color: var(--amber-body);
+	flex-grow: 1;
+}
+
+.zm-sol__link {
+	align-self: flex-start;
+	font-family: var(--amber-font-sans);
+	font-weight: 600;
+	font-size: var(--amber-fs-sm, 0.9rem);
+	color: var(--amber-brand-600);
+	text-decoration: none;
+
+	&:hover { text-decoration: underline; }
+}
+
+// =============================================================================
+// Three-step benefits (#zm-steps) — reference: restorapos.com "Your Business
+// is on Safe Hand with Restora POS": eyebrow + accent-highlighted heading,
+// a horizontal pill tab bar, and one large rounded stage panel per step
+// (screenshot + heading/text/checklist, alternating sides). Reuses the
+// interactive .pos-key__list/.pos-key__item/.pos-key__panel toggle markup
+// and JS (modules/pos-key-features.js finds elements by those exact class
+// names) from the POS Key Features section, but every rule here is scoped
+// under #zm-steps so that section's own vertical-list design is untouched.
+// =============================================================================
+
+// Plain white section (not the same --amber-surface tint the tab track
+// below uses) so the track actually reads as a distinct light-grey bar
+// against the page, matching the reference — both sharing one colour made
+// the track invisible against its own section background.
+#zm-steps {
+	background: #fff;
+}
+
+// Wider than the shared .pos-key__container's default 1200px cap — matches
+// the wide-container pattern already used by the other Zoomie sections
+// (.zm-smart, .zm-modules__container both cap at 1500px), but pulled back in
+// a bit from that same 1500px so the stage box itself isn't quite as wide.
+#zm-steps .pos-key__container {
+	max-width: 1360px;
+}
+
+.zm-steps__head {
+	// Widened from 46rem so the long first heading line ("Your Restaurant Is
+	// in Safe Hands With") has room to sit on one line rather than wrapping
+	// mid-sentence.
+	max-width: 52rem;
+	margin: 0 auto clamp(2rem, 1.5rem + 1.5vw, 2.75rem);
+	text-align: center;
+}
+
+.zm-steps__eyebrow {
+	margin: 0 0 0.5rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 800;
+	font-size: 1rem;
+	color: var(--amber-brand-600);
+}
+
+.zm-steps__heading {
+	margin: 0 0 0.75rem;
+	font-family: var(--amber-font-display);
+	font-weight: 700;
+	line-height: 1.25;
+	font-size: clamp(1.75rem, 1.3rem + 2vw, 2.75rem);
+	color: var(--amber-ink);
+
+	// The PHP side now emits a hard <br> between the heading text and the
+	// accent phrase, so each half should hold its own line rather than
+	// wrapping again on its own — nowrap doesn't fight the <br> (it only
+	// suppresses natural wrapping at spaces, not an explicit line break).
+	@include bp.up('md') {
+		white-space: nowrap;
+	}
+}
+
+.zm-steps__accent {
+	color: var(--amber-brand);
+}
+
+.zm-steps__sub {
+	margin: 0;
+	font-size: 1.05rem;
+	color: var(--amber-body);
+}
+
+// ---- Row: pill nav stacked above the stage panel, not the base 2-column
+// list+detail split .pos-key__row normally uses.
+.zm-steps__row {
+	display: block;
+}
+
+// ---- Horizontal tab bar (overrides .pos-key__list's vertical column
+// layout) — a plain light-grey track (NOT a white pill-shaped bar); tabs
+// are plain text with no background of their own, and the active tab is
+// distinguished purely by colour + weight, matching the reference's flat
+// "Digital Management | Take Control On Your Own Hand | Integration" bar
+// exactly (no filled pill behind the active tab).
+.zm-steps__nav.pos-key__list {
+	flex-direction: row;
+	flex-wrap: nowrap;
+	gap: 0;
+	padding: 0;
+	margin: 0 0 clamp(2rem, 1.5rem + 1.5vw, 3rem);
+	background: var(--amber-surface, #f2ecec);
+	border-radius: var(--amber-radius-lg, 16px);
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;
+	&::-webkit-scrollbar { display: none; }
+}
+
+#zm-steps .pos-key__item {
+	flex: 1 1 0;
+	padding: 1.1rem 1.5rem;
+	border-radius: 0;
+	background: transparent;
+	text-align: center;
+	white-space: nowrap;
+	font-weight: 600;
+	color: var(--amber-muted, #6b7280);
+	transition: color var(--amber-dur-fast) ease;
+
+	&:hover:not(.is-active) { color: var(--amber-ink); background: transparent; }
+
+	&.is-active {
+		background: transparent;
+		color: var(--amber-brand);
+		font-weight: 700;
+		box-shadow: none;
+	}
+}
+
+// ---- Stage: one large rounded card per step. The box itself carries NO
+// padding — instead only the text column (.zm-steps__body) is padded, and
+// the image column sits flush against the box's own edge, clipped to match
+// its rounded corners via the box's own `overflow: hidden` rather than the
+// image needing its own per-side border-radius logic (which would otherwise
+// have to flip along with .zm-steps__panel--flip). This is what lets the
+// screenshot bleed all the way to the panel's outer edge like the
+// reference, instead of sitting inset as a small padded thumbnail.
+.zm-steps__stage.pos-key__panels {
+	// Blue at the top, fading down to white by the bottom edge — both this
+	// section (#zm-steps) and the one right after it (#zm-types) are plain
+	// white, so ending the gradient at white here means the box's bottom
+	// edge dissolves into the page instead of showing a visible seam/border
+	// where the tint stops. --amber-brand-100 (not the paler -50) so the top
+	// actually reads as visibly blue rather than near-white.
+	background: linear-gradient(180deg, var(--amber-brand-100, #e0f2fe) 0%, #fff 100%);
+	// Reference (.rounded-40-top): rounded top corners ONLY, square bottom —
+	// not a fully-rounded card on all four corners.
+	border-radius: clamp(20px, 2vw, 40px) clamp(20px, 2vw, 40px) 0 0;
+	overflow: hidden;
+}
+
+#zm-steps .pos-key__panel {
+	&.is-active {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0;
+		// Both columns start flush with the row's top edge and size to their
+		// own content height, rather than being stretched to match
+		// whichever column is taller.
+		align-items: start;
+
+		@include bp.up('lg') {
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		}
+	}
+
+	// Alternating side: every other step's image swaps to the right, text to
+	// the left, matching the reference's order-lg-2 alternation. The box's
+	// own overflow:hidden clip (above) rounds whichever edge the image ends
+	// up touching, so no extra corner-radius bookkeeping is needed here.
+	&.zm-steps__panel--flip.is-active {
+		@include bp.up('lg') {
+			.zm-steps__media { order: 2; }
+			.zm-steps__body { order: 1; }
+		}
+	}
+}
+
+.zm-steps__media {
+	min-height: 18rem;
+	// No background colour of its own — .zm-steps__stage already paints one
+	// continuous gradient behind both columns. This div having its own flat
+	// --amber-brand-50 fill on top of that was a solid colour sitting next
+	// to the gradient's actual (different) colour at most vertical
+	// positions, showing as a visible seam/mismatch down the middle of the
+	// panel instead of one even background.
+	background: transparent;
+	line-height: 0;
+}
+
+.zm-steps__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	// Desktop: bleed/crop to fill the column exactly, matching the
+	// reference's edge-to-edge photo. Switched to `contain` on mobile below
+	// so the stacked single-column layout never crops the artwork.
+	object-fit: cover;
+}
+
+.zm-steps__body {
+	// Top-aligned to match the image column (the panel grid no longer
+	// stretches either column to match the other's height — see
+	// align-items: start above), so both simply start flush with the row's
+	// top edge instead of one being vertically centred against the other.
+	padding: clamp(1.75rem, 1.2rem + 2vw, 3.5rem);
+}
+
+// Resets the base .pos-key__panel-head's own bottom margin (meant for a
+// single-column layout) — this panel half doesn't need it since its own
+// padding above already separates it from the section edges.
+.zm-steps__body.pos-key__panel-head {
+	margin-bottom: 0;
+}
+
+// ---- Mobile: single column, image above text -----------------------------
+@media (max-width: 767.98px) {
+	.zm-steps__nav.pos-key__list {
+		justify-content: flex-start;
+	}
+
+	#zm-steps .pos-key__item {
+		flex: 0 0 auto;
+	}
+
+	// Scale the artwork down to fit without cropping instead of the desktop
+	// edge-to-edge crop — the stacked layout has room to show the whole
+	// photo, so nothing needs to be cut off to fill the row.
+	.zm-steps__media {
+		min-height: 14rem;
+	}
+
+	.zm-steps__img {
+		object-fit: contain;
+	}
+}
+
+// ---- Three-step benefits: bullet list inside the .pos-key detail panel ----
+.zm-step__bullets {
+	display: grid;
+	gap: 0.75rem;
+	margin: 1.25rem 0 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.65rem;
+		font-size: var(--amber-fs-sm, 0.95rem);
+		line-height: 1.5;
+		color: var(--amber-body);
+	}
+}
+
+.zm-step__check {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 1.5rem;
+	height: 1.5rem;
+	margin-top: 0.1rem;
+	border-radius: 50%;
+	background: var(--amber-brand-50);
+	color: var(--amber-brand-600);
+
+	svg { width: 0.9rem; height: 0.9rem; }
+}
+
+// =============================================================================
+// Restaurant types (#zm-types) — photo-card showcase. Reference: the "no
+// matter what type of restaurant you have" strip — a plain white section, one
+// centred heading with a single brand-coloured word, then a grid of rounded
+// photos with a light caption directly underneath. Deliberately card-less:
+// no box, border or resting shadow around each tile (that was the previous
+// .erp-ind__card treatment), so the photography itself carries the row.
+// =============================================================================
+
+// The reference runs this grid in a wider container than the theme's default
+// 1200px one: five tiles across ~1290px of content, i.e. ~227px per tile. At
+// the theme's 1200px container the same five columns come out ~198px wide —
+// noticeably smaller than the reference, and narrow enough that the longer
+// labels ("Burger & Sandwich Shop") wrap to two lines. Widening just this
+// section to the shared --amber-container-wide (1360px → 1280px of content)
+// puts the tiles back at ~225px, matching the reference's tile size.
+.section--zm-types .container {
+	max-width: var(--amber-container-wide);
+}
+
+.section--zm-types .section-header {
+	// Wider than the shared 52rem so the heading holds on one line at desktop
+	// like the reference, instead of wrapping before the accent word.
+	max-width: 60rem;
+	margin-bottom: clamp(2.5rem, 1.8rem + 2.5vw, 4rem);
+}
+
+.zm-types__title {
+	font-size: clamp(1.9rem, 1.25rem + 2.6vw, 3rem);
+	font-weight: 800;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	color: var(--amber-ink);
+}
+
+// The one highlighted word ("Restaurant" in the reference) — inline, so it
+// stays in the flow of the sentence rather than dropping to its own line.
+.zm-types__accent {
+	color: var(--amber-brand);
+}
+
+.zm-types__grid {
+	display: grid;
+	// Five up on wide screens, stepping down through the breakpoints below.
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	// ~38px between columns at desktop, matching the reference's gutter.
+	column-gap: clamp(1rem, 0.3rem + 2.5vw, 2.4rem);
+	row-gap: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+	align-items: start;
+}
+
+.zm-types__card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	// Caption sits ~24px under the photo, as in the reference.
+	gap: 1.5rem;
+	text-align: center;
+	text-decoration: none;
+	color: inherit;
+}
+
+// Only the linked tiles react to the pointer — an unlinked tile lifting on
+// hover would promise an interaction it doesn't have.
+.zm-types__card--link {
+	transition: transform 0.3s var(--amber-ease);
+
+	&:hover,
+	&:focus-visible {
+		transform: translateY(-6px);
+
+		.zm-types__media {
+			box-shadow: var(--amber-shadow-lg);
+		}
+
+		.zm-types__label {
+			color: var(--amber-brand);
+		}
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--amber-brand);
+		outline-offset: 6px;
+		border-radius: var(--amber-radius);
+	}
+}
+
+.zm-types__media {
+	display: block;
+	width: 100%;
+	// The reference's tile is 284 × 230 (≈1.24:1) — mixed-ratio uploads crop
+	// to that same frame so every row lines up.
+	aspect-ratio: 1.24;
+	overflow: hidden;
+	border-radius: var(--amber-radius);
+	background: var(--amber-brand-50, #f0f9ff);
+	transition: box-shadow 0.3s ease;
+}
+
+.zm-types__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+// Fallback frame shown until real photography is uploaded for a type: the
+// same rounded tile, filled with the brand gradient and the type's icon,
+// rather than an empty box or a generic grey placeholder image.
+.zm-types__media--icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--amber-gradient);
+	color: #fff;
+
+	svg {
+		width: 34%;
+		height: auto;
+		max-height: 40%;
+	}
+}
+
+.zm-types__label {
+	font-family: var(--amber-font-sans);
+	// Light, not semibold — the reference's caption is fw-light, which is also
+	// what keeps the longest labels on a single line at this tile width.
+	font-weight: 300;
+	font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.075rem);
+	line-height: 1.4;
+	color: var(--amber-ink-700);
+	transition: color 0.25s ease;
+}
+
+@include bp.down('xl') {
+	.zm-types__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@include bp.down('lg') {
+	.zm-types__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@include bp.down('md') {
+	.zm-types__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

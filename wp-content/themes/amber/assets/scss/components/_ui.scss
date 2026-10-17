@@ -1,0 +1,91 @@
+// =============================================================================
+// Components · Small UI (breadcrumbs, pagination, tags, social, empty states)
+// =============================================================================
+
+// ---- Breadcrumbs ----
+.breadcrumbs {
+	display: flex;
+	margin-bottom: var(--amber-space-4);
+	font-size: var(--amber-fs-sm);
+
+	&__list { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+	&__item {
+		display: flex; align-items: center; gap: 0.5rem;
+		color: var(--amber-muted);
+		&:not(:last-child)::after { content: '/'; color: var(--amber-line); }
+		a { color: var(--amber-muted); &:hover { color: var(--amber-brand); } }
+		[aria-current='page'] { color: var(--amber-ink); font-weight: 600; }
+	}
+}
+
+// ---- Pagination ----
+.pagination {
+	margin-top: var(--amber-space-8);
+	&__list { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; }
+	.page-numbers {
+		display: inline-flex; align-items: center; justify-content: center;
+		min-width: 44px; height: 44px; padding: 0 0.5rem;
+		border-radius: var(--amber-radius-sm);
+		border: 1px solid var(--amber-line);
+		color: var(--amber-ink-700); font-weight: 600;
+		transition: all var(--amber-dur-fast) ease;
+		&:hover { border-color: var(--amber-brand); color: var(--amber-brand); }
+		&.current { background: var(--amber-brand); border-color: var(--amber-brand); color: #fff; }
+		&.dots { border: 0; }
+	}
+}
+
+// ---- Tags / badges ----
+.entry-tags {
+	display: flex; flex-wrap: wrap; gap: 0.5rem;
+	margin-top: var(--amber-space-6);
+	li a {
+		display: inline-block;
+		padding: 0.3rem 0.8rem;
+		background: var(--amber-surface);
+		border-radius: var(--amber-radius-pill);
+		font-size: var(--amber-fs-xs); font-weight: 600;
+		color: var(--amber-ink-700);
+		&:hover { background: var(--amber-brand-100); color: var(--amber-brand-700); }
+	}
+}
+
+// ---- Social list ----
+.social-list {
+	display: flex; gap: 0.5rem;
+	&__link {
+		display: inline-flex; align-items: center; justify-content: center;
+		width: 40px; height: 40px;
+		border-radius: var(--amber-radius-pill);
+		background: rgba(255,255,255,0.08);
+		color: #c7cbe0;
+		transition: all var(--amber-dur-fast) var(--amber-ease);
+		&:hover { background: var(--amber-brand); color: #fff; transform: translateY(-2px); }
+	}
+}
+
+// ---- Empty state ----
+.empty-state {
+	max-width: 540px; margin-inline: auto; text-align: center;
+	padding-block: var(--amber-space-7);
+	&__title { font-size: var(--amber-fs-xl); }
+	&__text { margin: var(--amber-space-4) 0 var(--amber-space-6); color: var(--amber-muted); }
+}
+
+// ---- Post navigation (single) ----
+.post-nav {
+	display: flex; justify-content: space-between; gap: var(--amber-space-4);
+	flex-wrap: wrap;
+	margin-top: var(--amber-space-8);
+	padding-top: var(--amber-space-6);
+	border-top: 1px solid var(--amber-line);
+	a { font-weight: 600; color: var(--amber-ink-700); &:hover { color: var(--amber-brand); } }
+}
+
+// ---- Widgets (blog sidebar) ----
+.widget {
+	& + & { margin-top: var(--amber-space-6); }
+	&__title { font-size: var(--amber-fs-md); margin-bottom: var(--amber-space-4); }
+	ul { display: grid; gap: 0.5rem; }
+	a { color: var(--amber-body); &:hover { color: var(--amber-brand); } }
+}

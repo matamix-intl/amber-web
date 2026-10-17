@@ -1,0 +1,128 @@
+// =============================================================================
+// Components · Buttons
+// =============================================================================
+
+.btn {
+	--btn-bg: var(--amber-brand);
+	--btn-fg: #fff;
+	--btn-border: transparent;
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5em;
+	padding: 0.75rem 1.4rem;
+	font-family: var(--amber-font-sans);
+	font-weight: 600;
+	font-size: var(--amber-fs-sm);
+	line-height: 1;
+	color: var(--btn-fg);
+	background: var(--btn-bg);
+	border: 1px solid var(--btn-border);
+	border-radius: var(--amber-radius-pill);
+	transition: transform var(--amber-dur-fast) var(--amber-ease),
+		box-shadow var(--amber-dur-fast) ease,
+		background-color var(--amber-dur-fast) ease,
+		color var(--amber-dur-fast) ease;
+	white-space: nowrap;
+	text-decoration: none;
+
+	&__icon {
+		display: inline-flex;
+		transition: transform var(--amber-dur-fast) var(--amber-ease);
+		svg { width: 1.1em; height: 1.1em; }
+	}
+
+	&:hover { transform: translateY(-2px); color: var(--btn-fg); }
+	&:hover &__icon { transform: translateX(3px); }
+	&:active { transform: translateY(0); }
+
+	// ---- Variants ----------------------------------------------------------
+	&--primary {
+		--btn-bg: var(--amber-brand);
+		box-shadow: var(--amber-shadow-brand);
+		&:hover { --btn-bg: var(--amber-brand-600); box-shadow: 0 22px 48px -12px rgba(14,165,233,0.6); }
+	}
+
+	&--secondary {
+		--btn-bg: #fff;
+		--btn-fg: var(--amber-ink);
+		--btn-border: var(--amber-line);
+		box-shadow: var(--amber-shadow-xs);
+		&:hover { --btn-fg: var(--amber-brand); --btn-border: var(--amber-brand); }
+	}
+
+	// Solid orange/red pill — used by the POS "Why choose" CTA row (reference:
+	// GoFrugal's red "Cloud POS / Retail POS / Restaurant POS" buttons).
+	&--pos-accent {
+		--btn-bg: #f0532d;
+		--btn-fg: #fff;
+		box-shadow: 0 12px 30px -10px rgba(240, 83, 45, 0.5);
+		&:hover { --btn-bg: #d8441f; }
+	}
+
+	// Solid navy pill on the light-blue CTA banners (homepage + About page).
+	&--cta-navy {
+		--btn-bg: var(--amber-ink);
+		--btn-fg: #fff;
+		box-shadow: 0 12px 30px -10px rgba(15, 23, 42, 0.35);
+		&:hover { --btn-bg: var(--amber-navy-600); }
+	}
+
+	// Solid WhatsApp green pill — used by the homepage "WhatsApp Integration" CTA.
+	&--whatsapp {
+		--btn-bg: #25d366;
+		--btn-fg: #fff;
+		box-shadow: 0 12px 30px -10px rgba(37, 211, 102, 0.5);
+		svg { width: 1.15em; height: 1.15em; }
+		&:hover { --btn-bg: #1eb956; box-shadow: 0 22px 48px -12px rgba(37, 211, 102, 0.6); }
+	}
+
+	&--ghost {
+		--btn-bg: transparent;
+		--btn-fg: currentColor;
+		--btn-border: rgba(255, 255, 255, 0.4);
+		box-shadow: none;
+		&:hover { --btn-bg: rgba(255, 255, 255, 0.12); }
+	}
+
+	// Glass — for use on the navy hero / dark sections.
+	&--glass {
+		--btn-bg: rgba(255, 255, 255, 0.06);
+		--btn-fg: #fff;
+		--btn-border: rgba(56, 189, 248, 0.35);
+		backdrop-filter: blur(8px);
+		box-shadow: none;
+		&:hover { --btn-bg: rgba(56, 189, 248, 0.16); --btn-border: rgba(56, 189, 248, 0.6); --btn-fg: #fff; }
+	}
+
+	&--light {
+		--btn-bg: #fff;
+		--btn-fg: var(--amber-brand-700);
+		box-shadow: 0 12px 30px -10px rgba(0,0,0,0.35);
+		&:hover { --btn-fg: var(--amber-brand-700); }
+	}
+
+	&--link {
+		--btn-bg: transparent;
+		--btn-fg: var(--amber-ink);
+		--btn-border: transparent;
+		padding-inline: 0.35rem;
+		box-shadow: none;
+		&:hover { --btn-fg: var(--amber-brand); transform: none; }
+	}
+
+	// Outline pill — for light sections (e.g. the text-reveal CTA).
+	&--outline {
+		--btn-bg: transparent;
+		--btn-fg: var(--amber-ink);
+		--btn-border: rgba(15, 23, 42, 0.22);
+		box-shadow: none;
+		&:hover { --btn-bg: var(--amber-ink); --btn-fg: #fff; --btn-border: var(--amber-ink); }
+	}
+
+	// ---- Sizes -------------------------------------------------------------
+	&--lg { padding: 0.95rem 1.8rem; font-size: var(--amber-fs-base); }
+	&--sm { padding: 0.55rem 1rem; font-size: var(--amber-fs-xs); }
+	&--block { display: flex; width: 100%; }
+}

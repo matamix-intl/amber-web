@@ -1,0 +1,250 @@
+// =============================================================================
+// Components · "Schedule a Demo" modal
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+.demo-modal-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(4, 10, 22, 0.6);
+	z-index: 250;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity var(--amber-dur) ease;
+	&.is-visible { opacity: 1; visibility: visible; }
+}
+
+.demo-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 260;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+
+	&[hidden] { display: none; }
+}
+
+.demo-modal__panel {
+	position: relative;
+	width: min(920px, 100%);
+	max-height: min(680px, calc(100vh - 2rem));
+	display: flex;
+	flex-direction: column;
+	background: var(--amber-surface);
+	border-radius: var(--amber-radius-lg);
+	box-shadow: var(--amber-shadow-lg);
+	overflow: hidden;
+	animation: demo-modal-in 0.25s var(--amber-ease);
+}
+
+@keyframes demo-modal-in {
+	from { opacity: 0; transform: translateY(12px) scale(0.98); }
+	to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// Plain, compact header — a title bar, not a hero banner.
+.demo-modal__head {
+	position: relative;
+	flex-shrink: 0;
+	padding: 1.1rem 3rem 1rem 1.5rem;
+	border-bottom: 1px solid var(--amber-line);
+}
+.demo-modal__eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-size: var(--amber-fs-xs);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--amber-brand);
+	svg { width: 13px; height: 13px; }
+}
+.demo-modal__head h3 {
+	font-size: var(--amber-fs-md);
+	color: var(--amber-ink);
+	margin: 0.2rem 0 0;
+}
+.demo-modal__lead {
+	margin: 0.2rem 0 0;
+	font-size: var(--amber-fs-xs);
+	color: var(--amber-muted);
+}
+
+.demo-modal__close {
+	position: absolute;
+	top: 0.75rem;
+	right: 0.75rem;
+	z-index: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	color: var(--amber-ink-700);
+	background: var(--amber-brand-50);
+	border: 1px solid var(--amber-line);
+	cursor: pointer;
+	transition: background var(--amber-dur-fast) ease, color var(--amber-dur-fast) ease;
+	svg { width: 15px; height: 15px; }
+	&:hover { background: var(--amber-brand); color: #fff; }
+}
+
+.demo-modal__body {
+	overflow-y: auto;
+	padding: 1.25rem 1.5rem 1.5rem;
+
+	// The CF7 shortcode's own <h3> (after the hidden-fields fieldset) duplicates
+	// .demo-modal__head's title above; hide it in place since the shortcode
+	// content itself can't be edited from here.
+	.wpcf7-form > h3 { display: none; }
+
+	// The demo-request CF7 form ships its own Bootstrap-style row/col markup
+	// as several 2-up <div class="row"><div class="col-md-6">…two-per-row
+	// blocks, plus a couple of standalone full-width fields. To fit the whole
+	// form without scrolling we flow every field into one continuous 3-column
+	// grid on the form itself, so .row wrappers need to get out of the way
+	// (display:contents) rather than each impose their own 2-column track.
+	.wpcf7-form {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.6rem var(--amber-space-4);
+		align-items: start;
+		@include bp.up('sm') { grid-template-columns: repeat(3, 1fr); }
+	}
+	.row {
+		display: contents;
+	}
+	.col-md-6 { min-width: 0; }
+
+	// The four fields NOT wrapped in .row/.col-md-6 (Interested Product,
+	// Demo Mode, Message, Terms) render as bare <p> children of the form and
+	// so become direct grid items too; span them across all 3 columns
+	// instead of collapsing to a single narrow column.
+	p:has(> [data-name="product"]),
+	p:has(> [data-name="demo-mode"]),
+	p:has(> [data-name="message"]),
+	p:has(> [data-name="terms"]) {
+		grid-column: 1 / -1;
+	}
+	.text-center { grid-column: 1 / -1; }
+
+	label {
+		display: block;
+		margin-bottom: 0.3rem;
+		font-weight: 600;
+		font-size: var(--amber-fs-xs);
+		color: var(--amber-ink-700);
+	}
+
+	// Required-field marker, wrapped in a span by demo-modal.js.
+	.req-mark { color: #dc2626; }
+
+	// The CF7 shortcode puts a literal <br> between each <label> and its
+	// field; the label is already display:block, so the <br> would add a
+	// second, redundant line break.
+	p > br { display: none; }
+
+	p { margin: 0; }
+
+	.wpcf7-form-control:not(.wpcf7-submit):not(.wpcf7-radio):not(.wpcf7-acceptance) {
+		width: 100%;
+		padding: 0.5rem 0.75rem;
+		border: 1.5px solid var(--amber-line);
+		border-radius: var(--amber-radius-sm);
+		background: var(--amber-white);
+		font: inherit;
+		font-size: var(--amber-fs-sm);
+		color: var(--amber-ink);
+		transition: border-color var(--amber-dur-fast) var(--amber-ease), box-shadow var(--amber-dur-fast) var(--amber-ease);
+		&:hover { border-color: color-mix(in srgb, var(--amber-brand) 40%, var(--amber-line)); }
+		&:focus {
+			outline: none;
+			border-color: var(--amber-brand);
+			box-shadow: 0 0 0 3px var(--amber-brand-50);
+		}
+	}
+	textarea.wpcf7-form-control { height: 3.5rem; resize: vertical; }
+
+	// Demo-mode radios as selectable pill chips rather than bare browser radios.
+	[data-name="demo-mode"] {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.wpcf7-list-item {
+		margin: 0;
+		font-size: 0;
+
+		label {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.4rem;
+			margin: 0;
+			padding: 0.4rem 0.85rem;
+			border: 1.5px solid var(--amber-line);
+			border-radius: var(--amber-radius-pill);
+			font-size: var(--amber-fs-xs);
+			font-weight: 500;
+			color: var(--amber-ink-700);
+			cursor: pointer;
+			transition: border-color var(--amber-dur-fast) ease, background var(--amber-dur-fast) ease, color var(--amber-dur-fast) ease;
+			&:hover { border-color: var(--amber-brand); }
+		}
+		&:has(input:checked) label {
+			border-color: var(--amber-brand);
+			background: var(--amber-brand-50);
+			color: var(--amber-brand-600);
+		}
+		&:has(input:focus-visible) label {
+			outline: 2px solid var(--amber-brand);
+			outline-offset: 2px;
+		}
+	}
+	input[type="radio"] {
+		position: absolute;
+		width: 1px; height: 1px;
+		opacity: 0;
+	}
+	input[type="checkbox"] { width: auto; accent-color: var(--amber-brand); }
+
+	// Consent row: checkbox + label side by side, not stacked.
+	p:has(> [data-name="terms"]) .wpcf7-list-item {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.4rem;
+		label { display: flex; align-items: flex-start; gap: 0.4rem; padding: 0; border: 0; font-weight: 400; font-size: var(--amber-fs-sm); border-radius: 0; }
+		input[type="checkbox"] { margin-top: 0.2rem; }
+	}
+
+	.text-center {
+		margin-top: 0.25rem;
+		padding-top: 0.9rem;
+		border-top: 1px solid var(--amber-line);
+	}
+
+	.wpcf7-submit {
+		padding: 0.7rem 2.25rem;
+		border: none;
+		border-radius: var(--amber-radius-pill);
+		background: var(--amber-brand);
+		color: #fff;
+		font-weight: 600;
+		font-size: var(--amber-fs-sm);
+		cursor: pointer;
+		box-shadow: 0 10px 24px -10px rgba(14, 165, 233, 0.55);
+		transition: background-color var(--amber-dur-fast) var(--amber-ease), transform var(--amber-dur-fast) var(--amber-ease);
+		&:hover { background: var(--amber-brand-600); transform: translateY(-1px); }
+	}
+
+	.wpcf7-not-valid-tip { color: #dc2626; font-size: var(--amber-fs-xs); margin-top: 0.2rem; }
+	.wpcf7-response-output { margin-top: 0.75rem; border-radius: var(--amber-radius-sm); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.demo-modal-backdrop { transition: none; }
+}

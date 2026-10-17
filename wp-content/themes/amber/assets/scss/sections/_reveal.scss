@@ -1,0 +1,200 @@
+// =============================================================================
+// Sections · Scroll-Zoom Reveal (sticky wordmark + scaling media frame)
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+.section--reveal {
+	position: relative;
+	z-index: 1;
+	background: #050505;
+
+	// Desktop: a tall scroll track that drives the zoom.
+	@include bp.up('lg') { height: 240vh; }
+
+	// Mobile: a simple, static rounded media card.
+	@include bp.down('lg') {
+		padding-block: clamp(3rem, 8vw, 5rem);
+		padding-inline: var(--amber-gutter);
+	}
+}
+
+// ---- The pinned stage ----
+.reveal__stage {
+	display: grid;
+	place-items: center;
+	overflow: hidden;
+
+	@include bp.up('lg') {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+
+		// Break out of the document box so the locked frame spans the FULL window.
+		// The section is only as wide as the document (clientWidth, e.g. 1887px),
+		// which excludes the vertical scrollbar gutter — leaving a dark strip down
+		// each side at full-bleed. Widening the pinned stage to 100vw (which does
+		// include the gutter) makes it reach both window edges.
+		//
+		// Anchor with left/right rather than `margin-left: calc(50% - 50vw)`: that
+		// classic trick mixes `%` (resolved against the 1887px parent) with `vw`
+		// (1902px), so it lands half a scrollbar-width off-centre. The section is
+		// `position: relative`, so pinning left:0 against it and letting width:100vw
+		// run to the right is exact — the stage starts flush at the window's left
+		// edge and spans the true viewport width.
+		width: 100vw;
+		left: 0;
+		margin-left: 0;
+
+		// The frame is the only grid item that should fill the stage: stretching
+		// it (rather than centring a fixed-height child) means sub-pixel rounding
+		// on the 100vh<->window.innerHeight mapping can't open a black seam.
+		> .reveal__frame { align-self: stretch; justify-self: stretch; }
+	}
+}
+
+// ---- Giant gradient wordmark ----
+.reveal__title {
+	margin: 0;
+	font-family: var(--amber-font-display);
+	font-weight: 800;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	text-align: center;
+	color: transparent;
+	background: linear-gradient(91deg, #bfe6ff 0%, #38bdf8 45%, #0284c7 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	white-space: nowrap;
+	user-select: none;
+
+	@include bp.up('lg') {
+		position: absolute;
+		top: 11vh;
+		left: 0; right: 0;
+		z-index: 1;
+		// The JS drives a perspective()/translateZ() recede — keep the origin at
+		// the centre so it pulls back into the middle of the stage rather than
+		// toward a corner, and hint the compositor so the gradient-clipped text
+		// stays crisp while it scales.
+		transform-origin: 50% 50%;
+		backface-visibility: hidden;
+		font-size: clamp(1.5rem, 4vw, 3.75rem);
+		will-change: transform, opacity;
+	}
+	@include bp.down('lg') {
+		font-size: clamp(1.25rem, 6vw, 2.1rem);
+		margin-bottom: var(--amber-space-5);
+	}
+}
+
+// ---- Scaling media frame ----
+.reveal__frame {
+	position: relative;
+	z-index: 2;
+	overflow: hidden;
+	background: #0a0a0c;
+	border: 1px solid rgba(56, 189, 248, 0.16);
+	box-shadow: 0 50px 120px -40px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+
+	@include bp.up('lg') {
+		// Natural (scale 1) size = the whole stage, so the zoom ends edge-to-edge.
+		//
+		// Use 100%/100% rather than 100vw/100vh: `vw` INCLUDES the classic
+		// scrollbar (measured 1902px) while the section's own block width does
+		// not (1887px), so a `100vw` frame overhung the section by the 15px
+		// scrollbar width and showed a strip down the right-hand side. The
+		// stage is already exactly 100vh tall, so 100% inherits the right
+		// height without re-introducing a vh/svh unit mismatch.
+		width: 100%;
+		height: 100%;
+		border: 0;
+		border-radius: 40px;
+		transform-origin: center center;
+		will-change: transform, border-radius;
+		// Pre-set the small state under JS so there's no first-paint flash.
+		.js & { transform: scale(0.5); }
+	}
+	@include bp.down('lg') {
+		width: 100%;
+		aspect-ratio: 16 / 10;
+		border-radius: var(--amber-radius-lg);
+		margin-inline: auto;
+		max-width: 960px;
+	}
+}
+
+.reveal__media {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;       // crop the over-sized iframe (Pixbit technique)
+	pointer-events: none;
+}
+
+// Images fill nicely via object-fit.
+.reveal__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border: 0;
+}
+
+// A Vimeo/YouTube <iframe> ignores object-fit, so the 16:9 player letterboxes
+// inside a non-16:9 frame. Instead, size the 16:9 iframe to always COVER the
+// frame and crop the overflow — so the video fills edge-to-edge, no black bars
+// (the same idea as Pixbit's h-[calc(100%+104px)] over-scan, but aspect-safe).
+.reveal__video {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	border: 0;
+
+	// TRUE cover for a cross-origin video iframe.
+	//
+	// Sizing the iframe to 100%/100% is NOT enough: getBoundingClientRect then
+	// reports a perfectly full-bleed *box*, but Vimeo renders the 16:9 picture
+	// INSIDE that box and letterboxes it itself. Those bars belong to the
+	// player's own document, so no CSS of ours can crop them — which is why the
+	// element measured edge-to-edge while the screen still showed side bars.
+	//
+	// The fix is to make the iframe big enough that its INNER 16:9 video covers
+	// the viewport, then crop the excess with .reveal__media's overflow:hidden:
+	//   - window wider than 16:9  -> match width, overflow height (100vw/(16/9))
+	//   - window taller than 16:9 -> match height, overflow width (100vh*(16/9))
+	// `max()` picks whichever is binding, so one rule is correct at every ratio.
+	// Widths use vw (includes the scrollbar gutter) to match the broken-out stage.
+	width: max(100vw, 100vh * (16 / 9));
+	height: max(100vh, 100vw / (16 / 9));
+
+	// Centre the over-sized box, plus a hair of over-scan to swallow the
+	// player's own 1px edge antialiasing.
+	transform: translate(-50%, -50%) scale(1.02);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reveal__frame { transform: none !important; border-radius: var(--amber-radius-lg) !important; }
+}
+
+// =============================================================================
+// Blank media slot (shown until a video / image is added in the admin)
+// =============================================================================
+.reveal__placeholder {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	background: radial-gradient(120% 120% at 50% 30%, rgba(56, 189, 248, 0.08), transparent 60%), #0a0d13;
+}
+.reveal__placeholder-icon {
+	display: grid;
+	place-items: center;
+	width: clamp(54px, 6vw, 88px);
+	aspect-ratio: 1;
+	border-radius: 50%;
+	color: var(--amber-brand-400);
+	background: rgba(56, 189, 248, 0.08);
+	border: 1px solid rgba(56, 189, 248, 0.28);
+	box-shadow: 0 0 30px -8px rgba(56, 189, 248, 0.5);
+	svg { width: 42%; height: 42%; margin-left: 6%; }
+}

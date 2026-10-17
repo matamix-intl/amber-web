@@ -1,0 +1,225 @@
+// =============================================================================
+// Sections · WhatsApp Integration — chat mockup left, checklist right
+// WhatsApp's own green (#25d366 / #128c7e) instead of the Amber brand blue,
+// so the section reads as its own third-party integration, not core product UI.
+// =============================================================================
+
+@use '../settings/breakpoints' as bp;
+
+.section.section--whatsapp {
+	--wa-green: #25d366;
+	--wa-green-dark: #128c7e;
+	--wa-panel: #d9fdd3;
+	overflow: hidden;
+	background: var(--wa-green);
+}
+
+.whatsapp-sec__row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(2rem, 4vw, 3rem);
+	align-items: center;
+
+	@include bp.up('lg') {
+		grid-template-columns: minmax(0, 30%) minmax(0, 70%);
+	}
+}
+
+// ---- Copy column ---------------------------------------------------------------
+.whatsapp-sec__eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin-bottom: 0.85rem;
+	padding: 0.35rem 0.8rem 0.35rem 0.6rem;
+	font-size: var(--amber-fs-xs);
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	color: #fff;
+	background: rgba(255, 255, 255, 0.16);
+	border-radius: var(--amber-radius-pill);
+
+	svg { width: 16px; height: 16px; }
+}
+
+.whatsapp-sec__title {
+	margin: 0 0 8px;
+	font-family: var(--amber-font-display);
+	font-size: 22px;
+	line-height: 1.35;
+	font-weight: 700;
+	color: #fff;
+
+	@include bp.up('lg') { font-size: 28px; line-height: 36px; }
+}
+
+.whatsapp-sec__intro {
+	margin: 0 0 18px;
+	font-size: 16px;
+	line-height: 1.55;
+	font-weight: 400;
+	color: rgba(255, 255, 255, 0.88);
+}
+
+.whatsapp-sec__list {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0.65rem 1.25rem;
+	margin: 0 0 1.4rem;
+	padding: 0;
+	list-style: none;
+
+	@include bp.up('md') {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	li {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.65rem;
+		font-size: 15px;
+		line-height: 1.5;
+		color: #fff;
+	}
+}
+
+.whatsapp-sec__point {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
+	overflow: hidden;
+}
+
+.whatsapp-sec__btn {
+	--btn-bg: #fff;
+	--btn-fg: var(--wa-green-dark);
+	display: flex;
+	justify-content: center;
+	margin-inline: auto;
+	box-shadow: var(--amber-shadow-lg);
+
+	&:hover { --btn-bg: #fff; --btn-fg: var(--wa-green-dark); box-shadow: var(--amber-shadow-lg); }
+}
+
+.whatsapp-sec__check {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	margin-top: 0.15rem;
+	color: #fff;
+
+	svg { width: 18px; height: 18px; stroke-width: 3; }
+}
+
+// ---- Visual: pure-CSS chat mockup ------------------------------------------
+.whatsapp-sec__visual {
+	display: flex;
+	justify-content: center;
+}
+
+.wa-mock {
+	width: 100%;
+	max-width: 300px;
+	overflow: hidden;
+	background: var(--wa-panel);
+	border-radius: var(--amber-radius);
+	box-shadow: var(--amber-shadow-lg);
+}
+
+.wa-mock__bar {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.75rem 1rem;
+	background: var(--wa-green-dark);
+}
+
+.wa-mock__avatar {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	color: var(--wa-green-dark);
+	background: #fff;
+	border-radius: 50%;
+
+	svg { width: 17px; height: 17px; }
+}
+
+.wa-mock__who {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+}
+
+.wa-mock__name {
+	font-size: 15px;
+	font-weight: 700;
+	color: #fff;
+}
+
+.wa-mock__status {
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.75);
+}
+
+.wa-mock__body {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1rem;
+	background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+	background-size: 14px 14px;
+}
+
+.wa-bubble {
+	position: relative;
+	max-width: 84%;
+	padding: 0.6rem 0.8rem 1.15rem;
+	font-size: 14px;
+	line-height: 1.45;
+	color: var(--amber-ink);
+	background: #fff;
+	border-radius: var(--amber-radius-sm);
+	box-shadow: var(--amber-shadow-xs);
+
+	&--in { align-self: flex-start; border-top-left-radius: 2px; }
+
+	&--out {
+		align-self: flex-end;
+		color: #073023;
+		background: #e7ffdb;
+		border-top-right-radius: 2px;
+	}
+}
+
+.wa-bubble__time {
+	position: absolute;
+	right: 0.7rem;
+	bottom: 0.4rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.2rem;
+	font-size: 10px;
+	color: var(--amber-muted);
+
+	svg { width: 11px; height: 11px; color: #53bdeb; stroke-width: 3; }
+}
+
+.wa-chip {
+	align-self: center;
+	margin-top: 0.35rem;
+	padding: 0.35rem 0.75rem;
+	font-size: 11px;
+	font-weight: 700;
+	color: var(--wa-green-dark);
+	background: rgba(255, 255, 255, 0.8);
+	border: 1px dashed var(--wa-green);
+	border-radius: var(--amber-radius-pill);
+}

@@ -1,0 +1,59 @@
+// =============================================================================
+// Amber · main stylesheet entry point
+// Compile:  npx sass assets/scss/main.scss assets/css/main.css --style=compressed
+// Watch:    npm run watch     (see package.json)
+//
+// Architecture (ITCSS-ish):
+//   1. settings   — tokens & breakpoints (no CSS output except :root tokens)
+//   2. base       — reset, typography, layout primitives
+//   3. components — reusable UI pieces
+//   4. layout     — header & footer
+//   5. sections   — page-builder section styles
+//   6. utilities  — animations & overrides (last for specificity)
+// =============================================================================
+
+// 1 · Settings (breakpoints emits nothing; tokens emit :root)
+@use 'settings/breakpoints';
+@use 'settings/tokens';
+
+// 2 · Base
+@use 'base/reset';
+@use 'base/typography';
+@use 'base/layout';
+
+// 3 · Components
+@use 'components/buttons';
+@use 'components/forms';
+@use 'components/ui';
+@use 'components/accordion';
+@use 'components/demo-modal';
+
+// 4 · Layout
+@use 'layout/header';
+@use 'layout/footer';
+
+// 5 · Sections
+@use 'sections/hero';
+@use 'sections/choose';
+@use 'sections/whatsapp';
+@use 'sections/reveal';
+@use 'sections/pixbit-sections';
+@use 'sections/blocks';
+@use 'sections/amber-tech';
+@use 'sections/testimonials-pricing';
+@use 'sections/products-stack';
+@use 'sections/cta-contact';
+@use 'sections/locations';
+@use 'sections/about';
+@use 'sections/erp';
+@use 'sections/gozzbe-hero';
+@use 'sections/gozzbe-features';
+@use 'sections/pos-key-features';
+@use 'sections/zoomie-sections';
+@use 'sections/erp-section';
+@use 'sections/faq-reviews';
+@use 'sections/blog';
+@use 'sections/legal';
+
+// 6 · Utilities (loaded last)
+@use 'utilities/animations';

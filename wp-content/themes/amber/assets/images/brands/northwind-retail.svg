@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 44" width="180" height="44" role="img" aria-label="Northwind Retail">
+	<g fill="#1e293b">
+		<path d="M8 32 L8 12 L13 12 L22 26 L22 12 L27 12 L27 32 L22 32 L13 18 L13 32 Z"/>
+		<circle cx="34" cy="22" r="9" fill="none" stroke="#1e293b" stroke-width="2.4"/>
+		<path d="M34 15 L34 22 L39 26" fill="none" stroke="#1e293b" stroke-width="2.4" stroke-linecap="round"/>
+	</g>
+	<text x="52" y="28" font-family="Georgia, 'Times New Roman', serif" font-size="18" letter-spacing="0.5" fill="#1e293b">Northwind</text>
+</svg>
