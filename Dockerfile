@@ -6,7 +6,7 @@
 # pre-pruned layer.
 
 # --- Stage 1: assemble and prune the document root -------------------------
-FROM alpine:3.20 AS code
+FROM alpine:3.22 AS code
 
 # Application code: core, themes, plugins. Backups, caches and docs are
 # excluded by .dockerignore.
@@ -29,7 +29,7 @@ RUN set -eux; \
 		/src/wp-content/ai1wm-backups /src/wp-content/cache
 
 # --- Stage 2: runtime ------------------------------------------------------
-FROM alpine:3.20
+FROM alpine:3.22
 
 # HTTP mirror: HTTPS is intercepted on some networks; apk verifies signatures.
 RUN set -eux; \
